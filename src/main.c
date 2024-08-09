@@ -7,6 +7,6 @@ int	main(int args, char **argv)
 	t_server	*x;
 
 	if (args < 2 || args > 3)
-		return (message_exit(ERROR_ARG));
+		message_exit(ERROR_ARG);
 	world = scene_init(argv[1]);
 }

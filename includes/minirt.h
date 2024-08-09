@@ -12,6 +12,7 @@
 # include <stdbool.h>
 
 # define EXTENSION ".rt"
+# define EPSILON 0.0001
 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
@@ -62,15 +63,15 @@ typedef struct s_vector
 typedef struct s_sphere
 {
 	t_type			type;
-	t_point			center;
-	t_vector		normal;
+	t_vector		center;
+	float			radius;
 	t_color			color;
 }					t_sphere;
 
 typedef struct s_plane
 {
 	t_type			type;
-	t_point			point;
+	t_vector		point;
 	t_vector		normal;
 	t_color			color;
 }					t_plane;
@@ -124,7 +125,7 @@ typedef struct s_light
 typedef struct s_hit
 {
 	t_vector		normal;
-	t_point			p;
+	t_vector		p;
 	float			t;
 	void			*object;
 	t_color			color;
@@ -133,7 +134,7 @@ typedef struct s_hit
 
 typedef struct s_ray
 {
-	t_point			origin;
+	t_vector		origin;
 	t_vector		direction;
 	t_hit			record;
 }					t_ray;
@@ -198,6 +199,10 @@ t_vector			scale(t_vector v, double c);
 double				sqr(double num);
 double				length_square(t_vector v);
 double				length(t_vector v);
+double				dot(t_vector v, t_vector w);
+t_vector			add(t_vector v, t_vector w);
+t_vector			sub(t_vector v, t_vector w);
+t_vector			at(t_ray ray);
 
 //parser.c
 int					*resolution(char **data);
