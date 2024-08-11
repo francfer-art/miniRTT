@@ -79,21 +79,21 @@ typedef struct s_plane
 typedef struct s_quare
 {
 	t_type			type;
-	t_point			center;
+	t_vector		center;
 	float			side;
 	t_vector		normal;
-	t_point			vertex[4];
+	t_vector		vertex[4];
 	t_color			color;
 }					t_square;
 
 typedef struct s_cylinder
 {
 	t_type			type;
-	t_point			center;
+	t_vector			center;
 	t_vector		axis;
 	float			radius;
 	float			height;
-	t_point			edege[2];
+	t_vector		edege[2];
 	t_color			color;
 }					t_cylinder;
 
@@ -203,6 +203,7 @@ double				dot(t_vector v, t_vector w);
 t_vector			add(t_vector v, t_vector w);
 t_vector			sub(t_vector v, t_vector w);
 t_vector			at(t_ray ray);
+t_vector			cross(t_vector v, t_vector w);
 
 //parser.c
 int					*resolution(char **data);
@@ -225,5 +226,16 @@ t_point				point(double x, double y, double z);
 //free.c
 void				free_world(t_world *world);
 void				free_server(t_server *server);
+
+
+//plane.c
+t_plane				*new_plane(char **data);
+int					hit_plane(t_ray *ray, t_plane *plane);
+
+//square.c
+void    			square_vertex(t_square *square);
+t_square    		*new_square(char **data);
+int 				is_inside(t_hit r, t_vector *v, int vertex);
+int					hit_square(t_ray *ray, t_square *square);
 
 #endif

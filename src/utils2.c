@@ -34,3 +34,13 @@ t_vector	at(t_ray ray)
 {
 	return (add(ray.origin, scale(ray.direction, ray.record.t)));
 }
+
+t_vector	cross(t_vector v, t_vector w)
+{
+	t_vector	u;
+
+	u.x = (v.y * w.z) - (v.z * w.y);
+	u.y = (v.z * w.x) - (v.x * w.z);
+	u.z = (v.x * w.y) - (v.y * w.x);
+	return (u);
+}

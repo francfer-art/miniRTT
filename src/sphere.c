@@ -28,9 +28,30 @@ void	sphere_roots(t_ray ray, t_sphere sphere, float *root)
 	a = length_square(ray.direction);
 	half_b = dot(oc, ray.direction);
 	c = length_square(oc) - pow(sphere.radius, 2);
+	sqrt_disc = sqrt(pow(half_b, 2) - a * c);
+	root[0] = (-half_b + sqrt_disc) / a;
+	root[1] = (-half_b - sqrt_disc) / a;
 }
 
 int	hit_sphere(t_ray *ray, t_sphere *sphere)
 {
+	unsigned int	i;
+	float			root[2];
 
+	i = 0;
+	sphere_roots(*ray, *sphere, root);
+	while (i < 2)
+	{
+		if (ray->record.t > root[i] && root[i] > 0)
+		{
+			ray->record.t = root[i];
+			ray->record.p = at(*ray);
+			ray->record.normal = norm(sub(ray->record.p, sphere->center));
+			ray->record.color = sphere->color;
+			ray->record.type = SPHERE;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
