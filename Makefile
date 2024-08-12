@@ -24,9 +24,8 @@ RESET				=	\033[0m
 
 
 SRC_FILES = $(SRC_DIR)/main.c\
-
-# SRC_FILES = $(SRC_DIR)/main.c
-# SRC_FILES = $(SRC_DIR)/hhp3.c
+			$(SRC_DIR)/cylinder.c\
+			$(SRC_DIR)/elements.c\
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 DEP = $(addsuffix .d, $(basename $(SRC_FILES)))

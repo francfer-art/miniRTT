@@ -100,7 +100,7 @@ typedef struct s_cylinder
 typedef struct s_triangle
 {
 	t_type			type;
-	t_point			vertex[3];
+	t_vector		vertex[3];
 	t_vector		normal;
 	t_color			color;
 }					t_triangle;
@@ -237,5 +237,20 @@ void    			square_vertex(t_square *square);
 t_square    		*new_square(char **data);
 int 				is_inside(t_hit r, t_vector *v, int vertex);
 int					hit_square(t_ray *ray, t_square *square);
+
+//cylinder.c
+t_cylinder			*new_cylinder(char **data);
+void				cylinder_roots(t_ray r, t_cylinder cylinder, float roots[2]);
+void				valid_hit(int *hit, float *dist, float *root, float *d, float *t);
+float				solve(t_ray r, t_cylinder cy, float *d, int hit[2]);
+int					hit_cylinder(t_ray *ray, t_cylinder *cylinder);
+
+//sphere.c
+t_sphere			*new_sphere(char **data);
+void				sphere_roots(t_ray ray, t_sphere sphere, float *root);
+int					hit_sphere(t_ray *ray, t_sphere *sphere);
+
+//triangle.c
+t_triangle			*new_triangle();
 
 #endif
