@@ -13,6 +13,7 @@
 
 # define EXTENSION ".rt"
 # define EPSILON 0.0001
+# define WINDOW_TITLE "miniRT"
 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
@@ -165,7 +166,6 @@ typedef struct s_server
 	t_world			*world;
 	unsigned int	width;
 	unsigned int	height;
-	bool			windowless;
 }					t_server;
 
 
@@ -252,5 +252,9 @@ int					hit_sphere(t_ray *ray, t_sphere *sphere);
 //triangle.c
 t_triangle			*new_triangle(char **data);
 int					hit_triangle(t_ray *ray, t_triangle *triangle);
+
+
+//server.c
+t_server			*new_server(t_world *world);
 
 #endif
