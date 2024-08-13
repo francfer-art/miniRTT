@@ -235,7 +235,6 @@ int					hit_plane(t_ray *ray, t_plane *plane);
 //square.c
 void    			square_vertex(t_square *square);
 t_square    		*new_square(char **data);
-int 				is_inside(t_hit r, t_vector *v, int vertex);
 int					hit_square(t_ray *ray, t_square *square);
 
 //cylinder.c
@@ -251,6 +250,7 @@ void				sphere_roots(t_ray ray, t_sphere sphere, float *root);
 int					hit_sphere(t_ray *ray, t_sphere *sphere);
 
 //triangle.c
-t_triangle			*new_triangle();
+t_triangle			*new_triangle(char **data);
+int					hit_triangle(t_ray *ray, t_triangle *triangle);
 
 #endif

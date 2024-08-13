@@ -36,7 +36,7 @@ t_square    *new_square(char **data)
 
 }
 
-int is_inside(t_hit r, t_vector *v, int vertex)
+static int is_inside(t_hit r, t_vector *v, int vertex)
 {
     int				i;
     int             in;
