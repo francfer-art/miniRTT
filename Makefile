@@ -23,7 +23,8 @@ WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
 
-SRC_FILES = $(SRC_DIR)/cylinder.c\
+SRC_FILES = $(SRC_DIR)/camera.c\
+			$(SRC_DIR)/cylinder.c\
 			$(SRC_DIR)/elements.c\
 			$(SRC_DIR)/error.c\
 			$(SRC_DIR)/free.c\
@@ -31,6 +32,7 @@ SRC_FILES = $(SRC_DIR)/cylinder.c\
 			$(SRC_DIR)/parser.c\
 			$(SRC_DIR)/plane.c\
 			$(SRC_DIR)/scene.c\
+			$(SRC_DIR)/server.c\
 			$(SRC_DIR)/sphere.c\
 			$(SRC_DIR)/square.c\
 			$(SRC_DIR)/triangle.c\

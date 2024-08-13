@@ -255,6 +255,8 @@ int					hit_triangle(t_ray *ray, t_triangle *triangle);
 
 
 //server.c
+t_image				*new_image(t_server *server);
 t_server			*new_server(t_world *world);
+void				my_put_pixel(t_server *server, int x, int y, t_color color);
 
 #endif
