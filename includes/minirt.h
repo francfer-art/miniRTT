@@ -17,6 +17,7 @@
 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
+# define ERROR_SERVER "ERROR : Can't create server 🔴"
 # define ERROR_COL_VAL "ERROR : Color value out range 🔴"
 # define ERROR_VECTOR "ERROR : Vector out range 🔴"
 # define ERROR_BRIGHTNESS "ERROR : Brightness out of range 🔴"

@@ -10,4 +10,9 @@ int	main(int args, char **argv)
 		message_exit(ERROR_ARG);
 	world = scene_init(argv[1]);
 	server = new_server(world);
+	if (!server)
+		message_exit(ERROR_SERVER);
+	render(server);
+	mlx_listen(server);
+	return (EXIT_SUCCESS);
 }
