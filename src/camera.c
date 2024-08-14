@@ -25,3 +25,13 @@ void    init_cameras(t_list *camset, int width, int height)
         camset = camset->next;
     }
 }
+
+void    change_camera(t_server *server, int step)
+{
+    t_list  **camset;
+
+    camset = &(server->world->cameras);
+    while(step-- && (*camset)->next)
+        *camset = (*camset)->next;
+    render(server);
+}

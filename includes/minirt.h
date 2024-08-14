@@ -259,4 +259,8 @@ t_image				*new_image(t_server *server);
 t_server			*new_server(t_world *world);
 void				my_put_pixel(t_server *server, int x, int y, t_color color);
 
+//camera.c
+void    			init_cameras(t_list *camset, int width, int height);
+void    			change_camera(t_server *server, int step);
+
 #endif
