@@ -35,3 +35,22 @@ void    change_camera(t_server *server, int step)
         *camset = (*camset)->next;
     render(server);
 }
+
+t_ray   generate_ray(t_camera *camera, float u, float v)
+{
+    t_ray       ray;
+    t_vector    horizontal;
+    t_vector    vertical;
+    t_vector    llc;
+
+    horizontal = camera->horizontal;
+    vertical = camera->vertical;
+    llc = camera->llc;
+    ray.origin = camera->origin;
+    ray.direction = add(scale(horizontal, u), scale(vertical, v));
+    ray.direction = add(ray.direction, llc);
+    ray.direction = norm(sub(ray.direction, ray.origin));
+    ray.record.object = NULL;
+    ray.record.color = 0x0;
+    return (ray);
+}
