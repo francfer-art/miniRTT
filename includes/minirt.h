@@ -10,6 +10,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <X11/X.h>
 
 # define EXTENSION ".rt"
 # define EPSILON 0.0001
@@ -264,5 +265,11 @@ void				my_put_pixel(t_server *server, int x, int y, t_color color);
 void    			init_cameras(t_list *camset, int width, int height);
 void    			change_camera(t_server *server, int step);
 t_ray   			generate_ray(t_camera *camera, float u, float v);
+
+//events.c
+int 				exit_hook(t_server *server);
+int					expose_hook(t_server *server);
+int 				key_press_hook(int keycode, t_server *server);
+void    			mlx_events(t_server *server);
 
 #endif

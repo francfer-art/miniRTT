@@ -33,7 +33,6 @@ void    change_camera(t_server *server, int step)
     camset = &(server->world->cameras);
     while(step-- && (*camset)->next)
         *camset = (*camset)->next;
-    render(server);
 }
 
 t_ray   generate_ray(t_camera *camera, float u, float v)
@@ -53,4 +52,11 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
     ray.record.object = NULL;
     ray.record.color = 0x0;
     return (ray);
+}
+
+void    move_camera(t_server *server, int code)
+{
+    //Moveré la camara en función del código
+    //Seleccionaré por el codigo y me moveré a la izquierda/derecha o arriba/abajo
+    //Tengo que tener claro que camara estoy usando y modificar esa
 }

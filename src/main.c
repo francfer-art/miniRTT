@@ -13,6 +13,6 @@ int	main(int args, char **argv)
 	if (!server)
 		message_exit(ERROR_SERVER);
 	render(server);
-	mlx_listen(server);
+	mlx_events(server);
 	return (EXIT_SUCCESS);
 }
