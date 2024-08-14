@@ -112,7 +112,7 @@ typedef struct s_camera
 	t_vector		direction;
 	t_vector		horizontal;
 	t_vector		vertical;
-	t_point			llc;
+	t_vector		llc;	
 	float			fov;
 }					t_camera;
 

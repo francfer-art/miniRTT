@@ -19,5 +19,9 @@ void    init_cameras(t_list *camset, int width, int height)
         v = cross(w, u);
         camera->horizontal = scale(u, vp[0]);
         camera->vertical = scale(v, vp[1]);
+        camera->llc = sub(camera->origin, scale(camera->horizontal, 0.5));
+        camera->llc = sub(camera->llc, scale(camera->vertical, 0.5));
+        camera->llc = sub(camera->llc, w);
+        camset = camset->next;
     }
 }
