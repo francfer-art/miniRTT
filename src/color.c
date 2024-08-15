@@ -57,3 +57,23 @@ t_color	cscale(int color, float a)
 	b = ccheck(color * (color >> 0xFF));
 	return ((r << 0x10) | (g << 0x08) | b);
 }
+
+// Función para calcular el color resultante de la intersección de la luz
+// con el objetoen de la escena
+// Esta función tendrá en cuenta el color del objeto y la intensidad y color
+// de la luz
+// Inicializamos el color en negro, obtenemos el color del objeto desde la
+// estructura record. Escalamos el color del objeto con la intensidad de la
+// luz y lo sumamos con el color que teníamos.
+// Finalmente multiplicamos ambos colores, el color del objeto y el color de la luz
+t_color	color_component(t_light *light, t_hit record)
+{
+	t_color	obj_color;
+	t_color	color;
+
+	color = 0x0;
+	obj_color = record.color;
+	color = cadd(color, cscale(obj_color, light_intensity(light, record)));
+	color = cproduct(color, light->color);
+	return(color);
+}
