@@ -11,6 +11,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <X11/X.h>
+# include <X11/keysym.h>
 
 # define EXTENSION ".rt"
 # define EPSILON 0.0001
@@ -271,5 +272,11 @@ int 				exit_hook(t_server *server);
 int					expose_hook(t_server *server);
 int 				key_press_hook(int keycode, t_server *server);
 void    			mlx_events(t_server *server);
+
+//color.c
+t_color				ccheck(int color);
+t_color 			cproduct(int color_a, int color_b);
+t_color 			cadd(int color_a, int color_b);
+t_color 			cscale(int color, float a);
 
 #endif

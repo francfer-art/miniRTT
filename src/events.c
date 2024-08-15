@@ -19,13 +19,13 @@ int key_press_hook(int keycode, t_server *server)
     // C para cambiar a la siguiente camara
     // Flechas para modificar las coordenadas de la camara
     //  para poder moverme por la escnea
-    if (keycode == 0Xff1b) //Escape
+    if (keycode == XK_Escape) //Escape
         exit_hook(server);
-    else if (keycode == 0x0043) //C para cambiar de camara
+    else if (keycode == XK_c) //C para cambiar de camara
         change_camera(server, 1);
-    else if (keycode == 0xff51 || keycode == 0xff53) //Arrows para mover la camara horizontalmente
+    else if (keycode == XK_Left || keycode == XK_Right) //Arrows para mover la camara horizontalmente
         move_camera(server, keycode);
-    else if (keycode == 0xff52 || keycode == 0xff54)//Arrows para mover la camra verticalmente
+    else if (keycode == XK_Up || keycode == XK_Down)//Arrows para mover la camra verticalmente
         move_camera(server, keycode);
     render(server);
     return (0);
