@@ -1,30 +1,46 @@
 #include <minirt.h>
 
+// Función que eleva al cuadrado un número
 double	sqr(double num)
 {
 	return (num * num);
 }
 
+// Función que dado un vector, eleva al cuadrado cada componente del vector y suma 
+// sus valores
 double	length_square(t_vector v)
 {
 	return (sqr(v.x) + sqr(v.y) + sqr(v.z));
 }
 
+// Función que dado un vector, realiza la raíz cuadrada de la suma de los
+// cuadrados de cada componente
 double	length(t_vector v)
 {
 	return (sqrt(length_square(v)));
 }
 
+// Función que realiza el producto punto de dos vectores
+// El resultado será la suma de la multiplicación de cada componente de cada
+// vector
 double	dot(t_vector v, t_vector w)
 {
 	return ((v.x * w.x) + (v.y * w.y) + (v.z * w.z));
 }
 
+// Función que suma dos vectores, devolverá el vector resultante de la suma de 
+// cada componente de cada vector. 
+// Vector1 = (a,b,c) Vector2=(d,e,f)
+// Vector3 = Vector1 + Vector2 = (a+d, b+e, c+f)
 t_vector	add(t_vector v, t_vector w)
 {
 	return (vector(v.x + w.x, v.y + w.y, v.z + w.z));
 }
 
+// Función que resta dos vectores, devolverá el vector resultante de la resta de 
+// cada componente de cada vector. 
+// Vector1 = (a,b,c) Vector2=(d,e,f)
+// Vector3 = Vector1 - Vector2 = (a-d, b-e, c-f)
 t_vector	sub(t_vector v, t_vector w)
 {
 	return (vector(v.x - w.x, v.y - w.y, v.z - w.z));

@@ -16,6 +16,8 @@ t_color ccheck(int color)
 
 // Hay que hacer la multiplicación relativa para que el resultado te quede
 // entre [0, 1] y luego multiplicarlo por 255(0xFF)
+// Cabe destacar que con la minilib no hay elemento alpha, es decir el color es RGB
+// y no RGBA como en la MLX42
 t_color	cproduct(int color_a, int color_b)
 {
 	int	r;
@@ -30,7 +32,7 @@ t_color	cproduct(int color_a, int color_b)
 
 // Función que suman dos colores y devuelve la suma
 // Básicamente aplicamos la operación suma y chequeamos que el valor sea correcto
-// Dicha función fuerza a que el valor sea correcto
+// Dicha función fuerza a que el valor sea correcto y esté dentro de los límites
 t_color	cadd(int color_a, int color_b)
 {
 	int	r;
