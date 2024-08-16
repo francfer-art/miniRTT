@@ -1,5 +1,14 @@
 #include <minirt.h>
 
+// Función que parsea y crea un cilindro desde un char **data
+// Este doble puntero viene de hacer un split de cada string del archivo.rt 
+// que nos pasan por argumento
+// Lo primero es verificar la cantidad de elementos del dataset, si no son 6 error
+// Reservo la cantidad de memoria necesaria para el objeto
+// Empiezo a rellenar la estructura
+// Cuando relleno el axis del cilindro, llamo a la función norm despues de llamar a 
+// ft_atov. De este modo consigo que el vector esté normalizado, independientemente
+// del vector que introduzcan en el archivo.rt
 t_cylinder	*new_cylinder(char **data)
 {
 	t_cylinder	*cylinder;
@@ -13,14 +22,18 @@ t_cylinder	*new_cylinder(char **data)
 	cylinder->color = ft_atoc(data[5]);
 	cylinder->height = ft_atof(data[4]);
 	cylinder->radius = ft_atof(data[3]) / 2;
-	cylinder->axis = ft_atov(data[2]);
+	cylinder->axis = norm(ft_atov(data[2]));
 	cylinder->center = ft_atov(data[1]);
-	if (out_range_vector(cylinder->axis))
-		message_exit(ERROR_VECTOR);
-	else
-		cylinder->axis = norm(cylinder->axis);
+	return (cylinder);
 }
 
+// Función para calcular las raíces de un cilindro, recibe como argumento el rayo, 
+// el cilindro y un array de dos posiciones donde irán las raíces en caso de existir
+// Proyectamos la dirección del rayo sobre el eje del cilindro
+// Poyección de la diferencia entre el origen del rayo y el centro del cilindro sobre
+// el eje del cilindro
+// Calculo de las ecuaciones cuadráticas
+// Resolución de las ecuaciones cuadráticas
 void	cylinder_roots(t_ray r, t_cylinder cylinder, float roots[2])
 {
 	float		a;
@@ -41,6 +54,9 @@ void	cylinder_roots(t_ray r, t_cylinder cylinder, float roots[2])
 	roots[1] = (-half_b - sqrt(pow(half_b, 2) - a * c)) / a;
 }
 
+// Función que se encarga de seleccionar los valores t y d que más adecuada de 
+// dos posibles intersecciones entre un rayo y un objeto. La función decide cuál
+// de las dos intersecciones es válida o más cercana.
 void	valid_hit(int *hit, float *dist, float *root, float *d, float *t)
 {
 	if (hit[0] && hit[1])

@@ -46,11 +46,18 @@ t_vector	sub(t_vector v, t_vector w)
 	return (vector(v.x - w.x, v.y - w.y, v.z - w.z));
 }
 
+// Función que calcula un punto en el espacio tridimennsional a lo largo de un rayo
+// Escalamos el vector de dirección del rayo por el parámetro t, de este modo,
+// conseguimos saber que tan lejos está el punto 
+// A la posición calculada le sumamos la posción del origen del rayo
 t_vector	at(t_ray ray)
 {
 	return (add(ray.origin, scale(ray.direction, ray.record.t)));
 }
 
+// Función para calcular el prodcuto vectorial de dos vectores, en resumen, calcula
+// el vector que es perpendicular a ambos vectores
+// El resultado se obtiene mediante determinantes y calculos matriciales
 t_vector	cross(t_vector v, t_vector w)
 {
 	t_vector	u;
