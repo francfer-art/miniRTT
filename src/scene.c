@@ -1,5 +1,11 @@
 #include <minirt.h>
 
+// Función que abre el archivo pasado de argumento
+// Por defecto inicializo el fd en -1
+// Busco el caracter '.', para comparar el puntero devuelto por la función
+// ft_strchr(), con el valor de EXTENSION
+// SI la el puntero devuelto existe y son iguales, abrimos el archivo
+// Guardamos el valor devuelto del open en fd y devolvemos fd
 int	open_scene_file(char *file)
 {
 	int		fd;
@@ -15,6 +21,12 @@ int	open_scene_file(char *file)
 	return (fd);
 }
 
+// Función para crear un puntero a la estructura world
+// No recibe argumentos, creamos el puntero que vamos a devolver, asignamos
+// el puntero devuelto por el malloc a ese puntero.
+// Si no existe el puntero devolvemos NULL, en otro caso, asignamos NULL
+// a todos los puntero de la estructura
+// Finalmente devolvemos el puntero a la estructura recién creada
 t_world	*new_world(void)
 {
 	t_world	*world;
@@ -30,6 +42,14 @@ t_world	*new_world(void)
 	return (world);
 }
 
+// Función 
+// Abrimos el archivo, si el archivo es negativo, mostramos un error y salimos
+// Creamos una nueva escena (world)
+// Parseamos el archivo y vamos rellenando la escena
+// Cerramos el archivo
+// Comprobamos si ha habido algún error parseando el mapa --> En ese caso liberamos
+// el mundo
+// Finalmente devolvemos la escena
 t_world	*scene_init(char *file)
 {
 	int		fd;
@@ -44,6 +64,9 @@ t_world	*scene_init(char *file)
 	if (close(fd) < 0)
 		message_exit (ERROR_CLOSE);
 	if (err)
+	{
+		message_exit(ERROR_PARSE);
 		free_world(world);
+	}
 	return (world);
 }

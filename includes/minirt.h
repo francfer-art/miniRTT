@@ -18,6 +18,7 @@
 # define WINDOW_TITLE "miniRT"
 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
+# define ERROR_PARSE "ERROR : While parsing 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
 # define ERROR_SERVER "ERROR : Can't create server 🔴"
 # define ERROR_COL_VAL "ERROR : Color value out range 🔴"
