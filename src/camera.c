@@ -1,5 +1,17 @@
 #include <minirt.h>
 
+// Función para inicializar las cámras de una lista de cámaras.
+// vp es un array de floats que almacenan los valores de proyección de la ventana
+// en las  direcciones horizontal y vertical. Los vectores u, v y w representan
+// los ejes de la cámara.
+// Calculamos el ancho de la proyección usando la tangente del fov dividido por 2 
+// Calculamos la altura de la proyección usando el ancho y manteniendo el mismo ratio
+// Normalizamos el vector de dirección de la cámara y lo asignamos a w
+// Calculamos el vector u, que es perpendicular a w y al eje horizontal
+// Calculamos v como vector perpendicular a u y w
+// Escalamos los vectores v y u a los valores de la proyección
+// Finalmente calculamos la esquina inferior izquierda y pasamos a la siguiente
+// para seguir iterando
 void    init_cameras(t_list *camset, int width, int height)
 {
     float       vp[2];
