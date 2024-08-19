@@ -1,5 +1,14 @@
 #include <minirt.h>
 
+// Función que crea una nueva imagen y devuelve un puntero a dicha imagen
+// Recibe un puntero a la estructura t_server, para tener los argumentos necesarios
+// requeridos por mlx_new_image o mlx_get_data_addr
+// Alojamos dinámicamente la memoria necesaria para el puntero de la imagen
+// Asignamos el campo imagen a la estuctura con la función mlx_new_image
+// Asignamos el campo data a la estructura con la función mlx_get_data_addr
+// Devolvemos el puntero a la estructura que acabamos de alojar.
+// Si alguna de las llamadas a las funciones de la mlx falla, liberamos el puntero
+// y devolvemos NULL
 t_image	*new_image(t_server *server)
 {
 	t_image	*img;
@@ -9,10 +18,10 @@ t_image	*new_image(t_server *server)
 		return (NULL);
 	img->image = mlx_new_image(server->mlx, server->width, server->height);
 	if (!img)
-		return (NULL);
+		return (free(img), NULL);
 	img->data = mlx_get_data_addr(server->mlx, &(server->image->bpp), &(server->image->size_line), &(server->image->endian));
 	if (!img->data)
-		return (NULL);
+		return (free(img), NULL);
 	return (img);
 
 }
@@ -46,6 +55,15 @@ t_server	*new_server(t_world *world)
 	return (server);
 }
 
+// Función que coloca un pixel de un color específico en una posición (x,y)
+// Lo primero es calcular la cantidad de bytes por pixel, para eso dividemos bpp
+// entre 8 para pasar de bits por pixel a bytes por pixel
+// Ahora calculamos la dirección de memoria donde se colocará el pixel
+// Calculamos el desplazamiento en bytes para llegar a la posición x e y, sumamos
+// estos desplazamientos con dirección donde empieza el puntero de la imagen
+// Covertimos el color a un valor hexadecimal 
+// Ft_memcpy escribe opp bytes desde &hex_color hacia color_add, esto escribe el 
+// color en la memoria
 void	my_put_pixel(t_server *server, int x, int y, t_color color)
 {
 	char	*color_add;
