@@ -38,6 +38,11 @@ void    init_cameras(t_list *camset, int width, int height)
     }
 }
 
+// Función para cambiar de cámara, recibe como argumento el server que contiene
+// todos los datos y un entero que indica por cuántas cámaras vamos a iterar
+// Siempre se va a renderizar desde la primera cámara, por tanto, el objetivo es
+// actualizar la lista de modo cuando se renderice el server, la cámara haya 
+// cambiado
 void    change_camera(t_server *server, int step)
 {
     t_list  **camset;
@@ -47,6 +52,15 @@ void    change_camera(t_server *server, int step)
         *camset = (*camset)->next;
 }
 
+// Función que me genera un rayo a partir de una cámara hacia un punto específico
+// de la pantalla. Lo primero que hacemos es declarar el rayo que vamos a devolver,
+// así como variables propias del rayo
+// Asignamos los valores iniciales y procedemos a  calcular la dirección del rayo
+// Escalamos el vector horizontal y vertical por u y v para determinar el punto 
+// correspondiente de u,v en pantalla
+// Se suma este vector escalado a la esquina inferior izquierda (llc), finalmente
+// restamos la dirección menos el origen, para obtener ese vector desde el origen
+// Por último devolvemos el rayo
 t_ray   generate_ray(t_camera *camera, float u, float v)
 {
     t_ray       ray;
@@ -66,9 +80,14 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
     return (ray);
 }
 
+// La idea de esta función es que podamos movernos con la cámara seleccionada
+// por la escena. Recibe como argumento el server , que contiene toda la información
+// y un código. Dicho código nos indicará en qué dirección nos vamos a mover.
+// Por ejemplo, si el código es XK_Left, la cámara se moverá hacia la izquierda
+// Tengo en mente que el movimiento por la escena sea fluido, lo mismo tengo que
+// recurrir a un render más básico mientras el usuario se mueve, y aplicar el
+// general con un botón cuando el usuario termine de desplazarse.
 void    move_camera(t_server *server, int code)
 {
-    //Moveré la camara en función del código
-    //Seleccionaré por el codigo y me moveré a la izquierda/derecha o arriba/abajo
-    //Tengo que tener claro que camara estoy usando y modificar esa
+    
 }
