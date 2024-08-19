@@ -23,9 +23,18 @@ t_image	*new_image(t_server *server)
 	if (!img->data)
 		return (free(img), NULL);
 	return (img);
-
 }
 
+// Función que crea e inicializa un puntero a una estructura t_server
+// Lo primero que hacemos es alojar dinámicamente el puntero a la estructura
+// Inicializamos la conexión a la mlx con mlx_init()
+// Obtenemos el tamaño de la pantalla y lo guardamos en width y height
+// Comprobamos la resolución introducida, si la resolución deseada es mayor que la de la pantalla
+// ajustamos dicha resolución que no exceda los límites de la pantalla
+// Se crea una nueva ventana con las dimensiones ajustadas y un título definido
+// Inicializamos los campos del servidor, inicializamos las cámaras, y creamos la imagen del servidor
+// Finalmente devolvemos el servidor
+// PD : Si alguna llamada falla, liberamos el server, el world y devolvemos NULL
 t_server	*new_server(t_world *world)
 {
 	t_server	*server;
