@@ -1,5 +1,9 @@
 #include <minirt.h>
 
+// Función que crea, rellena y devuelve un puntero a la estructura triángulo, desde un char **.
+// Lo primero que hacemos es comprobar su longitud, si es distinta de 5 devolvemos NULL. Luego
+// alojamos dinámicamente la memoria necesaria para almacenar el puntero a la estructura.
+// Finalmente empezamos a rellenar los campos de la estructura y devolvemos el puntero.
 t_triangle	*new_triangle(char **data)
 {
 	t_triangle	*triangle;
@@ -20,6 +24,18 @@ t_triangle	*new_triangle(char **data)
 	return (triangle);
 }
 
+// Función que chequea si un rayo intersecciona con un triángulo. Recibe un rayo, un triángulo y
+// devuelve 1 si hay intersección y 0 si no la hay.
+// El algoritmo funciona de la siguiente manera:
+// La función primero configura un plano que corresponde al triángulo utilizando el primer
+// vértice del triángulo como un punto en el plano y su normal como la normal del plano.
+// La función hit_plane verifica si el rayo intersecta este plano. Si lo hace, la función
+// luego verifica si el punto de intersección se encuentra dentro del triángulo utilizando
+// la función is_inside.
+// Si el punto está dentro del triángulo, se actualiza el registro del rayo con la información
+// de la intersección, y la función retorna 1.
+// Si el punto está fuera del triángulo, o si el rayo no intersecta el plano en absoluto,
+// la función retorna 0.
 int	hit_triangle(t_ray *ray, t_triangle *triangle)
 {
 	int		hit;
