@@ -1,10 +1,39 @@
 #include <minirt.h>
 
 // Devolverá 1 si hay alguna intersección con algún objeto de la escena,
-// y devolverá 0 si no hay intersección
+// y devolverá 0 si no hay intersección. Recibe como argumento un rayo y una lista
+// enlazada donde cada nodo es una figura
+// Lo primero que hacemos es inicializar los valores de hit en 0 y la r en INFINITO
+// para asegurarnos de que la intersección encontrada sea la más cercana.
+// Iteramos mientras exista nuestra lista enlazada. En cada iteración obtenemos el
+// tipo de la figura y llamamos a la función de intersección correspondiente
+// Cuando la función acabe se devuelve 1 o 0, lo importante es que mientras vamos 
+// iterando la estructura rayo se actualiza si hay intersección y si la distancia
+// a dicha intersección es más cercana de la que había antes. Por eso es importante
+// inicializar la distancia t a INFINITO al principio del bucle.
 int intersec(t_ray *ray, t_list *figures)
 {
+    int     hit;
+    t_type  type;
 
+    hit = 0;
+    ray->record.t = INFINITY;
+    while (figures)
+    {
+        type = *((t_type *)figures->content);
+        if (type == CYLINDER)
+            hit |= hit_cylinder(ray, (t_cylinder *)figures->content);
+        else if (type == PLANE)
+            hit |= hit_plane(ray, (t_plane *)figures->content);
+        else if (type == SPHERE)
+            hit |= hit_sphere(ray, (t_sphere *)figures->content);
+        else if (type == SQUARE)
+            hit |= hit_square(ray, (t_square *)figures->content);
+        else if (type == TRIANGLE)
+            hit |= hit_triangle(ray, (t_triangle *)figures->content);
+        figures = figures->next;
+    }
+    return (hit);
 }
 
 // El raytracing se encarga de determinar la intersección del rayo
