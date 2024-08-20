@@ -288,6 +288,8 @@ t_color 			cproduct(int color_a, int color_b);
 t_color 			cadd(int color_a, int color_b);
 t_color 			cscale(int color, float a);
 int					in_shadow(t_light light, t_list *figures, t_hit record);
+t_color				color_component(t_light *light, t_hit record);
+float				light_intensity(t_light light, t_hit record);
 
 //render.c
 int 				intersec(t_ray *ray, t_list *figures);

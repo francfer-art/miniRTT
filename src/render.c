@@ -51,13 +51,13 @@ t_color raytracer(t_ray *ray, t_world *world)
     if (!intersec(ray, world->figures))
         return (0x0);
     light = world->lights;
-    ambient = cscale();
-    color = cproduct();
+    ambient = cscale((*world->ambient).color, (*world->ambient).brightness);
+    color = cproduct(ray->record.color, ambient);
     while(light)
     {
         current_light = *((t_light *)light->content);
-        vis = !in_shadow();
-        color = cadd();
+        vis = !in_shadow(current_light, world->figures, ray->record);
+        color = cadd(color, vis * color_component(current_light, ray->record));
         light = light->next;
     }
     return (color);
