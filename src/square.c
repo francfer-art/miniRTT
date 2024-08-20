@@ -51,14 +51,26 @@ t_square    *new_square(char **data)
 
 }
 
-static int is_inside(t_hit r, t_vector *v, int vertex)
+// Función que comprueba si una intersección está dentro de un polígono definido
+// por un conjunto de vértices.
+// El algoritmo funciona de la siguiente manera:
+// Para cada borde del polígono, definido por vértices consecutivos `v[i]` y `v[i + 1]`, la 
+// función calcula el producto cruzado entre el vector que representa el borde y el vector 
+// que va desde uno de los vértices al punto `r.p`.
+// El producto punto de este producto cruzado con el vector normal `r.normal` se calcula y 
+// se almacena en el arreglo `det[]`.
+// Si dos valores consecutivos en `det[]` tienen signos opuestos, significa que el punto `r.p` 
+// está fuera del polígono, y la función retorna `0`.
+// Si todos los valores en `det[]` son consistentes (sin cambios de signo), el punto está 
+// dentro del polígono, y la función retorna `1`.
+int is_inside(t_hit r, t_vector *v, int vertex)
 {
     int				i;
     int             in;
     float           det[vertex];
     t_vector        det_cross;
 
-    in = true;
+    in = 1;
     i = 0;
     while (i < vertex)
     {
@@ -74,6 +86,7 @@ static int is_inside(t_hit r, t_vector *v, int vertex)
 		}
 		i++;
     }
+    return (in);
 }
 
 // Función que devuelve 1 si un rayo intersecciona con un cuadrado. Dicha función devuelve 0 si no hay

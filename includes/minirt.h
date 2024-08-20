@@ -240,6 +240,7 @@ int					hit_plane(t_ray *ray, t_plane *plane);
 void    			square_vertex(t_square *square);
 t_square    		*new_square(char **data);
 int					hit_square(t_ray *ray, t_square *square);
+int					is_inside(t_hit r, t_vector *v, int vertex);
 
 //cylinder.c
 t_cylinder			*new_cylinder(char **data);
