@@ -1,5 +1,16 @@
 #include <minirt.h>
 
+// función que calcula los vértices de un cuadrado. Recibe como argumento un 
+// puntero a un cuadrado, la función rellenará el campo vértice del cuadrado
+// dado como argumento.
+// Las variables basis representan las bases del cuadrado
+// El vector basis_i se calcula como el producto cruzado del vector normal, 
+// con otro vector obtenido permutando las coordenadas del vector normal --> De
+// esa forma se obtiene una de las direcciones para definir el plano del cuadrado
+// Calculamos el basis_j como el producto cruzado del vector normal y el vector
+// basis_i. Escalamos ambos vectores por la mitad del lado del cuadrado, porque
+// cada vértice esta a la mitad de distancia desde el centro del cuadrado
+// Finalmente calculamos los vértices del cuadrado
 void    square_vertex(t_square *square)
 {
     t_vector    basis_i;
@@ -15,6 +26,12 @@ void    square_vertex(t_square *square)
     square->vertex[3] = add(sub(square->center, basis_i), basis_j);
 }
 
+// Función para crear, rellenar y devolver un puntero a la estructura t_square. Recibe un char **
+// del que extraerá la información. Lo primero es verificar la longitud de data, si es distinta de 5
+// devolvemos NULL. Alojamos dinámicamente la memoria para el puntero. Rellenamos la estructura con
+// los datos del char **, incluídos los vértices y devolvemos el cuadrado.
+// Como siempre cuando obtenemos el vector normal, le aplicamos la función norm(), para normalizarlo,
+// asegurándonos de que su módulo sea 1.
 t_square    *new_square(char **data)
 {
     t_square    *square;
@@ -26,12 +43,10 @@ t_square    *new_square(char **data)
         return (NULL);
     square->type = SQUARE;
     square->center = ft_atov(data[1]);
-    square->normal = ft_atov(data[2]);
+    square->normal = norm(ft_atov(data[2]));
     square->side = ft_atof(data[3]);
     square->color = ft_atoc(data[4]);
     square_vertex(square);
-    if (out_range_vector(square->normal))
-        message_exit(ERROR_VECTOR);
     return(square);
 
 }
@@ -61,6 +76,17 @@ static int is_inside(t_hit r, t_vector *v, int vertex)
     }
 }
 
+// Función que devuelve 1 si un rayo intersecciona con un cuadrado. Dicha función devuelve 0 si no hay
+// intersección. Básicamente crearemos un plano (plane) que coincidirá con el cuadrado, para luego
+// determinar si el rayo intersecciona con dicho plano.
+// La variable hit es la variable que va a ser devuelta, la iniciamos en 0 y si 
+// se produce la intersección la colocamos en 1.
+// Colocamos el punto del plano, el vector normal y el color con los parámetros del
+// cuadrado, hacemos lo mismo con el rayo.
+// Si se produce una intersección y está dentro de los límites del cuadrado, nos 
+// quedamos con el rayo, guardamos el objeto con el que ha interseccionado y 
+// colocamos hit en 1.
+// Finalmente devolvemos hit.
 int	hit_square(t_ray *ray, t_square *square)
 {
 	int		hit;
