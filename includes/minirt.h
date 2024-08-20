@@ -13,10 +13,24 @@
 # include <X11/X.h>
 # include <X11/keysym.h>
 
+// Extension archivo
 # define EXTENSION ".rt"
-# define EPSILON 0.0001
+
+// Nombre ventana
 # define WINDOW_TITLE "miniRT"
 
+// Variable para evitar errores
+# define EPSILON 0.0001
+
+//MATERIALES
+# define ALBEDO 1000
+# define ALBEDO_POLISHED_METAL 900
+# define ALBEDO_GLASS 700
+# define ALBEDO_PLASTIC 500
+# define ALBEDO_MATTE 300
+# define ALBEDO_NONE 0
+
+// Definición de errores 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_PARSE "ERROR : While parsing 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
@@ -173,7 +187,6 @@ typedef struct s_server
 }					t_server;
 
 
-
 //error.c
 void				message_exit(char *msg);
 void				full_message_exit(char *msg, t_world *world, t_server *server);
@@ -183,14 +196,12 @@ t_world				*scene_init(char *file);
 int					open_scene_file(char *file);
 t_world				*new_world(void);
 
-
 //utils.c
 int					double_pointer_len(char **data);
 int					out_range_vector(t_vector v);
 float				degree_2_rad(float degree);
 float				ft_atof(char *str);
 t_vector			ft_atov(char *str);
-
 
 //utils1.c
 void				free_double(char **s);
@@ -215,22 +226,18 @@ void				figures_parser(char **line, t_world *world);
 void				scene_parser(char **line, t_world *world);
 int					parser_file(int fd, t_world *world);
 
-
 //elements.c
 t_camera			*new_camera(char **data);
 t_light				*new_light(char **data);
 t_light				*new_ambient_light(char **data);
 
-
 //vector.c
 t_vector			vector(double x, double y, double z);
 t_point				point(double x, double y, double z);
 
-
 //free.c
 void				free_world(t_world *world);
 void				free_server(t_server *server);
-
 
 //plane.c
 t_plane				*new_plane(char **data);
@@ -257,7 +264,6 @@ int					hit_sphere(t_ray *ray, t_sphere *sphere);
 //triangle.c
 t_triangle			*new_triangle(char **data);
 int					hit_triangle(t_ray *ray, t_triangle *triangle);
-
 
 //server.c
 t_image				*new_image(t_server *server);
