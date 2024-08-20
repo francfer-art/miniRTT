@@ -100,3 +100,30 @@ int	in_shadow(t_light light, t_list *figures, t_hit record)
 	shadow.record.object = record.object;
 	return (intersec(&shadow, figures));
 }
+
+// Función que calcula la intensidad de la luz que incide sobre un punto específico
+// de una superficie.
+// Lo primero que hacemos es calcular la dirección de la luz desde el punto de la 
+// superficie p hacia la posición de la luz.
+// Se calcula la distancia al cuadrado entre el origen de la luz y la superficie,
+// esto reprensenta como varía la intensidad conforme la distancia.
+// Calculamos gain, definido como la cantidad de luz que incide sobre la el punto
+// de la superficie. Si el valor es positivo la ganancia será positiva, si es
+// negativa o cero la ganancia será nula --> Devolvemos 0 en este caso
+// Calculamos la intensidad de la luz, que depende del brillo de la propia luz,
+// la ganancia que indica cuanto está la luz alineada con la normal, ALBEDO (coeficiente
+// que representa la reflectividad de la superficie) y (4.0 * M_PI * r2), que 
+// representa la atenuación de la luz
+float	light_intensity(t_light light, t_hit record)
+{
+	t_vector	light_dir;
+	float		gain;
+	float		r2;
+
+	light_dir = sub(light.position, record.p);
+	r2 = length_square(light_dir);
+	gain = dot(norm(light_dir), record.normal);
+	if (gain <= 0)
+		return (0);
+	return ((light.brightness * gain * ALBEDO) / (4.0 * M_PI * r2));
+}
