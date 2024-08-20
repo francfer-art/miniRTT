@@ -14,3 +14,13 @@ void	message_exit(char *msg)
 	}
 	exit(EXIT_FAILURE);
 }
+
+// Esta función es la que limpia todo y muestra un error, en caso de que queramos salir de 
+// alguna función con un mensaje de error definido en minirt.h, podemos llamar a esta
+// función
+void	full_message_exit(char *msg, t_world *world, t_server *server)
+{
+	free_world(world);
+	free_server(server);
+	message_exit(msg);
+}

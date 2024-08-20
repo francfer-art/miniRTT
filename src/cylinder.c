@@ -80,7 +80,7 @@ void	valid_hit(int *hit, float *dist, float *root, float *d, float *t)
 		*d = dist[0];
 		*t = root[0];		
 	}
-	else if (hit[hit[1]])
+	else if (hit[1])
 	{
 		*d = dist[1];
 		*t = root[1];

@@ -176,7 +176,7 @@ typedef struct s_server
 
 //error.c
 void				message_exit(char *msg);
-
+void				full_message_exit(char *msg, t_world *world, t_server *server);
 
 //scene.c
 t_world				*scene_init(char *file);
@@ -268,6 +268,7 @@ void				my_put_pixel(t_server *server, int x, int y, t_color color);
 void    			init_cameras(t_list *camset, int width, int height);
 void    			change_camera(t_server *server, int step);
 t_ray   			generate_ray(t_camera *camera, float u, float v);
+void				move_camera(t_server *server, int code);
 
 //events.c
 int 				exit_hook(t_server *server);
