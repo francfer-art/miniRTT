@@ -79,3 +79,24 @@ t_color	color_component(t_light *light, t_hit record)
 	color = cproduct(color, light->color);
 	return(color);
 }
+
+// Función que determina si un punto de una superficia está en sombra o no con respecto a una
+// luz situada en unas coordenadas.
+// Inicializamos el rayo de sombra --> Colocamos dicho rayo ligeramente desplazado del punto de
+// intersección para evitar errores de autointersección, con la dirección normal.
+// Dirección del rayo de sombra --> Esta dirección se calcula como el vector normalizado de la 
+// resta del origen de la luz y el origen del rayo de sombra
+// Verificación de las intersecciones --> Llamamos a la función intersec, que calculará si hay
+// objetos que produzcan intersecciones con el rayo sombra.
+// Devolvemos 1 si el rayo en su camino hacia la luz choca con un objeto, lo que implica que 
+// ese punto estará en sombra. Devolveremos 0 si el rayo no intersecciona con nada antes de llegar
+// a la luz.
+int	in_shadow(t_light light, t_list *figures, t_hit record)
+{
+	t_ray	shadow;
+
+	shadow.origin = add(record.p, scale(record.normal EPSILON));
+	shadow.direction = norm(sub(light.position, shadow.origin));
+	shadow.record.object = record.object;
+	return (intersec(&shadow, figures));
+}

@@ -39,7 +39,7 @@ int intersec(t_ray *ray, t_list *figures)
 // El raytracing se encarga de determinar la intersección del rayo
 // con los objetos en la escena y calcular el color resultante basado
 // en las propiedades del material, las luces, y otras consideraciones.
-//Si no hay intersección con ningun objeto devuelvo color negro
+// Si no hay intersección con ningun objeto devuelvo color negro
 t_color raytracer(t_ray *ray, t_world *world)
 {
     int     vis;
