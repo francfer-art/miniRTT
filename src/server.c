@@ -19,7 +19,7 @@ t_image	*new_image(t_server *server)
 	img->image = mlx_new_image(server->mlx, server->width, server->height);
 	if (!img)
 		return (free(img), NULL);
-	img->data = mlx_get_data_addr(img->image, &(image->bpp), &(image->size_line), &(image->endian));
+	img->data = mlx_get_data_addr(img->image, &(img->bpp), &(img->size_line), &(img->endian));
 	if (!img->data)
 		return (free(img), NULL);
 	return (img);
