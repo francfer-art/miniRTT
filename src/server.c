@@ -52,15 +52,15 @@ t_server	*new_server(t_world *world)
 		world->resolution[0] = width;
 	if (world->resolution[1] > height)
 		world->resolution[1] = height;
-	server->window = mlx_new_window(server->mlx, server->width, server->height, WINDOW_TITLE);
-	if (!server->window)
-		return (NULL);
 	server->world = world;
 	server->width = world->resolution[0];
 	server->height = world->resolution[1];
 	init_cameras(world->cameras, server->width, server->height);
 	server->image = new_image(server);
 	if (!server->image)
+		return (NULL);
+	server->window = mlx_new_window(server->mlx, server->width, server->height, WINDOW_TITLE);
+	if (!server->window)
 		return (NULL);
 	return (server);
 }
