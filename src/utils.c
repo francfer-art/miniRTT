@@ -5,9 +5,9 @@ int	double_pointer_len(char **data)
 {
 	int	i;
 
-	i = -1;
-	while (data[++i])
-		;
+	i = 0;
+	while (data[i])
+		i++;
 	return (i);
 }
 

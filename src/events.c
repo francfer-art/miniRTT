@@ -28,10 +28,12 @@ int key_press_hook(int keycode, t_server *server)
         exit_hook(server);
     else if (keycode == XK_c)
         change_camera(server, 1);
-    else if (keycode == XK_Left || keycode == XK_Right)
+   /*  else if (keycode == XK_Left || keycode == XK_Right)
         move_camera(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)
-        move_camera(server, keycode);
+        move_camera(server, keycode); */
+    else
+        ;
     render(server);
     return (0);
 }
@@ -44,13 +46,13 @@ int key_press_hook(int keycode, t_server *server)
 // cuando la ventana se minimiza, expose_hook() se encargará de redibujar la 
 // el contenido de la ventana
 // Inicio el bucle de eventos
-void    mlx_events(t_server *server)
+int mlx_events(t_server *server)
 {
     void    *window;
 
     window = server->window;
-    mlx_hook(window, KeyPressMask, key_press_hook, server);
-    mlx_hook(window, DestroyNotify, exit_hook, server);
+    mlx_hook(window, KeyPress, KeyPressMask, key_press_hook, server);
+    mlx_hook(window, DestroyNotify, StructureNotifyMask, exit_hook, server);
     mlx_expose_hook(window, expose_hook, server);
     mlx_loop(server->mlx);
     return (0);

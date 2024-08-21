@@ -11,7 +11,6 @@ void	free_double(char **s)
 		free(s[i++]);
 	}
 	free(s);
-	return (NULL);
 }
 
 // Función para saber si un número es inválido, devuelve 1 si es inválido y 0 si es 
@@ -23,20 +22,22 @@ int	invalid_number(char *str)
 
 	i = -1;
 	inv = 0;
+	str = ft_strtrim(str, "\n");
 	while (str[++i])
 	{
 		if (i == 0)
-		{
-			if (!ft_isdigit(str[i]) && str[i] != '+' && str[i] != '-')
-				inv = 1;
-		}
+			inv |= (!ft_isdigit(str[i]) & (str[i] != '+') & (str[i] != '-'));
 		else
-		{
-			if (!ft_isdigit(str[i]) && str[i] != '.')
-				inv = 1;
-		}
+			inv |= (!ft_isdigit(str[i]) & (str[i] != '.'));
 	}
 	return (inv);
+}
+
+void	show_split_content(char **data)
+{
+	int i = 0;
+	while(data[i])
+		ft_printf("%s\n", data[i++]);
 }
 
 // Función para transformar un string en un t_color
@@ -50,7 +51,7 @@ t_color	ft_atoc(char *str)
 
 	i = 0;
 	color = 0x0;
-	split = ft_split(str, '.');
+	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
 		message_exit(ERROR_COLOR);
 	else

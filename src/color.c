@@ -26,7 +26,7 @@ t_color	cproduct(int color_a, int color_b)
 
 	r = (((float)(color_a >> 0x10) / 0xFF) * ((float)(color_b >> 0x10) / 0xFF)) * 0xFF;
 	g = (((float)((color_a >> 0x08) & 0xFF) / 0xFF) * ((float)((color_b >> 0x08) & 0xFF) / 0xFF)) * 0xFF;
-	b = (((float)(u & 0xFF) / 0xFF) * ((float)(v & 0xFF) / 0xFF)) * 0xFF;
+	b = (((float)(color_a & 0xFF) / 0xFF) * ((float)(color_b & 0xFF) / 0xFF)) * 0xFF;
     return ((r << 0x10) | (g << 0x08) | b);
 }
 
@@ -41,7 +41,7 @@ t_color	cadd(int color_a, int color_b)
 
 	r = ccheck((color_a >> 0x10) + (color_b >> 0x10));
 	g = ccheck((color_a >> 0x08 & 0xFF) + (color_b >> 0x08 & 0xFF));
-	b = ccheck((color_a >> 0xFF) + (color_b >> 0xFF));
+	b = ccheck((color_a & 0xFF) + (color_b & 0xFF));
 	return ((r << 0x10) | (g << 0x08) | b);
 }
 
@@ -54,9 +54,9 @@ t_color	cscale(int color, float a)
 	int g;
 	int b;
 
-	r = ccheck(color * (color >> 0x10));
-	g = ccheck(color * ((color >> 0x08) & 0xFF));
-	b = ccheck(color * (color >> 0xFF));
+	r = ccheck(a * (color >> 0x10));
+	g = ccheck(a * ((color >> 0x08) & 0xFF));
+	b = ccheck(a * (color & 0xFF));
 	return ((r << 0x10) | (g << 0x08) | b);
 }
 
@@ -68,7 +68,7 @@ t_color	cscale(int color, float a)
 // estructura record. Escalamos el color del objeto con la intensidad de la
 // luz y lo sumamos con el color que teníamos.
 // Finalmente multiplicamos ambos colores, el color del objeto y el color de la luz
-t_color	color_component(t_light *light, t_hit record)
+t_color	color_component(t_light light, t_hit record)
 {
 	t_color	obj_color;
 	t_color	color;
@@ -76,7 +76,7 @@ t_color	color_component(t_light *light, t_hit record)
 	color = 0x0;
 	obj_color = record.color;
 	color = cadd(color, cscale(obj_color, light_intensity(light, record)));
-	color = cproduct(color, light->color);
+	color = cproduct(color, light.color);
 	return(color);
 }
 
@@ -95,7 +95,7 @@ int	in_shadow(t_light light, t_list *figures, t_hit record)
 {
 	t_ray	shadow;
 
-	shadow.origin = add(record.p, scale(record.normal EPSILON));
+	shadow.origin = add(record.p, scale(record.normal, EPSILON));
 	shadow.direction = norm(sub(light.position, shadow.origin));
 	shadow.record.object = record.object;
 	return (intersec(&shadow, figures));

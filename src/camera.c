@@ -87,7 +87,7 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
 // Tengo en mente que el movimiento por la escena sea fluido, lo mismo tengo que
 // recurrir a un render más básico mientras el usuario se mueve, y aplicar el
 // general con un botón cuando el usuario termine de desplazarse.
-void    move_camera(t_server *server, int code)
+/* void    move_camera(t_server *server, int code)
 {
     
-}
+} */

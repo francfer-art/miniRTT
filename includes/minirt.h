@@ -280,7 +280,7 @@ void				move_camera(t_server *server, int code);
 int 				exit_hook(t_server *server);
 int					expose_hook(t_server *server);
 int 				key_press_hook(int keycode, t_server *server);
-void    			mlx_events(t_server *server);
+int    				mlx_events(t_server *server);
 
 //color.c
 t_color				ccheck(int color);
@@ -288,7 +288,7 @@ t_color 			cproduct(int color_a, int color_b);
 t_color 			cadd(int color_a, int color_b);
 t_color 			cscale(int color, float a);
 int					in_shadow(t_light light, t_list *figures, t_hit record);
-t_color				color_component(t_light *light, t_hit record);
+t_color				color_component(t_light light, t_hit record);
 float				light_intensity(t_light light, t_hit record);
 
 //render.c

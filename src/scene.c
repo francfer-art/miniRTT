@@ -31,7 +31,7 @@ t_world	*new_world(void)
 {
 	t_world	*world;
 
-	world = malloc(sizeof(t_world *));
+	world = malloc(sizeof(*world));
 	if (!world)
 		return (NULL);
 	world->resolution = NULL;
@@ -65,8 +65,8 @@ t_world	*scene_init(char *file)
 		message_exit (ERROR_CLOSE);
 	if (err)
 	{
-		message_exit(ERROR_PARSE);
 		free_world(world);
+		message_exit(ERROR_PARSE);
 	}
 	return (world);
 }

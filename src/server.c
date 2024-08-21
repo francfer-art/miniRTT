@@ -45,6 +45,7 @@ t_server	*new_server(t_world *world)
 	if (!server)
 		return (NULL);
 	server->mlx = mlx_init();
+	if (!(server->mlx))
 		return (NULL);
 	mlx_get_screen_size(server->mlx, &width, &height);
 	if (world->resolution[0] > width)
@@ -57,10 +58,10 @@ t_server	*new_server(t_world *world)
 	server->world = world;
 	server->width = world->resolution[0];
 	server->height = world->resolution[1];
-	init_cameras(world, server->width, server->height);
+	init_cameras(world->cameras, server->width, server->height);
 	server->image = new_image(server);
 	if (!server->image)
-		retunr (NULL);
+		return (NULL);
 	return (server);
 }
 
