@@ -90,26 +90,32 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
 void    move_camera(t_server *server, int code)
 {
     t_camera    *camera;
+    t_vector    right;
+    t_vector    up;
+    float       move_speed;
 
     camera = server->world->cameras->content;
+    right = cross(camera->direction, vector(0, 1, 0));
+    up = vector(0, 1 ,0);
+    move_speed = 0.1
     if (code == XK_Left)
     {
         ft_printf("Me muevo a la izquierda!\n");
-        camera->origin = add(camera->origin, vector(0.1, 0, 0.1));
+        camera->origin = sub(camera->origin, scale(right, move_speed));
     }
     else if (code == XK_Right)
     {
         ft_printf("Me muevo a la derecha!\n");;
-
+        camera->origin = add(camera->origin, scale(right, move_speed));
     }
     else if (code == XK_Up)
     {
         ft_printf("Me muevo arriba!\n");;
-        camera->origin = add(camera->origin, vector(0, -0.1, 0));
+        camera->origin = add(camera->origin, scale(camera->direction, move_speed))
     }
     else if (code == XK_Down)
     {
         ft_printf("Me muevo abajo!\n");;
-        camera->origin = add(camera->origin, vector(0, 0.1, 0));
+        camera->origin = sub(camera->origin, scale(camera->direction, move_speed));
     }
 }
