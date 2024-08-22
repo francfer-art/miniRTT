@@ -25,7 +25,7 @@ void	free_server(t_server *server)
 		mlx_clear_window(server->mlx, server->window);
 		mlx_destroy_window(server->mlx, server->window);
 	}
-	mlx_destroy_image(server->mlx, server->image);
+	mlx_destroy_image(server->mlx, server->image->image);
 	free_world(server->world);
 	free(server->image);
 	free(server->mlx);

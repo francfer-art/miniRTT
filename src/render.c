@@ -81,17 +81,15 @@ void    render(t_server *server)
     if (!server->world->cameras)
         return ;
     j = server->height;
-    while (j > 0)
+    while (j-- > 0)
     {
         i = server->width;
-        while (i > 0)
+        while (i-- > 0)
         {
             ray = generate_ray(server->world->cameras->content, (float)i / server->width, (float)j / server->height);
             pixel_color = raytracer(&ray, server->world);
             my_put_pixel(server, i, server->height - 1 - j, pixel_color);
-            i--;
         }
-        j--;
     }
     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
 }

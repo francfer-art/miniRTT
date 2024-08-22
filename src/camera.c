@@ -87,7 +87,29 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
 // Tengo en mente que el movimiento por la escena sea fluido, lo mismo tengo que
 // recurrir a un render más básico mientras el usuario se mueve, y aplicar el
 // general con un botón cuando el usuario termine de desplazarse.
-/* void    move_camera(t_server *server, int code)
+void    move_camera(t_server *server, int code)
 {
-    
-} */
+    t_camera    *camera;
+
+    camera = server->world->cameras->content;
+    if (code == XK_Left)
+    {
+        ft_printf("Me muevo a la izquierda!\n");
+        camera->origin = add(camera->origin, vector(0.1, 0, 0.1));
+    }
+    else if (code == XK_Right)
+    {
+        ft_printf("Me muevo a la derecha!\n");;
+
+    }
+    else if (code == XK_Up)
+    {
+        ft_printf("Me muevo arriba!\n");;
+        camera->origin = add(camera->origin, vector(0, -0.1, 0));
+    }
+    else if (code == XK_Down)
+    {
+        ft_printf("Me muevo abajo!\n");;
+        camera->origin = add(camera->origin, vector(0, 0.1, 0));
+    }
+}

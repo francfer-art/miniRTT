@@ -6,6 +6,7 @@
 int exit_hook(t_server *server)
 {
     free_server(server);
+    ft_printf("Ta luego jefe!\n");
     exit(EXIT_SUCCESS);
 }
 
@@ -28,10 +29,10 @@ int key_press_hook(int keycode, t_server *server)
         exit_hook(server);
     else if (keycode == XK_c)
         change_camera(server, 1);
-   /*  else if (keycode == XK_Left || keycode == XK_Right)
+    else if (keycode == XK_Left || keycode == XK_Right)
         move_camera(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)
-        move_camera(server, keycode); */
+        move_camera(server, keycode);
     else
         ;
     render(server);
