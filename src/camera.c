@@ -97,7 +97,7 @@ void    move_camera(t_server *server, int code)
     camera = server->world->cameras->content;
     right = cross(camera->direction, vector(0, 1, 0));
     up = vector(0, 1 ,0);
-    move_speed = 0.1
+    move_speed = 0.1;
     if (code == XK_Left)
     {
         ft_printf("Me muevo a la izquierda!\n");
@@ -111,7 +111,7 @@ void    move_camera(t_server *server, int code)
     else if (code == XK_Up)
     {
         ft_printf("Me muevo arriba!\n");;
-        camera->origin = add(camera->origin, scale(camera->direction, move_speed))
+        camera->origin = add(camera->origin, scale(camera->direction, move_speed));
     }
     else if (code == XK_Down)
     {
