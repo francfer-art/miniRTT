@@ -87,17 +87,53 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
 // Tengo en mente que el movimiento por la escena sea fluido, lo mismo tengo que
 // recurrir a un render más básico mientras el usuario se mueve, y aplicar el
 // general con un botón cuando el usuario termine de desplazarse.
+// void    move_camera(t_server *server, int code)
+// {
+//     t_camera    *camera;
+//     t_vector    right;
+//     t_vector    up;
+//     float       move_speed;
+
+//     camera = server->world->cameras->content;
+//     right = cross(camera->direction, vector(0, 1, 0));
+//     up = vector(0, 1 ,0);
+//     move_speed = 0.1;
+//     if (code == XK_Left)
+//     {
+//         ft_printf("Me muevo a la izquierda!\n");
+//         camera->origin = sub(camera->origin, scale(right, move_speed));
+//     }
+//     else if (code == XK_Right)
+//     {
+//         ft_printf("Me muevo a la derecha!\n");;
+//         camera->origin = add(camera->origin, scale(right, move_speed));
+//     }
+//     else if (code == XK_Up)
+//     {
+//         ft_printf("Me muevo arriba!\n");;
+//         camera->origin = add(camera->origin, scale(camera->direction, move_speed));
+//     }
+//     else if (code == XK_Down)
+//     {
+//         ft_printf("Me muevo abajo!\n");;
+//         camera->origin = sub(camera->origin, scale(camera->direction, move_speed));
+//     }
+// }
+
 void    move_camera(t_server *server, int code)
 {
     t_camera    *camera;
     t_vector    right;
     t_vector    up;
     float       move_speed;
+    float       rotation_speed;
 
     camera = server->world->cameras->content;
     right = cross(camera->direction, vector(0, 1, 0));
     up = vector(0, 1 ,0);
     move_speed = 0.1;
+    rotation_speed = 0.1;
+
     if (code == XK_Left)
     {
         ft_printf("Me muevo a la izquierda!\n");
@@ -105,17 +141,67 @@ void    move_camera(t_server *server, int code)
     }
     else if (code == XK_Right)
     {
-        ft_printf("Me muevo a la derecha!\n");;
+        ft_printf("Me muevo a la derecha!\n");
         camera->origin = add(camera->origin, scale(right, move_speed));
     }
     else if (code == XK_Up)
     {
-        ft_printf("Me muevo arriba!\n");;
+        ft_printf("Me muevo adelante!\n");
         camera->origin = add(camera->origin, scale(camera->direction, move_speed));
     }
     else if (code == XK_Down)
     {
-        ft_printf("Me muevo abajo!\n");;
+        ft_printf("Me muevo atrás!\n");
         camera->origin = sub(camera->origin, scale(camera->direction, move_speed));
     }
+    else if (code == XK_A)  // Girar hacia la izquierda
+    {
+        ft_printf("Giro a la izquierda!\n");
+        float cos_theta = cos(rotation_speed);
+        float sin_theta = sin(rotation_speed);
+        t_vector new_direction = {
+            cos_theta * camera->direction.x + sin_theta * camera->direction.z,
+            camera->direction.y,
+            -sin_theta * camera->direction.x + cos_theta * camera->direction.z
+        };
+        camera->direction = normalize(new_direction);
+    }
+    else if (code == XK_D)  // Girar hacia la derecha
+    {
+        ft_printf("Giro a la derecha!\n");
+        float cos_theta = cos(-rotation_speed);
+        float sin_theta = sin(-rotation_speed);
+        t_vector new_direction = {
+            cos_theta * camera->direction.x + sin_theta * camera->direction.z,
+            camera->direction.y,
+            -sin_theta * camera->direction.x + cos_theta * camera->direction.z
+        };
+        camera->direction = normalize(new_direction);
+    }
+    else if (code == XK_W)  // Girar hacia arriba
+    {
+        ft_printf("Giro hacia arriba!\n");
+        float cos_theta = cos(rotation_speed);
+        float sin_theta = sin(rotation_speed);
+        t_vector new_direction = {
+            camera->direction.x,
+            cos_theta * camera->direction.y - sin_theta * camera->direction.z,
+            sin_theta * camera->direction.y + cos_theta * camera->direction.z
+        };
+        camera->direction = normalize(new_direction);
+    }
+    else if (code == XK_S)  // Girar hacia abajo
+    {
+        ft_printf("Giro hacia abajo!\n");
+        float cos_theta = cos(-rotation_speed);
+        float sin_theta = sin(-rotation_speed);
+        t_vector new_direction = {
+            camera->direction.x,
+            cos_theta * camera->direction.y - sin_theta * camera->direction.z,
+            sin_theta * camera->direction.y + cos_theta * camera->direction.z
+        };
+        camera->direction = normalize(new_direction);
+    }
+
+    // Puedes actualizar otros vectores relacionados con la cámara si es necesario aquí.
 }
