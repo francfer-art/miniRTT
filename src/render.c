@@ -94,6 +94,9 @@ t_color raytracer(t_ray *ray, t_world *world)
 //     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
 // }
 
+// Función que realiza el render en una sección delimitada. Dicha sección la realiza
+// un hilo diferente. La idea es dividir la ventana en tantos cuadrados como hilos
+// tengae el procesador
 void *render_section(void *threadarg)
 {
     t_thread_data   *data;
@@ -119,6 +122,10 @@ void *render_section(void *threadarg)
     pthread_exit(NULL);
 }
 
+// Función para renderizar la escena, es similar a la función render de arriba, pero
+// el único cambio es que dividimos la escena por secciones. Cada seccion será
+// renderizada por un hilo, consiguiendo agilizar la computación, lo que proporciona
+// una mayor fluidez.
 void render(t_server *server)
 {
     pthread_t       threads[NUM_THREADS];
@@ -135,7 +142,10 @@ void render(t_server *server)
     {
         thread_data[t].server = server;
         thread_data[t].start_row = t * rows_per_thread;
-        thread_data[t].end_row = (t == NUM_THREADS - 1) ? server->height : thread_data[t].start_row + rows_per_thread;
+        if (t == NUM_THREADS - 1)
+            thread_data[t].end_row = server->height;
+        else
+            thread_data[t].end_row = thread_data[t].start_row + rows_per_thread;
         rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
         if (rc)
             full_message_exit(ERROR_CREATE, NULL, server);
@@ -147,12 +157,15 @@ void render(t_server *server)
     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
 }
 
+// Función que rellanará un cuadrado de pixeles en lugar de 1 solo. EStá función es la 
+// utilizada en la función render_low. 
 void    fill_pixels(t_server *server, int scale_factor, int i, int j, t_color pixel_color)
 {
     int x;
     int y;
     int orig_i;
     int orig_j;
+
     y = -1;
     while (++y < scale_factor)
     {
@@ -166,6 +179,12 @@ void    fill_pixels(t_server *server, int scale_factor, int i, int j, t_color pi
     }
 }
 
+// Función para que el renderizado sea mucho más pixelado y por tanto involucre 
+// menos computación (idea de Chema). Básicamente en lugar de pintar 1 pixel e iterar
+// por todos los pixeles de la pantalla, pintamos un cuadrado de pixeles del mismo
+// color. Esta función sólo se usa cuando nos estamos moviendo por la pantalla, nos 
+// interesa verlo todo fluido y cuando tengoamos la posición deseada pulsamos el 
+// espacio, para  renderizar toda la escena.
 void render_low(t_server *server, int scale_factor)
 {
     int     i;
