@@ -6,19 +6,19 @@
 // error y salimos. En otro caso alojamos la memoria para el array de enteros y
 // rellenamos dicha memoria. Comprobamos que la resolución no es negativa
 // La función devuelve un array de enteros con la resolución
-int	*resolution(char **data)
+int	*resolution(char **data, t_world *world)
 {
 	int	*res;
 
 	if (double_pointer_len(data) != 3)
-		message_exit(ERROR_RES_LEN);
+		full_message_exit(ERROR_RES_LEN, world, NULL);
 	res = malloc(sizeof(*res) * 2);
 	if (!res)
 		return (NULL);
 	res[0] = ft_atoi(data[1]);
 	res[1] = ft_atoi(data[2]);
 	if (res[0] <= 0 || res[1] <= 0)
-		message_exit(ERROR_RES_VALUE);
+		full_message_exit(ERROR_RES_VALUE, world, NULL);
 	return (res);
 }
 
@@ -39,7 +39,7 @@ void	figures_parser(char **line, t_world *world)
 	else if (!ft_strcmp(line[0], "tr"))
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_triangle(line)));
 	else
-		message_exit(ERROR_ID);
+		full_message_exit(ERROR_ID, world, NULL);
 }
 
 // Función que se utiliza como selector de los objetos que entrarán en juego en
@@ -51,13 +51,13 @@ void	figures_parser(char **line, t_world *world)
 void	scene_parser(char **line, t_world *world)
 {
 	if (!ft_strcmp(line[0], "R"))
-		world->resolution = resolution(line);
+		world->resolution = resolution(line, world);
 	else if (!ft_strcmp(line[0], "A"))
-		world->ambient = new_ambient_light(line);
+		world->ambient = new_ambient_light(line, world);
 	else if (!ft_strcmp(line[0], "c"))
 		ft_lstadd_back(&(world->cameras), ft_lstnew(new_camera(line)));
 	else if (!ft_strcmp(line[0], "l"))
-		ft_lstadd_back(&(world->lights), ft_lstnew(new_light(line)));
+		ft_lstadd_back(&(world->lights), ft_lstnew(new_light(line,world)));
 	else
 		figures_parser(line, world);
 }
@@ -91,8 +91,8 @@ int	parser_file(int fd, t_world *world)
 		line = get_next_line(fd);
 	}
 	if (!world->resolution)
-		message_exit(ERROR_RES);
+		full_message_exit(ERROR_RES, world, NULL);
 	else if (!world->ambient)
-		message_exit(ERROR_AMB);
+		full_message_exit(ERROR_AMB, world, NULL);
 	return (0);
 }

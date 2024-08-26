@@ -22,7 +22,7 @@ int	main(int args, char **argv)
 	world = scene_init(argv[1]);
 	server = new_server(world);
 	if (!server)
-		message_exit(ERROR_SERVER);
+		full_message_exit(ERROR_SERVER, world, server);
 	render(server);
 	mlx_events(server);
 	return (EXIT_SUCCESS);

@@ -32,7 +32,7 @@ t_camera	*new_camera(char **data)
 // NULL. Alojamos dinámicamente la memoria y procedemos a rellenar la estructura
 // con el char **. Comprobamos que el brillo de la luz no sea menor que 0 o mayor
 // que 1. Finalmente devolvemos la referencia a la estructura.
-t_light	*new_light(char **data)
+t_light	*new_light(char **data, t_world *world)
 {
 	t_light	*light;
 
@@ -44,7 +44,7 @@ t_light	*new_light(char **data)
 	light->color = ft_atoc(data[3]);
 	light->brightness = ft_atof(data[2]);
 	if (light->brightness < 0 || light->brightness > 1)
-		message_exit(ERROR_BRIGHTNESS);
+		full_message_exit(ERROR_BRIGHTNESS, world, NULL);
 	light->position = ft_atov(data[1]);
 	return (light);
 }
@@ -56,7 +56,7 @@ t_light	*new_light(char **data)
 // un error. Finalmente devolvemos la referencia a la estructura.
 // Es muy similar a la estructura anterior, con la única diferencia que la luz
 // ambiente no tiene posición.
-t_light	*new_ambient_light(char **data)
+t_light	*new_ambient_light(char **data, t_world *world)
 {
 	t_light	*light;
 
@@ -68,6 +68,6 @@ t_light	*new_ambient_light(char **data)
 	light->color = ft_atoc(data[2]);
 	light->brightness = ft_atof(data[1]);
 	if (light->brightness < 0 || light->brightness > 1)
-		message_exit(ERROR_BRIGHTNESS);
+		full_message_exit(ERROR_BRIGHTNESS, world, NULL);
 	return (light);
 }

@@ -14,7 +14,8 @@ int exit_hook(t_server *server)
 // se  actualiza, esta función se encarga de que todo se muestre correctamente.
 int expose_hook(t_server *server)
 {
-    return (mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0));
+    mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
+    return (1);
 }
 
 // Función para manejar los eventos en la escena
@@ -26,16 +27,21 @@ int expose_hook(t_server *server)
 int key_press_hook(int keycode, t_server *server)
 {
     if (keycode == XK_Escape)
-        exit_hook(server);
+        full_message_exit(ERROR_JEFE, NULL, server);
     else if (keycode == XK_c)
         change_camera(server, 1);
     else if (keycode == XK_Left || keycode == XK_Right)
         move_camera(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)
         move_camera(server, keycode);
+    else if (keycode == XK_space)
+    {
+        render(server);
+        return (1);
+    }
     else
-        ;
-    render(server);
+        return(1);
+    render_low(server, LOW_RENDER10);
     return (0);
 }
 

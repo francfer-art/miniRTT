@@ -62,11 +62,8 @@ t_world	*scene_init(char *file)
 	world = new_world();
 	err = parser_file(fd, world);
 	if (close(fd) < 0)
-		message_exit (ERROR_CLOSE);
+		full_message_exit(ERROR_CLOSE, world, NULL);
 	if (err)
-	{
-		free_world(world);
-		message_exit(ERROR_PARSE);
-	}
+		full_message_exit(ERROR_PARSE, world, NULL);
 	return (world);
 }

@@ -125,5 +125,5 @@ float	light_intensity(t_light light, t_hit record)
 	gain = dot(norm(light_dir), record.normal);
 	if (gain <= 0)
 		return (0);
-	return ((light.brightness * gain * ALBEDO) / (4.0 * M_PI * r2));
+	return ((light.brightness * gain * ALBEDO_PLASTIC) / (4.0 * M_PI * r2));
 }

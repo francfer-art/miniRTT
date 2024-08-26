@@ -71,24 +71,121 @@ t_color raytracer(t_ray *ray, t_world *world)
 //      Generando el rayo, calculando el color con la función raytracer() y poniendo en 
 //      la imagen el pixel con el nuevo color
 // Tras salir del bucle pondremos la imagen por pantalla mlx_put_image_to_window
-void    render(t_server *server)
+// void    render(t_server *server)
+// {
+//     int     i;
+//     int     j;
+//     t_ray   ray;
+//     t_color pixel_color;
+
+//     if (!server->world->cameras)
+//         return ;
+//     j = server->height;
+//     while (j-- > 0)
+//     {
+//         i = server->width;
+//         while (i-- > 0)
+//         {
+//             ray = generate_ray(server->world->cameras->content, (float)i / server->width, (float)j / server->height);
+//             pixel_color = raytracer(&ray, server->world);
+//             my_put_pixel(server, i, server->height - 1 - j, pixel_color);
+//         }
+//     }
+//     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
+// }
+
+void *render_section(void *threadarg)
+{
+    t_thread_data   *data;
+    int             i;
+    int             j;
+    t_color         pixel_color;
+    t_ray           ray;
+    
+    data = (t_thread_data *)threadarg;
+    j = data->start_row;
+    while (j < data->end_row)
+    {
+        i = 0;
+        while (i < data->server->width)
+        {
+            ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
+            pixel_color = raytracer(&ray, data->server->world);
+            my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
+            i++;
+        }
+    j++;
+    }
+    pthread_exit(NULL);
+}
+
+void render(t_server *server)
+{
+    pthread_t       threads[NUM_THREADS];
+    t_thread_data   thread_data[NUM_THREADS];
+    int             rows_per_thread;
+    int             rc;
+    int             t;
+    
+    rows_per_thread= server->height / NUM_THREADS;
+    if (!server->world->cameras)
+        return;
+    t = -1;
+    while (++t < NUM_THREADS)
+    {
+        thread_data[t].server = server;
+        thread_data[t].start_row = t * rows_per_thread;
+        thread_data[t].end_row = (t == NUM_THREADS - 1) ? server->height : thread_data[t].start_row + rows_per_thread;
+        rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
+        if (rc)
+            full_message_exit(ERROR_CREATE, NULL, server);
+    }
+    t = -1;
+    while (++t < NUM_THREADS)
+        if (pthread_join(threads[t], NULL))
+            full_message_exit(ERROR_JOIN, NULL, server);
+    mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
+}
+
+void    fill_pixels(t_server *server, int scale_factor, int i, int j, t_color pixel_color)
+{
+    int x;
+    int y;
+    int orig_i;
+    int orig_j;
+    y = -1;
+    while (++y < scale_factor)
+    {
+        x = -1;
+        while (++x < scale_factor)
+        {
+            orig_i = i * scale_factor + x;
+            orig_j = j * scale_factor + y;
+            my_put_pixel(server, orig_i, server->height - 1 - orig_j, pixel_color);
+        }
+    }
+}
+
+void render_low(t_server *server, int scale_factor)
 {
     int     i;
     int     j;
     t_ray   ray;
     t_color pixel_color;
 
-    if (!server->world->cameras)
-        return ;
-    j = server->height;
-    while (j-- > 0)
+    if (!server->world->cameras || scale_factor <= 0)
+        return;
+    int low_width = server->width / scale_factor;
+    int low_height = server->height / scale_factor;
+    j = -1;
+    while (++j < server->height / scale_factor)
     {
-        i = server->width;
-        while (i-- > 0)
+        i = -1;
+        while (++i < server->width / scale_factor)
         {
-            ray = generate_ray(server->world->cameras->content, (float)i / server->width, (float)j / server->height);
+            ray = generate_ray(server->world->cameras->content, (float)i / low_width, (float)j / low_height);
             pixel_color = raytracer(&ray, server->world);
-            my_put_pixel(server, i, server->height - 1 - j, pixel_color);
+            fill_pixels(server, scale_factor, i, j, pixel_color);
         }
     }
     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
