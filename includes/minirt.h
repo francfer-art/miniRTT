@@ -12,6 +12,10 @@
 # include <stdbool.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
+# include <pthread.h>
+
+// Número de threads
+#define NUM_THREADS 100
 
 // Extension archivo
 # define EXTENSION ".rt"
@@ -21,6 +25,15 @@
 
 // Variable para evitar errores
 # define EPSILON 0.0001
+
+// Factor de low render
+# define LOW_RENDER5 5
+# define LOW_RENDER10 10
+# define LOW_RENDER15 15
+# define LOW_RENDER20 20
+# define LOW_RENDER25 25
+# define LOW_RENDER30 30
+# define LOW_RENDER60 60
 
 //MATERIALES
 # define ALBEDO 1000
@@ -33,6 +46,9 @@
 // Definición de errores 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_PARSE "ERROR : While parsing 🔴"
+# define ERROR_JEFE "🐷 Nos vemos jefe 🐷"
+# define ERROR_CREATE "ERROR; return code from pthread_create() 🔴"
+# define ERROR_JOIN "ERROR : return code from pthread_join() 🔴"
 # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
 # define ERROR_SERVER "ERROR : Can't create server 🔴"
 # define ERROR_COL_VAL "ERROR : Color value out range 🔴"
@@ -49,10 +65,6 @@
 # define ERROR_FORMAT "ERROR : File format not supported"
 # define ERROR_OPEN "ERROR : Error opening the file 🔴"
 # define ERROR_CLOSE "ERROR : Error closing the file 🔴"
-# define ERROR_MEMORY "ERROR : Memory error"
-# define ERROR_LINE "ERROR : Line length discrepancy"
-# define ERROR_LINES "ERROR : Not enought lines"
-# define ERROR_READ "ERROR : Error reading file"
 
 typedef int			t_color;
 
@@ -182,10 +194,16 @@ typedef struct s_server
 	void			*window;
 	t_image			*image;
 	t_world			*world;
-	unsigned int	width;
-	unsigned int	height;
+	int				width;
+	int				height;
 }					t_server;
 
+typedef struct s_thread_data
+{
+    t_server		*server;
+    int				start_row;
+    int				end_row;
+} 					t_thread_data;
 
 //error.c
 void				message_exit(char *msg);
@@ -221,15 +239,15 @@ t_vector			at(t_ray ray);
 t_vector			cross(t_vector v, t_vector w);
 
 //parser.c
-int					*resolution(char **data);
+int					*resolution(char **data, t_world *world);
 void				figures_parser(char **line, t_world *world);
 void				scene_parser(char **line, t_world *world);
 int					parser_file(int fd, t_world *world);
 
 //elements.c
 t_camera			*new_camera(char **data);
-t_light				*new_light(char **data);
-t_light				*new_ambient_light(char **data);
+t_light				*new_light(char **data, t_world *world);
+t_light				*new_ambient_light(char **data, t_world *world);
 
 //vector.c
 t_vector			vector(double x, double y, double z);
@@ -295,5 +313,6 @@ float				light_intensity(t_light light, t_hit record);
 int 				intersec(t_ray *ray, t_list *figures);
 t_color 			raytracer(t_ray *ray, t_world *world);
 void				render(t_server *server);
+void 				render_low(t_server *server, int scale_factor);
 
 #endif
