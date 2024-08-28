@@ -101,6 +101,22 @@ int	in_shadow(t_light light, t_list *figures, t_hit record)
 	return (intersec(&shadow, figures));
 }
 
+// int	in_shadow(t_light light, t_list	*figures, t_hit record)
+// {
+// 	t_ray	shadow;
+// 	double	light_distance;
+
+// 	shadow.origin = add(record.p, scale(record.normal, EPSILON));
+// 	shadow.direction = norm(sub(light.position, shadow.origin));
+// 	light_distance = length(sub(light.position, shadow.origin));
+// 	if (intersec(&shadow, figures))
+// 	{
+// 		if (shadow.record.t < light_distance)
+// 			return (1);
+// 	}
+// 	return (0);
+// }
+
 // Función que calcula la intensidad de la luz que incide sobre un punto específico
 // de una superficie.
 // Lo primero que hacemos es calcular la dirección de la luz desde el punto de la 
@@ -125,5 +141,5 @@ float	light_intensity(t_light light, t_hit record)
 	gain = dot(norm(light_dir), record.normal);
 	if (gain <= 0)
 		return (0);
-	return ((light.brightness * gain * ALBEDO_PLASTIC) / (4.0 * M_PI * r2));
+	return ((light.brightness * gain * ALBEDO) / (4.0 * M_PI * r2));
 }
