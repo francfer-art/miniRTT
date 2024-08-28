@@ -43,8 +43,8 @@ void	sphere_roots(t_ray ray, t_sphere sphere, float *root)
 	half_b = dot(oc, ray.direction);
 	c = length_square(oc) - pow(sphere.radius, 2);
 	sqrt_disc = sqrt(pow(half_b, 2) - a * c);
-	root[0] = (-half_b + sqrt_disc) / a;
-	root[1] = (-half_b - sqrt_disc) / a;
+	root[0] = (-half_b - sqrt_disc) / a;
+	root[1] = (-half_b + sqrt_disc) / a;
 }
 
 // Función que determina si un rayo ha interseccionado con una esfera, devuelve
