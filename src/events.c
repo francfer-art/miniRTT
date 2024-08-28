@@ -28,8 +28,8 @@ int key_press_hook(int keycode, t_server *server)
 {
     if (keycode == XK_Escape)
         full_message_exit(ERROR_JEFE, NULL, server);
-    else if (keycode == XK_c)
-        change_camera(server, 1);
+    else if (keycode == XK_c || keycode == XK_x)
+        change_camera(server, keycode);
     else if (keycode == XK_Left || keycode == XK_Right)
         move_camera(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)

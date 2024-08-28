@@ -6,7 +6,7 @@
 /*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:03:14 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/07/07 20:27:45 by francfer         ###   ########.fr       */
+/*   Updated: 2024/08/28 17:20:16 by francfer         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -89,6 +89,7 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
+	struct s_list	*prev;
 }					t_list;
 
 t_list				*ft_lstnew(void *content);

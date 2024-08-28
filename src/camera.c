@@ -43,13 +43,20 @@ void    init_cameras(t_list *camset, int width, int height)
 // Siempre se va a renderizar desde la primera cámara, por tanto, el objetivo es
 // actualizar la lista de modo cuando se renderice el server, la cámara haya 
 // cambiado
-void    change_camera(t_server *server, int step)
+void    change_camera(t_server *server, int code)
 {
     t_list  **camset;
+    int     step;
 
     camset = &(server->world->cameras);
-    while(step-- && (*camset)->next)
+    if (code == XK_c)
+        step = 1;
+    else
+        step = -1;
+    while(step-- > 0 && (*camset)->next)
         *camset = (*camset)->next;
+    while(step++ < 0 && (*camset)->prev)
+        *camset = ((*camset)->prev);
 }
 
 // Función que me genera un rayo a partir de una cámara hacia un punto específico
