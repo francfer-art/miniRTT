@@ -179,30 +179,43 @@ void    fill_pixels(t_server *server, int scale_factor, int i, int j, t_color pi
     }
 }
 
+int	adjust_scale_factor(t_server *server)
+{
+    int	area;
+	int	scale_factor;
+
+    area = server->width * server->height;
+	scale_factor = area / BASE_FACTOR;
+    if (scale_factor < 1)
+        scale_factor = 5;
+    return scale_factor;
+}
+
+
 // Función para que el renderizado sea mucho más pixelado y por tanto involucre 
 // menos computación (idea de Chema). Básicamente en lugar de pintar 1 pixel e iterar
 // por todos los pixeles de la pantalla, pintamos un cuadrado de pixeles del mismo
 // color. Esta función sólo se usa cuando nos estamos moviendo por la pantalla, nos 
 // interesa verlo todo fluido y cuando tengoamos la posición deseada pulsamos el 
 // espacio, para  renderizar toda la escena.
-void render_low(t_server *server, int scale_factor)
+void render_low(t_server *server)
 {
     int     i;
     int     j;
+	int		scale_factor;
     t_ray   ray;
     t_color pixel_color;
 
+    scale_factor = adjust_scale_factor(server);
     if (!server->world->cameras || scale_factor <= 0)
         return;
-    int low_width = server->width / scale_factor;
-    int low_height = server->height / scale_factor;
     j = -1;
     while (++j < server->height / scale_factor)
     {
         i = -1;
         while (++i < server->width / scale_factor)
         {
-            ray = generate_ray(server->world->cameras->content, (float)i / low_width, (float)j / low_height);
+            ray = generate_ray(server->world->cameras->content, (float)i / (server->width / scale_factor), (float)j / (server->height / scale_factor));
             pixel_color = raytracer(&ray, server->world);
             fill_pixels(server, scale_factor, i, j, pixel_color);
         }
