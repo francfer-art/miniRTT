@@ -41,7 +41,7 @@ int key_press_hook(int keycode, t_server *server)
     }
     else
         return(1);
-    render_low(server, LOW_RENDER10);
+    render_low(server);
     return (0);
 }
 
