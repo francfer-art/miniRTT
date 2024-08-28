@@ -9,8 +9,7 @@ void	message_exit(char *msg)
 {
 	if (msg)
 	{
-		ft_putstr_fd(msg, STDOUT_FILENO);
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		ft_printf("%s\n", msg);
 	}
 	exit(EXIT_FAILURE);
 }

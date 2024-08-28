@@ -53,10 +53,16 @@ void    change_camera(t_server *server, int code)
         step = 1;
     else
         step = -1;
-    while(step-- > 0 && (*camset)->next)
-        *camset = (*camset)->next;
-    while(step++ < 0 && (*camset)->prev)
-        *camset = ((*camset)->prev);
+    if (step > 0)
+    {
+        while(step-- && (*camset)->next)
+            *camset = (*camset)->next;
+    }
+    else if (step < 0)
+    {
+        while(step++ && (*camset)->prev)
+            *camset = ((*camset)->prev);
+    }
 }
 
 // Función que me genera un rayo a partir de una cámara hacia un punto específico
