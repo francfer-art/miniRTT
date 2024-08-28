@@ -15,7 +15,7 @@
 # include <pthread.h>
 
 // Número de threads
-#define NUM_THREADS 100
+#define NUM_THREADS 12
 
 // Extension archivo
 # define EXTENSION ".rt"
@@ -27,13 +27,7 @@
 # define EPSILON 0.0001
 
 // Factor de low render
-# define LOW_RENDER5 5
-# define LOW_RENDER10 10
-# define LOW_RENDER15 15
-# define LOW_RENDER20 20
-# define LOW_RENDER25 25
-# define LOW_RENDER30 30
-# define LOW_RENDER60 60
+# define BASE_FACTOR 50000
 
 //MATERIALES
 # define ALBEDO 1000
@@ -313,6 +307,7 @@ float				light_intensity(t_light light, t_hit record);
 int 				intersec(t_ray *ray, t_list *figures);
 t_color 			raytracer(t_ray *ray, t_world *world);
 void				render(t_server *server);
-void 				render_low(t_server *server, int scale_factor);
+void 				render_low(t_server *server);
+int					adjust_scale_factor(t_server *server);
 
 #endif
