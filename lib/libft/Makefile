@@ -14,6 +14,7 @@ SRC_FILES		= $(SRC_DIR)/ft_isalpha.c \
 			$(SRC_DIR)/ft_isalnum.c \
 			$(SRC_DIR)/ft_isascii.c \
 			$(SRC_DIR)/ft_isprint.c \
+			$(SRC_DIR)/ft_isspace.c \
 			$(SRC_DIR)/ft_strlen.c \
 			$(SRC_DIR)/ft_memset.c \
 			$(SRC_DIR)/ft_bzero.c \
@@ -36,6 +37,7 @@ SRC_FILES		= $(SRC_DIR)/ft_isalpha.c \
 			$(SRC_DIR)/ft_strjoin.c \
 			$(SRC_DIR)/ft_strtrim.c \
 			$(SRC_DIR)/ft_split.c \
+			$(SRC_DIR)/ft_split_space.c \
 			$(SRC_DIR)/ft_itoa.c \
 			$(SRC_DIR)/ft_strmapi.c \
 			$(SRC_DIR)/ft_striteri.c \

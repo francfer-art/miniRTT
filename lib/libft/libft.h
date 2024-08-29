@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
+/*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:03:14 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/08/28 17:20:16 by francfer         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:14:19 by  francfer        ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
@@ -36,6 +36,7 @@ int					ft_isdigit(int i);
 int					ft_isalnum(int i);
 int					ft_isascii(int i);
 int					ft_isprint(int i);
+int					ft_isspace(int i);
 size_t				ft_strlen(const char *s);
 void				*ft_memset(void *p, int value, size_t len);
 void				*ft_bzero(void *p, size_t len);
@@ -59,6 +60,7 @@ char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(char const *s, char c);
+char 				**ft_split_space(char *str);
 char				*ft_itoa(int n);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
