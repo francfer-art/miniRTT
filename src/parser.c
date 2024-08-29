@@ -39,7 +39,10 @@ void	figures_parser(char **line, t_world *world)
 	else if (!ft_strcmp(line[0], "tr"))
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_triangle(line)));
 	else
+	{
+		free_double(line);
 		full_message_exit(ERROR_ID, world, NULL);
+	}
 }
 
 // Función que se utiliza como selector de los objetos que entrarán en juego en
@@ -83,7 +86,7 @@ int	parser_file(int fd, t_world *world)
 	{
 		if (*line && *line != '#')
 		{
-			split = ft_split(line, ' ');
+			split = ft_split_space(line);
 			scene_parser(split, world);
 			free_double(split);
 		}
