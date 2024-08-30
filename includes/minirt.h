@@ -24,7 +24,7 @@
 # define WINDOW_TITLE "miniRT"
 
 // Variable para evitar errores
-# define EPSILON 0.0001
+# define EPSILON 0.001
 
 // Factor de low render
 # define BASE_FACTOR 50000
@@ -114,7 +114,7 @@ typedef struct s_quare
 typedef struct s_cylinder
 {
 	t_type			type;
-	t_vector			center;
+	t_vector		center;
 	t_vector		axis;
 	float			radius;
 	float			height;
@@ -287,6 +287,7 @@ void    			init_cameras(t_list *camset, int width, int height);
 void    			change_camera(t_server *server, int step);
 t_ray   			generate_ray(t_camera *camera, float u, float v);
 void				move_camera(t_server *server, int code);
+void				move_camera_rotate(t_server *server, int code);
 
 //events.c
 int 				exit_hook(t_server *server);

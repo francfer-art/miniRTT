@@ -42,7 +42,7 @@ int	hit_triangle(t_ray *ray, t_triangle *triangle)
 	t_ray	r;
 	t_plane	pl;
 
-	hit = false;
+	hit = 0;
 	pl.point = triangle->vertex[0];
 	pl.normal = triangle->normal;
 	pl.color = triangle->color;
@@ -53,7 +53,7 @@ int	hit_triangle(t_ray *ray, t_triangle *triangle)
 	{
 		*ray = r;
 		ray->record.type = TRIANGLE;
-		hit = true;
+		hit = 1;
 	}
 	return (hit);
 }

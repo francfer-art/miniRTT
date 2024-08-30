@@ -31,8 +31,10 @@ int key_press_hook(int keycode, t_server *server)
     else if (keycode == XK_c || keycode == XK_x)
         change_camera(server, keycode);
     else if (keycode == XK_Left || keycode == XK_Right)
-        move_camera(server, keycode);
+        move_camera_rotate(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)
+        move_camera_rotate(server, keycode);
+    else if (keycode == XK_KP_Add || keycode == XK_KP_Subtract)
         move_camera(server, keycode);
     else if (keycode == XK_space)
     {
