@@ -288,12 +288,14 @@ void    			change_camera(t_server *server, int step);
 t_ray   			generate_ray(t_camera *camera, float u, float v);
 void				move_camera(t_server *server, int code);
 void				move_camera_rotate(t_server *server, int code);
+void				move_camera_position(t_server *server, int code);
 
 //events.c
 int 				exit_hook(t_server *server);
 int					expose_hook(t_server *server);
 int 				key_press_hook(int keycode, t_server *server);
 int    				mlx_events(t_server *server);
+int					mouse_handler(int button, int x, int y, t_server *server);
 
 //color.c
 t_color				ccheck(int color);

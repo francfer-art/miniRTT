@@ -34,8 +34,8 @@ int key_press_hook(int keycode, t_server *server)
         move_camera_rotate(server, keycode);
     else if (keycode == XK_Up || keycode == XK_Down)
         move_camera_rotate(server, keycode);
-    else if (keycode == XK_KP_Add || keycode == XK_KP_Subtract)
-        move_camera(server, keycode);
+    else if (keycode == XK_w || keycode == XK_s || keycode == XK_a || keycode == XK_d)
+        move_camera_position(server, keycode);
     else if (keycode == XK_space)
     {
         render(server);
@@ -44,6 +44,15 @@ int key_press_hook(int keycode, t_server *server)
     else
         return(1);
     render_low(server);
+    return (0);
+}
+
+int mouse_handler(int button, int x, int y, t_server *server)
+{
+    if (button == 0x0005)
+        move_camera(server, button);
+    else if (button == 0x0004)
+        move_camera(server, button);
     return (0);
 }
 
@@ -62,6 +71,7 @@ int mlx_events(t_server *server)
     window = server->window;
     mlx_hook(window, KeyPress, KeyPressMask, key_press_hook, server);
     mlx_hook(window, DestroyNotify, StructureNotifyMask, exit_hook, server);
+    mlx_hook(window, ButtonPress, ButtonPressMask, mouse_handler, server);
     mlx_expose_hook(window, expose_hook, server);
     mlx_loop(server->mlx);
     return (0);
