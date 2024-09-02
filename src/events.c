@@ -20,26 +20,28 @@ int expose_hook(t_server *server)
 
 void update_ambient_color(t_server *server, int code)
 {
-    int color = server->world->ambient->color;
+    int color;
+    int red;
+    int green;
+    int blue;
 
-    
-    int red = (color >> 16) & 0xFF;
-    int green = (color >> 8) & 0xFF;
-    int blue = color & 0xFF;
-
-    if (code == XK_r)
-        red = (red + 5 > 255) ? 255 : red + 5;
-    else if (code == XK_t)
-        red = (red - 5 > 255) ? 255 : red + 5;
-    else if (code == XK_g)
-        green = (green + 5 > 255) ? 255 : green + 5;
-    else if (code == XK_h)
-        green = (green - 5 > 255) ? 255 : green - 5;
-    else if (code == XK_b)
-        blue = (blue + 5 > 255) ? 255 : blue + 5;
-    else if (code == XK_n)
-        blue = (blue - 5 > 255) ? 255 : blue - 5;
-    color = (red << 16) | (green << 8) | blue;
+    color = server->world->ambient->color;
+    red = (color >> 0x010) & 0xFF;
+    green = (color >> 0x08) & 0xFF;
+    blue = color & 0xFF;
+    if (code == XK_r && red <= 250)
+        red = red + 5;
+    else if (code == XK_t && red >= 5)
+        red = red - 5;
+    else if (code == XK_g && green <= 250)
+        green = green + 5;
+    else if (code == XK_h && green >= 5)
+        green = green - 5;
+    else if (code == XK_b && blue >= 250)
+        blue = blue + 5;
+    else if (code == XK_n && blue >= 5)
+        blue = blue - 5;
+    color = (red << 0x010) | (green << 0x08) | blue;
     server->world->ambient->color = color;
 }
 
