@@ -37,7 +37,7 @@ void update_ambient_color(t_server *server, int code)
         green = green + 5;
     else if (code == XK_h && green >= 5)
         green = green - 5;
-    else if (code == XK_b && blue >= 250)
+    else if (code == XK_b && blue <= 250)
         blue = blue + 5;
     else if (code == XK_n && blue >= 5)
         blue = blue - 5;
