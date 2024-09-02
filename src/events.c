@@ -6,8 +6,8 @@
 int exit_hook(t_server *server)
 {
     free_server(server);
-    ft_printf("Ta luego jefe!\n");
-    exit(EXIT_SUCCESS);
+    message_exit(ERROR_JEFE);
+    return (0);
 }
 
 // Función para mantener la consistencia visual del contenido de la pantalla. Cuando la pantalla
@@ -17,6 +17,32 @@ int expose_hook(t_server *server)
     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
     return (1);
 }
+
+void update_ambient_color(t_server *server, int code)
+{
+    int color = server->world->ambient->color;
+
+    
+    int red = (color >> 16) & 0xFF;
+    int green = (color >> 8) & 0xFF;
+    int blue = color & 0xFF;
+
+    if (code == XK_r)
+        red = (red + 5 > 255) ? 255 : red + 5;
+    else if (code == XK_t)
+        red = (red - 5 > 255) ? 255 : red + 5;
+    else if (code == XK_g)
+        green = (green + 5 > 255) ? 255 : green + 5;
+    else if (code == XK_h)
+        green = (green - 5 > 255) ? 255 : green - 5;
+    else if (code == XK_b)
+        blue = (blue + 5 > 255) ? 255 : blue + 5;
+    else if (code == XK_n)
+        blue = (blue - 5 > 255) ? 255 : blue - 5;
+    color = (red << 16) | (green << 8) | blue;
+    server->world->ambient->color = color;
+}
+
 
 // Función para manejar los eventos en la escena
 // Eventos que tengo que manejar:
@@ -36,6 +62,8 @@ int key_press_hook(int keycode, t_server *server)
         move_camera_rotate(server, keycode);
     else if (keycode == XK_w || keycode == XK_s || keycode == XK_a || keycode == XK_d)
         move_camera_position(server, keycode);
+    else if (keycode == XK_r || keycode == XK_g || keycode == XK_b || keycode == XK_t || keycode == XK_h || keycode == XK_n)
+        update_ambient_color(server, keycode);
     else if (keycode == XK_space)
     {
         render(server);
@@ -47,12 +75,31 @@ int key_press_hook(int keycode, t_server *server)
     return (0);
 }
 
+void    update_ambient_brightness(t_server *server, float num)
+{
+    float   brightness;
+
+    server->world->ambient->brightness += num;
+    brightness = server->world->ambient->brightness;
+    if (brightness < 0)
+        brightness = 0;
+    else if (brightness > 1)
+        brightness = 1;
+}
+
 int mouse_handler(int button, int x, int y, t_server *server)
 {
-    if (button == 0x0005)
+    x++;
+    y++;
+    if (button == XK_ZOOM_OUT)
         move_camera(server, button);
-    else if (button == 0x0004)
+    else if (button == XK_ZOOM_IN)
         move_camera(server, button);
+    else if (button == XK_LEFT_BUTTON)
+        update_ambient_brightness(server, 0.05);
+    else if (button == XK_RIGHT_BUTTON)
+        update_ambient_brightness(server, -0.05);
+    render_low(server);
     return (0);
 }
 
@@ -69,10 +116,11 @@ int mlx_events(t_server *server)
     void    *window;
 
     window = server->window;
+  
     mlx_hook(window, KeyPress, KeyPressMask, key_press_hook, server);
     mlx_hook(window, DestroyNotify, StructureNotifyMask, exit_hook, server);
     mlx_hook(window, ButtonPress, ButtonPressMask, mouse_handler, server);
-    mlx_expose_hook(window, expose_hook, server);
+    //mlx_expose_hook(window, expose_hook, server);
     mlx_loop(server->mlx);
     return (0);
 }

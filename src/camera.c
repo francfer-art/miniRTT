@@ -126,7 +126,7 @@ void    rotate_camera_horizontal(t_server *server, float angle)
     new_direction.z = camera->direction.x * sin_angle + camera->direction.z * cos_angle;
     new_direction.y = camera->direction.y;
     camera->direction = norm(new_direction);
-    recalculate_camera(server->world->cameras->content, server->width, server->height);
+    //recalculate_camera(server->world->cameras->content, server->width, server->height);
 }
 
 void    rotate_camera_vertical(t_server *server, float angle)
@@ -145,13 +145,20 @@ void    rotate_camera_vertical(t_server *server, float angle)
     new_direction.y = camera->direction.y * cos_angle - camera->direction.z * sin_angle;
     new_direction.z = camera->direction.y * sin_angle + camera->direction.z * cos_angle;
     camera->direction = norm(new_direction);
-    recalculate_camera(server->world->cameras->content, server->width, server->height);
+    //recalculate_camera(server->world->cameras->content, server->width, server->height);
 }
+
 void    move_camera_position(t_server *server, int code)
 {
     t_camera    *camera;
+    t_vector    right;
+    t_vector    up;
+    float       move_speed;
 
+    up = vector(0, 1, 0);
+    move_speed = 0.1;
     camera = server->world->cameras->content;
+    right = cross(camera->direction, up);
     if (code == XK_a)
     {
         ft_printf("Me muevo a la izquierda!\n");
@@ -215,12 +222,12 @@ void    move_camera(t_server *server, int code)
 
     camera = server->world->cameras->content;
     zoom_speed = 0.15;
-    if (code == XK_KP_Add)
+    if (code == XK_ZOOM_IN)
     {
         ft_printf("Me acerco al centro de la imagen!\n");
         camera->origin = sub(camera->origin, scale(camera->direction, zoom_speed));
     }
-    else if (code == XK_KP_Subtract)
+    else if (code == XK_ZOOM_OUT)
     {
         ft_printf("Me alejo del centro de la imagen!\n");
         camera->origin = add(camera->origin, scale(camera->direction, zoom_speed));

@@ -29,6 +29,12 @@
 // Factor de low render
 # define BASE_FACTOR 50000
 
+// Zoom factors
+# define XK_ZOOM_IN 0x0004
+# define XK_ZOOM_OUT 0x0005
+# define XK_LEFT_BUTTON 0x0001
+# define XK_RIGHT_BUTTON 0x0003
+
 //MATERIALES
 # define ALBEDO 1000
 # define ALBEDO_POLISHED_METAL 900
