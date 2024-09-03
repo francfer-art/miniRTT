@@ -18,6 +18,10 @@ int expose_hook(t_server *server)
     return (1);
 }
 
+// Función para actualizar los valores de la luz ambiente. Básicamente me quedo con cada
+// canal de color y voy aumentando o disminuyendo la proporción de dicho color. Pulsando 
+// R/G/B aumento el color en cuestión hasta 255 y pulsando T/H/N disminuyo dicha proporción
+// los colores. Estas teclas están al lado de las otras (XD) 
 void update_ambient_color(t_server *server, int code)
 {
     int color;
@@ -77,6 +81,8 @@ int key_press_hook(int keycode, t_server *server)
     return (0);
 }
 
+// Función que actualiza el brillo de la luz ambiente. Siempre sumo el número, si el brillo
+// resultante es negativo, el brillo será cero. Si el brillo es mayor que 1 el brillo será 1.
 void    update_ambient_brightness(t_server *server, float num)
 {
     float   brightness;
@@ -89,6 +95,10 @@ void    update_ambient_brightness(t_server *server, float num)
         brightness = 1;
 }
 
+// Función encargada de manejar los eventos del ratón. La rueda del ratón hace zoom. De momento
+// el botón izquierdo aumenta el brillo de la luz ambiente, y el botón derecho lo disminuye.
+// Estoy pensando en utilizar dichos botones para seleccionar un objeto para poder moverlo por 
+// la escena.
 int mouse_handler(int button, int x, int y, t_server *server)
 {
     x++;
