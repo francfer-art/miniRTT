@@ -49,6 +49,13 @@ void update_ambient_color(t_server *server, int code)
     server->world->ambient->color = color;
 }
 
+void    update_checkerboard(t_server *server)
+{
+    if (!server->world->checkerboard)
+        server->world->checkerboard = 1;
+    else
+        server->world->checkerboard = 0;
+}
 
 // Función para manejar los eventos en la escena
 // Eventos que tengo que manejar:
@@ -70,6 +77,8 @@ int key_press_hook(int keycode, t_server *server)
         move_camera_position(server, keycode);
     else if (keycode == XK_r || keycode == XK_g || keycode == XK_b || keycode == XK_t || keycode == XK_h || keycode == XK_n)
         update_ambient_color(server, keycode);
+    else if (keycode == XK_CHECKERBOARD)
+        update_checkerboard(server);
     else if (keycode == XK_space)
     {
         render(server);

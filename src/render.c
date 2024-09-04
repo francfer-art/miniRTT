@@ -36,6 +36,61 @@ int intersec(t_ray *ray, t_list *figures)
     return (hit);
 }
 
+t_color checkerboard_square(t_ray *ray)
+{
+	int		check_x;
+	int		check_y;
+	int		checker;
+	float	size;
+
+	size = 4.0;
+	check_x = (int)floor(ray->record.p.x / size);
+	check_y = (int)floor(ray->record.p.y / size);
+	checker = (check_x + check_y) % 2;
+	if (checker == 0)
+		return ray->record.color;
+	else
+		return (0xFFFFFF - ray->record.color);
+}
+
+
+t_color	checkerboard_sphere(t_ray *ray, float size)
+{
+    int		check_x;
+    int		check_y;
+    int		check_z;
+    int		checker;
+
+	check_x = (int)floor(ray->record.p.x / size);
+	check_y = (int)floor(ray->record.p.y / size);
+	check_z = (int)floor(ray->record.p.z / size);
+	checker = (check_x + check_y + check_z) % 2;
+	if (checker == 0)
+		return ray->record.color;
+	else
+		return (0xFFFFFF - ray->record.color);
+}
+
+/* t_color	checkerboard_cylinder(t_ray *ray)
+{
+
+} */
+
+t_color checkerboard_pattern_selector(t_ray *ray)
+{
+	if (ray->record.type == SPHERE)
+		return (checkerboard_sphere(ray, 1.0));
+	else if (ray->record.type == PLANE)
+		return (checkerboard_sphere(ray, 3.0));
+	else if (ray->record.type == SQUARE)
+		return (checkerboard_square(ray));
+	/* else if (ray->record.type == CYLINDER)
+		return (checkerboard_cylinder(ray)); */
+	else
+		return (checkerboard_sphere(ray, 1.0));
+	return (ray->record.color);
+}
+
 // El raytracing se encarga de determinar la intersección del rayo
 // con los objetos en la escena y calcular el color resultante basado
 // en las propiedades del material, las luces, y otras consideraciones.
@@ -50,6 +105,8 @@ t_color raytracer(t_ray *ray, t_world *world)
 
     if (!intersec(ray, world->figures))
         return (0x0);
+    if (world->checkerboard)
+        ray->record.color = checkerboard_pattern_selector(ray);
     light = world->lights;
     ambient = cscale((*world->ambient).color, (*world->ambient).brightness);
     color = cproduct(ray->record.color, ambient);

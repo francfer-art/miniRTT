@@ -29,11 +29,12 @@
 // Factor de low render
 # define BASE_FACTOR 50000
 
-// Zoom factors
+// Some defines that are not in X11 library
 # define XK_ZOOM_IN 0x0004
 # define XK_ZOOM_OUT 0x0005
 # define XK_LEFT_BUTTON 0x0001
 # define XK_RIGHT_BUTTON 0x0003
+# define XK_CHECKERBOARD 0X60
 
 //MATERIALES
 # define ALBEDO 1000
@@ -177,6 +178,7 @@ typedef struct s_world
 	t_list			*lights;
 	t_list			*cameras;
 	t_light			*ambient;
+	int				checkerboard;
 }					t_world;
 
 typedef struct s_image
