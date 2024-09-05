@@ -67,3 +67,18 @@ t_vector	cross(t_vector v, t_vector w)
 	u.z = (v.x * w.y) - (v.y * w.x);
 	return (u);
 }
+
+// Función que calcula la reflexión de un rayo basado en la dirección del rayo y de la normal
+// del objeto con el que intersecciona. Este rayo incluye la información del material del 
+// obejto interseccionado
+t_color	reflect(t_ray *ray, t_world *world)
+{
+	
+}
+
+// Función que calcula la refracción de un rayo basado en la ley de Snell, usando el índice
+// de refracción del material y del ambiente.
+t_color	refract(t_ray *ray, t_world *world)
+{
+	
+}

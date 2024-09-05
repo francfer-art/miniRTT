@@ -78,6 +78,16 @@ typedef enum s_type
 	CYLINDER
 }					t_type;
 
+typedef	struct s_material
+{
+	t_color			diffuse;
+	t_color			specular;
+	float			shininess;
+	float			reflectivity;
+	float			refractivity;
+	float			ior;
+}					t_material;
+
 typedef struct s_point
 {
 	double			x;
