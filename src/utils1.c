@@ -30,6 +30,7 @@ int	invalid_number(char *str)
 		else
 			inv |= (!ft_isdigit(str[i]) & (str[i] != '.'));
 	}
+	free(str);
 	return (inv);
 }
 

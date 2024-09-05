@@ -37,28 +37,53 @@
 # define ALBEDO_MATTE 300
 # define ALBEDO_NONE 0
 
-// Definición de errores 
-# define ERROR_MALLOC "ERROR : Malloc problem 🔴"
-# define ERROR_PARSE "ERROR : While parsing 🔴"
-# define ERROR_JEFE "🐷 Nos vemos jefe 🐷"
-# define ERROR_CREATE "ERROR; return code from pthread_create() 🔴"
-# define ERROR_JOIN "ERROR : return code from pthread_join() 🔴"
-# define ERROR_COLOR "ERROR : Invalid color definition 🔴"
-# define ERROR_SERVER "ERROR : Can't create server 🔴"
-# define ERROR_COL_VAL "ERROR : Color value out range 🔴"
-# define ERROR_VECTOR "ERROR : Vector out range 🔴"
-# define ERROR_BRIGHTNESS "ERROR : Brightness out of range 🔴"
-# define ERROR_RATIO "ERROR : Ambient light ratio out of range 🔴"
-# define ERROR_DIR "ERROR : Invalid number detected 🔴"
-# define ERROR_ARG "ERROR : Incorrect number of arguments 🔴"
-# define ERROR_ID "ERROR : Invalid object's identifier 🔴"
-# define ERROR_RES "ERROR : Resolution not found 🔴"
-# define ERROR_RES_LEN "ERROR : Poor resolution definition 🔴"
-# define ERROR_RES_VALUE "ERROR : Resolution value below 0 🔴"
-# define ERROR_AMB "ERROR : Not ambient light found 🔴"
-# define ERROR_FORMAT "ERROR : File format not supported"
-# define ERROR_OPEN "ERROR : Error opening the file 🔴"
-# define ERROR_CLOSE "ERROR : Error closing the file 🔴"
+// // Definición de errores 
+// # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
+// # define ERROR_PARSE "ERROR : While parsing 🔴"
+// # define ERROR_JEFE "🐷 Nos vemos jefe 🐷"
+// # define ERROR_CREATE "ERROR; return code from pthread_create() 🔴"
+// # define ERROR_JOIN "ERROR : return code from pthread_join() 🔴"
+// # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
+// # define ERROR_SERVER "ERROR : Can't create server 🔴"
+// # define ERROR_COL_VAL "ERROR : Color value out range 🔴"
+// # define ERROR_VECTOR "ERROR : Vector out range 🔴"
+// # define ERROR_BRIGHTNESS "ERROR : Brightness out of range 🔴"
+// # define ERROR_RATIO "ERROR : Ambient light ratio out of range 🔴"
+// # define ERROR_DIR "ERROR : Invalid number detected 🔴"
+// # define ERROR_ARG "ERROR : Incorrect number of arguments 🔴"
+// # define ERROR_ID "ERROR : Invalid object's identifier 🔴"
+// # define ERROR_RES "ERROR : Resolution not found 🔴"
+// # define ERROR_RES_LEN "ERROR : Poor resolution definition 🔴"
+// # define ERROR_RES_VALUE "ERROR : Resolution value below 0 🔴"
+// # define ERROR_AMB "ERROR : Not ambient light found 🔴"
+// # define ERROR_FORMAT "ERROR : File format not supported"
+// # define ERROR_OPEN "ERROR : Error opening the file 🔴"
+// # define ERROR_CLOSE "ERROR : Error closing the file 🔴"
+
+typedef enum {
+    ERROR_JEFE,
+    ERROR_MALLOC,
+    ERROR_PARSE,
+    ERROR_CREATE,
+    ERROR_JOIN,
+    ERROR_COLOR,
+    ERROR_SERVER,
+    ERROR_COL_VAL,
+    ERROR_VECTOR,
+    ERROR_BRIGHTNESS,
+    ERROR_RATIO,
+    ERROR_DIR,
+    ERROR_ARG,
+    ERROR_ID,
+    ERROR_RES,
+    ERROR_RES_LEN,
+    ERROR_RES_VALUE,
+    ERROR_AMB,
+    ERROR_FORMAT,
+    ERROR_OPEN,
+    ERROR_CLOSE,
+    ERROR_COUNT // To keep track of the number of errors
+} ErrorType;
 
 typedef int			t_color;
 
