@@ -54,16 +54,16 @@ t_color	ft_atoc(char *str)
 	color = 0x0;
 	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
-		message_exit(ERROR_COLOR);
+		msg_exit(ERROR_COLOR);
 	else
 	{
 		while (i < 3)
 		{
 			if (invalid_number(split[i]))
-				message_exit(ERROR_DIR);
+				msg_exit(ERROR_DIR);
 			prim = ft_atoi(split[i]);
 			if (prim < 0 || prim > 0xFF)
-				message_exit(ERROR_COL_VAL);
+				msg_exit(ERROR_COL_VAL);
 			color = (color << 8) | prim;
 			i++;
 		}

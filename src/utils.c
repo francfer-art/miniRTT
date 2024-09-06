@@ -49,7 +49,7 @@ float	ft_atof(char *str)
 	i = -1;
 	sign = 1;
 	if (invalid_number(str))
-		message_exit(ERROR_DIR);
+		msg_exit(ERROR_DIR);
 	if (*str == '+' || *str == '-')
 		if (*str++ == '-')
 			sign = -1;

@@ -58,7 +58,7 @@ t_world	*scene_init(char *file)
 
 	fd = open_scene_file(file);
 	if (fd < 0)
-		message_exit(ERROR_OPEN);
+		msg_exit(ERROR_OPEN);
 	world = new_world();
 	err = parser_file(fd, world);
 	if (close(fd) < 0)

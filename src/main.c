@@ -73,7 +73,7 @@ int	pre_parse(char *file)
 	full_map = NULL;
 	fd = open_scene_file(file);
 	if (fd < 0)
-		message_exit(ERROR_OPEN);
+		msg_exit(ERROR_OPEN);
 	while ((line = get_next_line(fd)))
 	{
 		if (*line != '#' && *line != '\n')

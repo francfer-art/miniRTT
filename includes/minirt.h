@@ -225,9 +225,9 @@ typedef struct s_thread_data
 } 					t_thread_data;
 
 //error.c
-void				message_exit(char *msg);
+// void				message_exit(char *msg);
 void				msg_exit(ErrorType error);
-void				full_message_exit(char *msg, t_world *world, t_server *server);
+void				full_message_exit(ErrorType msg, t_world *world, t_server *server);
 
 //scene.c
 t_world				*scene_init(char *file);
