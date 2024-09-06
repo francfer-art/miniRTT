@@ -21,5 +21,5 @@ void	full_message_exit(char *msg, t_world *world, t_server *server)
 {
 	free_world(world);
 	free_server(server);
-	message_exit(msg);
+	msg_exit(msg);
 }
