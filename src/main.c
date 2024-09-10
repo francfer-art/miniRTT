@@ -3,6 +3,7 @@
 // Función principal del proyecto
 // Lo primero que hacemos es verificar que el número de argumentos es válido,
 // es decir, si el número de argumentos es menor que 2 o mayor que 3 paramos la
+// es decir, si el número de argumentos es menor que 2 o mayor que 3 paramos la
 // ejecucuión aquí.
 // Inicializamos el mundo --> Esta función leerá el mapa y parseará toda la
 // información e irá creando las figuras y guardandolas en la estructura world
