@@ -68,17 +68,115 @@ t_vector	cross(t_vector v, t_vector w)
 	return (u);
 }
 
+t_vector	negate(t_vector v)
+{
+	return (vector(-v.x, -v.y, -v.z));
+}
+
+float	clamp(float value, float min, float max)
+{
+	if (value < min)
+		return (min);
+	if (value > max)
+		return (max);
+	return (value);
+}
+
+t_vector	reflect_vector(t_vector v, t_vector normal)
+{
+	return (sub(v, scale(normal, 2.0 * dot(v, normal))));
+}
+
+t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
+{
+	float		cosi;
+	float		etai;
+	float		etat;
+	t_vector	n;
+
+	cosi = clamp(dot(v, normal), -1.0, 1.0);
+	etai = env_ior;
+	etat = ior;
+	n = normal;
+	if (cosi < 0)
+		cosi = -cosi;
+	else
+	{
+		float temp = etai;
+		etai = etat;
+		etat = temp;
+		n = negate(normal);
+	}
+	float eta = etai / etat;
+	float k = 1.0 - eta * eta * (1.0 - cosi * cosi);
+	if (k < 0)
+		return (vector(0, 0, 0));
+	return (add(scale(v, eta), scale(n, (eta * cosi -sqrt(k)))));
+}
 // Función que calcula la reflexión de un rayo basado en la dirección del rayo y de la normal
 // del objeto con el que intersecciona. Este rayo incluye la información del material del 
 // obejto interseccionado
-t_color	reflect(t_ray *ray, t_world *world)
-{
-	
-}
+// t_color	reflect(t_ray *ray, t_world *world)
+// {
+// 	t_vector	reflected_v;
+// 	t_ray		reflected_ray;
+// 	t_color		refleted_color;
+
+// 	reflected_v = reflect_vector(ray->direction, ray->record.normal);
+// 	reflected_ray.origin = ray->record.p;
+// 	reflected_ray.direction = norm(reflected_v);
+// 	refleted_color = raytracer(&reflected_ray, world);
+// 	return (refleted_color);
+// }
 
 // Función que calcula la refracción de un rayo basado en la ley de Snell, usando el índice
 // de refracción del material y del ambiente.
-t_color	refract(t_ray *ray, t_world *world)
+// t_color	refract(t_ray *ray, t_world *world)
+// {
+// 	float		env_ior;
+// 	t_vector	refracted_vector;
+// 	t_ray		refracted_ray;
+// 	t_color		refracted_color;
+
+// 	env_ior = 1.0;
+// 	refracted_vector = refract_vector(ray->direction, ray->record.normal, ray->record.material.ior, env_ior);
+// 	if (length(refracted_vector) == 0)
+// 		return (0x0);
+// 	refracted_ray.origin = ray->record.p;
+// 	refracted_ray.direction = norm(refracted_vector);
+// 	refracted_color = raytracer(&refracted_ray, world);
+// 	return (refracted_color);
+// }
+
+t_color reflect(t_ray *ray, t_world *world, int depth)
 {
-	
+    if (depth <= 0)
+        return (0x0);
+
+    t_vector reflected_v = reflect_vector(ray->direction, ray->record.normal);
+    t_ray reflected_ray = {
+        .origin = ray->record.p,
+        .direction = norm(reflected_v),
+        .record = (t_hit){0}  // Inicializar el record para evitar problemas
+    };
+    return raytracer(&reflected_ray, world, depth - 1);
+}
+
+t_color refract(t_ray *ray, t_world *world, int depth)
+{
+    if (depth <= 0)
+        return (0x0);
+
+    float env_ior = 4.0 * ALBEDO;
+    t_vector refracted_vector = refract_vector(ray->direction, ray->record.normal, ray->record.material.ior, env_ior);
+
+    if (length(refracted_vector) == 0)
+        return (0x0);
+
+    t_ray refracted_ray = {
+        .origin = ray->record.p,
+        .direction = norm(refracted_vector),
+        .record = (t_hit){0}  // Inicializar el record para evitar problemas
+    };
+    return raytracer(&refracted_ray, world, depth - 1);
 }

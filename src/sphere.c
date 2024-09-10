@@ -73,6 +73,12 @@ int	hit_sphere(t_ray *ray, t_sphere *sphere)
 			ray->record.normal = norm(sub(ray->record.p, sphere->center));
 			ray->record.color = sphere->color;
 			ray->record.type = SPHERE;
+			ray->record.material.diffuse = 0x0;           // Color marrón oscuro
+			ray->record.material.specular = 0x4C3C3C;          // Reflexión especular baja
+			ray->record.material.shininess = 164;               // Moderadamente brillante
+			ray->record.material.reflectivity = 0.2;           // Reflexión moderada
+			ray->record.material.refractivity = 1.0;           // No refracta
+			ray->record.material.ior = 1.54;                    // Índice de refracción para cuero
 			return (1);
 		}
 		i++;

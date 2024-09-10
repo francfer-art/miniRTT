@@ -90,6 +90,12 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
     ray.direction = norm(sub(ray.direction, ray.origin));
     ray.record.object = NULL;
     ray.record.color = 0x0;
+    ray.record.material.diffuse = 0;
+    ray.record.material.specular = 0xFFFFFF;
+    ray.record.material.shininess = 128;
+    ray.record.material.reflectivity = 0.1;
+    ray.record.material.refractivity = 0.9;
+    ray.record.material.ior = 1.52;
     return (ray);
 }
 

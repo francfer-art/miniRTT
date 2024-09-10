@@ -80,6 +80,7 @@ typedef enum s_type
 
 typedef	struct s_material
 {
+	char			*type;
 	t_color			diffuse;
 	t_color			specular;
 	float			shininess;
@@ -172,6 +173,7 @@ typedef struct s_hit
 	void			*object;
 	t_color			color;
 	t_type			type;
+	t_material		material;
 }					t_hit;
 
 typedef struct s_ray
@@ -189,6 +191,7 @@ typedef struct s_world
 	t_list			*cameras;
 	t_light			*ambient;
 	int				checkerboard;
+	int				material;
 }					t_world;
 
 typedef struct s_image
@@ -249,6 +252,12 @@ t_vector			add(t_vector v, t_vector w);
 t_vector			sub(t_vector v, t_vector w);
 t_vector			at(t_ray ray);
 t_vector			cross(t_vector v, t_vector w);
+t_vector			negate(t_vector v);
+float				clamp(float value, float min, float max);
+t_vector			reflect_vector(t_vector v, t_vector normal);
+t_vector			refract_vector(t_vector v, t_vector normal, float ior, float env_ior);
+t_color				reflect(t_ray *ray, t_world *world, int depth);
+t_color				refract(t_ray *ray, t_world *world, int depth);
 
 //parser.c
 int					*resolution(char **data, t_world *world);
@@ -326,7 +335,7 @@ float				light_intensity(t_light light, t_hit record);
 
 //render.c
 int 				intersec(t_ray *ray, t_list *figures);
-t_color 			raytracer(t_ray *ray, t_world *world);
+t_color 			raytracer(t_ray *ray, t_world *world, int depth);
 void				render(t_server *server);
 void 				render_low(t_server *server);
 int					adjust_scale_factor(t_server *server);

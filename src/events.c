@@ -49,6 +49,14 @@ void update_ambient_color(t_server *server, int code)
     server->world->ambient->color = color;
 }
 
+void    update_material(t_server *server)
+{
+    if (!server->world->material)
+        server->world->material = 1;
+    else
+        server->world->material = 0;
+}
+
 void    update_checkerboard(t_server *server)
 {
     if (!server->world->checkerboard)
@@ -79,6 +87,8 @@ int key_press_hook(int keycode, t_server *server)
         update_ambient_color(server, keycode);
     else if (keycode == XK_CHECKERBOARD)
         update_checkerboard(server);
+    else if (keycode == XK_m)
+        update_material(server);
     else if (keycode == XK_space)
     {
         render(server);

@@ -39,6 +39,8 @@ t_world	*new_world(void)
 	world->lights = NULL;
 	world->cameras = NULL;
 	world->ambient = NULL;
+	world->checkerboard = 0;
+	world->material = 0;
 	return (world);
 }
 
@@ -65,6 +67,5 @@ t_world	*scene_init(char *file)
 		full_message_exit(ERROR_CLOSE, world, NULL);
 	if (err)
 		full_message_exit(ERROR_PARSE, world, NULL);
-	world->checkerboard = 0;
 	return (world);
 }

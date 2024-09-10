@@ -55,6 +55,12 @@ int	hit_plane(t_ray *ray, t_plane *plane)
 		ray->record.color = plane->color;
 		ray->record.type = plane->type;
 		ray->record.object = plane;
+		ray->record.material.diffuse = 0x000000;  // Sin difuso
+		ray->record.material.specular = 0xFFFFF; // Reflexión especular alta
+		ray->record.material.shininess = 200;     // Reflejos nítidos
+		ray->record.material.reflectivity = 0.3;  // Reflexión completa
+		ray->record.material.refractivity = 1.0;  // No refracta
+		ray->record.material.ior = 1.52; 
 		return (1);
 	}
 	return (0);
