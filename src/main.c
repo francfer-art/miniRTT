@@ -82,7 +82,8 @@ int	pre_parse(char *file)
 		}
 		free(line);
 	}
-	close(fd);
+	if(close(fd) < 0)
+		msg_exit(ERROR_OPEN);
 
 	full_map = (char **)malloc(sizeof(char *) * (count_line + 1));
 	fd = open_scene_file(file);
