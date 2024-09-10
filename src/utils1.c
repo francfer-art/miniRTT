@@ -54,7 +54,12 @@ t_color	ft_atoc(char *str)
 	color = 0x0;
 	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
-		msg_exit(ERROR_COLOR);
+	{	
+		// printf("here!\n");
+		free_double(split);
+		// msg_exit(ERROR_COLOR);
+		return -1;
+	}
 	else
 	{
 		while (i < 3)

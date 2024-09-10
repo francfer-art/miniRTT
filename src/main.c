@@ -52,14 +52,13 @@ void	msg_exit(ErrorType error)
 	else if (error == 0)
 	{
 		ft_printf(error_messages[error]);
+		for (int i = 0; i < ERROR_COUNT; i++)
+		{
+			free(error_messages[i]);
+		}
 		exit(EXIT_SUCCESS);
 	}
 }
-
-// int checker(char **data)
-// {
-// 	if
-// }
 
 int	pre_parse(char *file)
 {
@@ -150,20 +149,27 @@ int	pre_parse(char *file)
 				free_double(full_map);
 				msg_exit(ERROR_FORMAT);
 			}
+			else if (ft_atoc(data[3]) == -1)
+			{
+				free_double(data);
+				free_double(full_map);
+				msg_exit(ERROR_PARSE);
+			}
 		}
+		else if (!ft_strcmp(data[0], "sp"))
+		{
+			if (double_pointer_len(data) != 4)
+			{
+				free_double(data);
+				free_double(full_map);
+				msg_exit(ERROR_PARSE);
+			}
+		}
+		
 		free_double(data);
 	}
 	free_double(full_map);
 
-
-
-	
-	// world = new_world();
-	// err = parser_file(fd, world);
-	// if (close(fd) < 0)
-	// 	full_message_exit(ERROR_CLOSE, world, NULL);
-	// if (err)
-	// 	full_message_exit(ERROR_PARSE, world, NULL);
 	return (res);
 }
 
