@@ -19,6 +19,8 @@ t_sphere	*new_sphere(char **data)
 	sphere->color = ft_atoc(data[3]);
 	sphere->radius = ft_atof(data[2]);
 	sphere->center = ft_atov(data[1]);
+	sphere->material.type = 1;
+	/* sphere->texture = 1; */
 	return (sphere);
 }
 
@@ -47,6 +49,25 @@ void	sphere_roots(t_ray ray, t_sphere sphere, float *root)
 	root[1] = (-half_b + sqrt_disc) / a;
 }
 
+void	fill_glass_material(t_ray *ray)
+{
+	ray->record.material.diffuse = 0x0;
+	ray->record.material.specular = 0x4C3C3C;
+	ray->record.material.shininess = 164;
+	ray->record.material.reflectivity = 0.2;
+	ray->record.material.refractivity = 1.0;
+	ray->record.material.ior = 1.54;
+}
+
+void	fill_mate_material(t_ray *ray)
+{
+	ray->record.material.diffuse = 0x0;
+	ray->record.material.specular = 0xFFFFFF;
+	ray->record.material.shininess = 24;
+	ray->record.material.reflectivity = 0.0;
+	ray->record.material.refractivity = 0.0;
+	ray->record.material.ior = 1.0;
+}
 // Función que determina si un rayo ha interseccionado con una esfera, devuelve
 // 1 si hay intersección y 0 si no la hay.
 // Lo primero que hacemos es calcular las raíces, llamando a sphere_roots
@@ -73,12 +94,10 @@ int	hit_sphere(t_ray *ray, t_sphere *sphere)
 			ray->record.normal = norm(sub(ray->record.p, sphere->center));
 			ray->record.color = sphere->color;
 			ray->record.type = SPHERE;
-			ray->record.material.diffuse = 0x0;           // Color marrón oscuro
-			ray->record.material.specular = 0x4C3C3C;          // Reflexión especular baja
-			ray->record.material.shininess = 164;               // Moderadamente brillante
-			ray->record.material.reflectivity = 0.2;           // Reflexión moderada
-			ray->record.material.refractivity = 1.0;           // No refracta
-			ray->record.material.ior = 1.54;                    // Índice de refracción para cuero
+			if (sphere->material.type)
+				fill_glass_material(ray);
+			else
+				fill_mate_material(ray);
 			return (1);
 		}
 		i++;

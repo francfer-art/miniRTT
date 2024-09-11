@@ -35,6 +35,7 @@
 # define XK_LEFT_BUTTON 0x0001
 # define XK_RIGHT_BUTTON 0x0003
 # define XK_CHECKERBOARD 0X60
+# define XK_TEXTURE 0x0075
 
 //MATERIALES
 # define ALBEDO 1000
@@ -80,7 +81,7 @@ typedef enum s_type
 
 typedef	struct s_material
 {
-	char			*type;
+	int				type;
 	t_color			diffuse;
 	t_color			specular;
 	float			shininess;
@@ -109,6 +110,7 @@ typedef struct s_sphere
 	t_vector		center;
 	float			radius;
 	t_color			color;
+	t_material		material;
 }					t_sphere;
 
 typedef struct s_plane
@@ -117,6 +119,7 @@ typedef struct s_plane
 	t_vector		point;
 	t_vector		normal;
 	t_color			color;
+	t_material		material;
 }					t_plane;
 
 typedef struct s_quare
@@ -127,6 +130,7 @@ typedef struct s_quare
 	t_vector		normal;
 	t_vector		vertex[4];
 	t_color			color;
+	t_material		material;
 }					t_square;
 
 typedef struct s_cylinder
@@ -183,6 +187,17 @@ typedef struct s_ray
 	t_hit			record;
 }					t_ray;
 
+typedef struct		s_texture
+{
+    void    *img_ptr;      // Puntero a la imagen de la textura
+    char    *img_data;     // Dirección de los datos de la imagen
+    int     width;         // Ancho de la imagen
+    int     height;        // Alto de la imagen
+    int     bpp;           // Bits por píxel
+    int     size_line;     // Longitud de una línea de la imagen en bytes
+    int     endian;        // Endianess
+}					t_texture;
+
 typedef struct s_world
 {
 	int				*resolution;
@@ -192,6 +207,8 @@ typedef struct s_world
 	t_light			*ambient;
 	int				checkerboard;
 	int				material;
+	int				texture;
+	t_texture		*texture_img;
 }					t_world;
 
 typedef struct s_image
@@ -228,6 +245,7 @@ void				full_message_exit(char *msg, t_world *world, t_server *server);
 t_world				*scene_init(char *file);
 int					open_scene_file(char *file);
 t_world				*new_world(void);
+void				init_texture(void *mlx_ptr, t_texture *texture, char *file_path);
 
 //utils.c
 int					double_pointer_len(char **data);
@@ -299,6 +317,8 @@ int					hit_cylinder(t_ray *ray, t_cylinder *cylinder);
 t_sphere			*new_sphere(char **data);
 void				sphere_roots(t_ray ray, t_sphere sphere, float *root);
 int					hit_sphere(t_ray *ray, t_sphere *sphere);
+void				fill_glass_material(t_ray *ray);
+void				fill_mate_material(t_ray *ray);
 
 //triangle.c
 t_triangle			*new_triangle(char **data);

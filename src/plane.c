@@ -20,6 +20,7 @@ t_plane	*new_plane(char **data)
 	plane->point = ft_atov(data[1]);
 	plane->normal = norm(ft_atov(data[2]));
 	plane->color = ft_atoc(data[3]);
+	plane->material.type = 1;
 	return (plane);
 }
 
@@ -55,12 +56,10 @@ int	hit_plane(t_ray *ray, t_plane *plane)
 		ray->record.color = plane->color;
 		ray->record.type = plane->type;
 		ray->record.object = plane;
-		ray->record.material.diffuse = 0x000000;  // Sin difuso
-		ray->record.material.specular = 0xFFFFF; // Reflexión especular alta
-		ray->record.material.shininess = 200;     // Reflejos nítidos
-		ray->record.material.reflectivity = 0.3;  // Reflexión completa
-		ray->record.material.refractivity = 1.0;  // No refracta
-		ray->record.material.ior = 1.52; 
+		if (plane->material.type)
+			fill_glass_material(ray);
+		else
+			fill_mate_material(ray);
 		return (1);
 	}
 	return (0);

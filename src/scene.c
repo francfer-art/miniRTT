@@ -41,6 +41,20 @@ t_world	*new_world(void)
 	world->ambient = NULL;
 	world->checkerboard = 0;
 	world->material = 0;
+	world->texture = 0;
+	world->texture_img = malloc(sizeof(t_texture));
+    if (!world->texture_img)
+    {
+        free(world);
+        return (NULL);
+    }
+	world->texture_img->img_ptr = NULL;
+   	world->texture_img->img_data = NULL;
+    world->texture_img->width = 0;
+    world->texture_img->height = 0;
+    world->texture_img->bpp = 0;
+    world->texture_img->size_line = 0;
+    world->texture_img->endian = 0;
 	return (world);
 }
 
@@ -68,4 +82,15 @@ t_world	*scene_init(char *file)
 	if (err)
 		full_message_exit(ERROR_PARSE, world, NULL);
 	return (world);
+}
+
+void init_texture(void *mlx_ptr, t_texture *texture, char *file_path)
+{
+    texture->img_ptr = mlx_xpm_file_to_image(mlx_ptr, file_path, &texture->width, &texture->height);
+    if (!texture->img_ptr)
+    {
+        printf("Error: No se pudo cargar la textura desde %s\n", file_path);
+        return;
+    }
+    texture->img_data = mlx_get_data_addr(texture->img_ptr, &texture->bpp, &texture->size_line, &texture->endian);
 }

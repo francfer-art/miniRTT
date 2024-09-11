@@ -47,8 +47,8 @@ t_square    *new_square(char **data)
     square->side = ft_atof(data[3]);
     square->color = ft_atoc(data[4]);
     square_vertex(square);
+    square->material.type = 1;
     return(square);
-
 }
 
 // Función que comprueba si una intersección está dentro de un polígono definido
@@ -117,6 +117,10 @@ int	hit_square(t_ray *ray, t_square *square)
 	{
 		*ray = r;
 		ray->record.object = square;
+        if (square->material.type)
+            fill_glass_material(ray);
+        else
+            fill_mate_material(ray);
 		hit = 1;
 	}
 	return (hit);
