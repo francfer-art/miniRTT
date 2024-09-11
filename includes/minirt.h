@@ -93,7 +93,9 @@ typedef enum s_type
 	PLANE,
 	SQUARE,
 	TRIANGLE,
-	CYLINDER
+	CYLINDER,
+	CONE,
+	TORUS
 }					t_type;
 
 typedef struct s_point
