@@ -130,18 +130,21 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
         return 0x0;
     if (!intersec(ray, world->figures))
         return (0x0);
-    if (world->material)
-        treat_material(ray, world, depth);
     if (world->texture)
     {
         float u = 0,v = 0;
         if (ray->record.type == SPHERE)
         {
-            u = 0.5 + (atan2(ray->record.normal.z, ray->record.normal.x) / (2 * M_PI));
+            u = 1 - (0.5 + (atan2(ray->record.normal.z, ray->record.normal.x) / (2 * M_PI)));
             v = 0.5 - (asin(ray->record.normal.y) / M_PI);
-        }
-        ray->record.color = get_texture_color(world->texture_img, u, v);
+            ray->record.color = get_texture_color(world->texture_img, u, v);
+        }/* else if (ray->record.type == SQUARE)
+        {
+           t_square *square = ray->record.object;
+        } */
     }
+    if (world->material)
+        treat_material(ray, world, depth);
     if (world->checkerboard)
         ray->record.color = checkerboard_pattern_selector(ray);
     light = world->lights;

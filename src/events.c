@@ -74,7 +74,10 @@ void    update_material(t_server *server)
 void    update_checkerboard(t_server *server)
 {
     if (!server->world->checkerboard)
+    {
         server->world->checkerboard = 1;
+        server->world->texture = 0;
+    }
     else
         server->world->checkerboard = 0;
 }
