@@ -47,10 +47,7 @@ void	figures_parser(char **line, t_world *world)
 	else if (!ft_strcmp(line[0], "to"))
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_torus(line)));
 	else if (!ft_strcmp(line[0], "co"))
-	{
-	    printf("pre new cone!\n");
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_cone(line)));
-	}
 	else
 	{
 		free_double(line);

@@ -5,14 +5,14 @@
 // argumento un puntero a t_world y un puntero a t_server, para llamar a las
 // funciones que liberan dichos punteros.
 // Si se le pasa NULL como argumento no liberarán dichos punteros
-// void	msg_exit(char *msg)
-// {
-// 	if (msg)
-// 	{
-// 		ft_printf("%s\n", msg);
-// 	}
-// 	exit(EXIT_FAILURE);
-// }
+void	message_exit(char *msg)
+{
+	if (msg)
+	{
+		ft_printf("%s\n", msg);
+	}
+	exit(EXIT_FAILURE);
+}
 
 // Esta función es la que limpia todo y muestra un error, en caso de que queramos salir de 
 // alguna función con un mensaje de error definido en minirt.h, podemos llamar a esta
