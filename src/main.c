@@ -187,6 +187,7 @@ int	main(int args, char **argv)
 	if (!server)
 		full_message_exit(ERROR_SERVER, world, server);
 	render(server);
+	init_texture(server->mlx, server->world->texture_img, "/home/francfer/Desktop/TEST/textures/brick.xpm");
 	mlx_events(server);
 	return (EXIT_SUCCESS);
 }
