@@ -26,11 +26,21 @@ int intersec(t_ray *ray, t_list *figures)
         else if (type == PLANE)
             hit |= hit_plane(ray, (t_plane *)figures->content);
         else if (type == SPHERE)
+        {
+            // printf("PRE hit sphere!\n");
             hit |= hit_sphere(ray, (t_sphere *)figures->content);
+        }
         else if (type == SQUARE)
             hit |= hit_square(ray, (t_square *)figures->content);
         else if (type == TRIANGLE)
             hit |= hit_triangle(ray, (t_triangle *)figures->content);
+        else if (type == TORUS)
+            hit |= hit_torus(ray, (t_torus *)figures->content);
+        else if (type == CONE)
+        {
+            // printf("PRE hit cone!\n");
+            hit |= hit_cone(ray, (t_cone *)figures->content);
+        }
         figures = figures->next;
     }
     return (hit);

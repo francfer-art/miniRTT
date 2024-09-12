@@ -157,6 +157,24 @@ typedef struct s_triangle
 	t_color			color;
 }					t_triangle;
 
+typedef struct s_torus {
+	t_type type;               // Tipo de objeto, en este caso, TORUS
+    t_vector center;        // Centro del toroide
+    t_vector axis;          // Eje del toroide (puede ser útil si se quiere orientar)
+    float major_radius;     // Radio mayor (desde el centro del toroide al centro del tubo)
+    float minor_radius;     // Radio menor (radio del tubo del toroide)
+    t_color color;          // Color del toroide
+} t_torus;
+
+typedef struct s_cone {
+    t_type type;              // Tipo de objeto, en este caso, CONE
+    t_vector vertex;       // Vértice del cono
+    t_vector direction;    // Dirección del eje del cono (debe estar normalizada)
+    float angle;           // Ángulo de apertura del cono (en radianes)
+    t_color color;         // Color del cono
+	float height;
+} t_cone;
+
 typedef struct s_camera
 {
 	t_vector		origin;
@@ -304,6 +322,15 @@ int					hit_sphere(t_ray *ray, t_sphere *sphere);
 //triangle.c
 t_triangle			*new_triangle(char **data);
 int					hit_triangle(t_ray *ray, t_triangle *triangle);
+
+//torus.c
+t_torus *new_torus(char **data);
+int hit_torus(t_ray *ray, t_torus *torus);
+
+//cone.c
+t_cone *new_cone(char **data);
+int hit_cone(t_ray *ray, t_cone *cone);
+void solve_quadratic(float a, float b, float c, float *roots, int *root_count);
 
 //server.c
 t_image				*new_image(t_server *server);
