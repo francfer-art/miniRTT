@@ -141,12 +141,5 @@ float	light_intensity(t_light light, t_hit record)
 	gain = dot(norm(light_dir), record.normal);
 	if (gain <= 0)
 		return (0);
-	 // Intensidad difusa considerando el material
-    //t_color diffuse_intensity = record.material.diffuse;
-    
-    // Intensidad ambiental (se puede ajustar según el material si es necesario)
-    
-    // Intensidad total teniendo en cuenta la reflexión, la refracción y la luz ambiental
-    // return (light.brightness * (diffuse_intensity * ALBEDO) / (4.0 * M_PI * r2));
 	return ((light.brightness * gain * ALBEDO) / (4.0 * M_PI * r2));
 }

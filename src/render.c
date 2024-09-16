@@ -73,6 +73,30 @@ t_color	checkerboard_sphere(t_ray *ray, float size)
 		return (0xFFFFFF - ray->record.color);
 }
 
+t_color checkerboard_cylinder(t_ray *ray)
+{
+    int         check_x;
+    int         check_y;
+    int         checker;
+    t_cylinder  *cylinder;
+    float       u;
+    float       v;
+    float       theta;
+
+    cylinder = ray->record.object;
+    theta = atan2(ray->record.p.z / cylinder->radius, ray->record.p.x / cylinder->radius);
+    u = (theta + M_PI) / (2 * M_PI);
+    v = ray->record.p.y / cylinder->radius;
+    if (v <= 0)
+        v += 1.0;
+    check_x = (int)floor(u * cylinder->radius);
+    check_y = (int)floor(v * cylinder->radius);
+    checker = (check_x + check_y) % 2;
+    if (checker == 0)
+        return (ray->record.color);
+    else
+        return (0xFFFFFF - ray->record.color);
+}
 
 t_color checkerboard_pattern_selector(t_ray *ray)
 {
@@ -82,8 +106,8 @@ t_color checkerboard_pattern_selector(t_ray *ray)
 		return (checkerboard_sphere(ray, 3.0));
 	else if (ray->record.type == SQUARE)
 		return (checkerboard_square(ray));
-	/* else if (ray->record.type == CYLINDER)
-		return (checkerboard_cylinder(ray)); */
+	else if (ray->record.type == CYLINDER)
+		return (checkerboard_cylinder(ray));
 	else
 		return (checkerboard_sphere(ray, 1.0));
 	return (ray->record.color);
@@ -91,12 +115,12 @@ t_color checkerboard_pattern_selector(t_ray *ray)
 
 void    treat_material(t_ray *ray, t_world *world, int depth)
 {
-    if (ray->record.type == SPHERE || ray->record.type == PLANE)
+    if (ray->record.type == SPHERE || ray->record.type == PLANE || ray->record.type == SQUARE)
     {
         t_color reflected_color = reflect(ray, world, depth);
         ray->record.color = cadd(ray->record.color, cscale(reflected_color, ray->record.material.reflectivity));
     }
-    if (ray->record.type == SPHERE || ray->record.type == PLANE)
+    if (ray->record.type == SPHERE || ray->record.type == PLANE || ray->record.type == SQUARE)
     {
         t_color refracted_color = refract(ray, world, depth);
         ray->record.color = cadd(ray->record.color, cscale(refracted_color, ray->record.material.refractivity));
@@ -143,9 +167,9 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
             t_vector relative_p;
             // Define el eje u_axis como el producto cruzado de la normal con un vector arbitrario
             if (fabs(square->normal.y) < 0.999)
-                u_axis = (cross(square->normal, (t_vector){0, 1, 0}));
+                u_axis = (cross(square->normal, vector(0, 1, 0)));
             else
-                u_axis = (cross(square->normal, (t_vector){1, 0, 0}));
+                u_axis = (cross(square->normal, vector(1, 0, 0)));
 
             // El eje v_axis es el producto cruzado entre la normal y u_axis
             v_axis = (cross(square->normal, u_axis));
@@ -210,52 +234,53 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
 // Función que realiza el render en una sección delimitada. Dicha sección la realiza
 // un hilo diferente. La idea es dividir la ventana en tantos cuadrados como hilos
 // tengae el procesador
-// void *render_section(void *threadarg)
-// {
-//     t_thread_data   *data;
-//     int             i;
-//     int             j;
-//     t_color         pixel_color;
-//     t_ray           ray;
-//     int             max_depth;
+void *render_section(void *threadarg)
+{
+    t_thread_data   *data;
+    int             i;
+    int             j;
+    t_color         pixel_color;
+    t_ray           ray;
+    int             max_depth;
     
-//     data = (t_thread_data *)threadarg;
-//     max_depth = 5;
-//     j = data->start_row;
-//     while (j < data->end_row)
-//     {
-//         i = 0;
-//         while (i < data->server->width)
-//         {
-//             ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
-//             pixel_color = raytracer(&ray, data->server->world, max_depth);
-//             my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
-//             i++;
-//         }
-//     j++;
-//     }
-//     pthread_exit(NULL);
-// }
-
-t_color average_color(t_color *colors, int num_colors) {
-    int r_sum = 0, g_sum = 0, b_sum = 0;
-
-    for (int i = 0; i < num_colors; i++) {
-        r_sum += (colors[i] >> 16) & 0xFF; // Extrae el componente rojo
-        g_sum += (colors[i] >> 8) & 0xFF;  // Extrae el componente verde
-        b_sum += colors[i] & 0xFF;          // Extrae el componente azul
+    data = (t_thread_data *)threadarg;
+    max_depth = 5;
+    j = data->start_row;
+    while (j < data->end_row)
+    {
+        i = 0;
+        while (i < data->server->width)
+        {
+            ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
+            pixel_color = raytracer(&ray, data->server->world, max_depth);
+            my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
+            i++;
+        }
+    j++;
     }
-
-    // Calcula el promedio
-    int r_avg = r_sum / num_colors;
-    int g_avg = g_sum / num_colors;
-    int b_avg = b_sum / num_colors;
-
-    // Empaqueta el promedio en un solo valor entero
-    return (r_avg << 16) | (g_avg << 8) | b_avg;
+    pthread_exit(NULL);
 }
 
-void *render_section(void *threadarg)
+t_color average_color(t_color *colors, int num_colors)
+{
+    int r_sum;
+    int g_sum;
+    int b_sum;
+    int i;
+    r_sum = 0;
+    g_sum = 0;
+    b_sum = 0;
+    i = -1;
+    while(++i < num_colors)
+    {
+        r_sum += (colors[i] >> 16) & 0xFF;
+        g_sum += (colors[i] >> 8) & 0xFF;
+        b_sum += colors[i] & 0xFF;
+    }
+    return ((r_sum / num_colors) << 16) | ((g_sum / num_colors)) << 8 | (b_sum / num_colors);
+}
+
+void *render_section_super(void *threadarg)
 {
     t_thread_data   *data;
     int             i, j, m, n;
@@ -333,7 +358,10 @@ void render(t_server *server)
             thread_data[t].end_row = server->height;
         else
             thread_data[t].end_row = thread_data[t].start_row + rows_per_thread;
-        rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
+        if (server->world->material)
+            rc = pthread_create(&threads[t], NULL, render_section_super, (void *)&thread_data[t]);
+        else
+            rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
         if (rc)
             full_message_exit(ERROR_CREATE, NULL, server);
     }
