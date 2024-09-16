@@ -116,6 +116,7 @@ int	hit_square(t_ray *ray, t_square *square)
 	if (hit_plane(&r, &plane) && is_inside(r.record, square->vertex, 4))
 	{
 		*ray = r;
+        ray->record.type = SQUARE;
 		ray->record.object = square;
         if (square->material.type)
             fill_glass_material(ray);

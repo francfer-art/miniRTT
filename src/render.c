@@ -38,12 +38,14 @@ int intersec(t_ray *ray, t_list *figures)
 
 t_color checkerboard_square(t_ray *ray)
 {
-	int		check_x;
-	int		check_y;
-	int		checker;
-	float	size;
+	int		    check_x;
+	int		    check_y;
+	int         checker;
+	float	    size;
+    t_square    *square;
 
-	size = 4.0;
+    square = ray->record.object;
+	size = square->side;
 	check_x = (int)floor(ray->record.p.z / size);
 	check_y = (int)floor(ray->record.p.x / size);
 	checker = (check_x + check_y) % 2;
@@ -71,10 +73,6 @@ t_color	checkerboard_sphere(t_ray *ray, float size)
 		return (0xFFFFFF - ray->record.color);
 }
 
-/* t_color	checkerboard_cylinder(t_ray *ray)
-{
-
-} */
 
 t_color checkerboard_pattern_selector(t_ray *ray)
 {
@@ -127,7 +125,7 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
     t_light current_light;
 
     if (depth <= 0)
-        return 0x0;
+        return (0x0);
     if (!intersec(ray, world->figures))
         return (0x0);
     if (world->texture)
@@ -138,10 +136,28 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
             u = 1 - (0.5 + (atan2(ray->record.normal.z, ray->record.normal.x) / (2 * M_PI)));
             v = 0.5 - (asin(ray->record.normal.y) / M_PI);
             ray->record.color = get_texture_color(world->texture_img, u, v);
-        }/* else if (ray->record.type == SQUARE)
+        }else if (ray->record.type == SQUARE)
         {
            t_square *square = ray->record.object;
-        } */
+            t_vector u_axis, v_axis;
+            t_vector relative_p;
+            // Define el eje u_axis como el producto cruzado de la normal con un vector arbitrario
+            if (fabs(square->normal.y) < 0.999)
+                u_axis = (cross(square->normal, (t_vector){0, 1, 0}));
+            else
+                u_axis = (cross(square->normal, (t_vector){1, 0, 0}));
+
+            // El eje v_axis es el producto cruzado entre la normal y u_axis
+            v_axis = (cross(square->normal, u_axis));
+
+            // Calcula el punto relativo al centro del cuadrado
+            relative_p = sub(ray->record.p, square->center);
+
+            // Proyecta el punto de intersección en los ejes u y v
+            u = 1 - dot(relative_p, u_axis) / square->side + 0.5;
+            v = dot(relative_p, v_axis) / square->side + 0.5;
+            ray->record.color = get_texture_color(world->texture_img, u, v);
+        }
     }
     if (world->material)
         treat_material(ray, world, depth);
