@@ -136,6 +136,34 @@ t_color get_texture_color(t_texture *texture, float u, float v)
     return *(int*)(texture->img_data + pixel_index);
 }
 
+t_color phong_lighting(t_light light, t_ray *ray)
+{
+    t_color color;
+    t_vector light_dir;
+    t_vector view_dir;
+    t_vector reflect_dir;
+
+    float spec;
+    float diffuse_factor;
+    float specular_factor = 3; // Factor de especularidad, puedes ajustarlo
+    int shininess = 3; // Brillo, puedes ajustarlo
+    color = 0x0;
+    // Dirección de la luz
+    light_dir = norm(sub(light.position, ray->record.p));
+    // Componente difusa (Lambertian)
+    diffuse_factor = fmax(dot(ray->record.normal, light_dir), 0.0);
+    color = cadd(color, cscale(ray->record.material.diffuse, diffuse_factor));
+    // Componente especular (Phong)
+    view_dir = norm(sub(ray->origin, ray->record.p));
+    reflect_dir = reflect_vector(negate(light_dir), ray->record.normal);
+    spec = pow(fmax(dot(view_dir, reflect_dir), 0.0), shininess);
+    color = cadd(color, cscale(ray->record.material.specular, spec * specular_factor));
+    // Escala el color por la intensidad de la luz y su color
+    color = cscale(color, light_intensity(light, ray->record));
+    color = cproduct(color, light.color);
+    return color;
+}
+
 // El raytracing se encarga de determinar la intersección del rayo
 // con los objetos en la escena y calcular el color resultante basado
 // en las propiedades del material, las luces, y otras consideraciones.
@@ -194,7 +222,13 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
     {
         current_light = *((t_light *)light->content);
         vis = !in_shadow(current_light, world->figures, ray->record);
-        color = cadd(color, vis * color_component(current_light, ray->record));
+        if (vis)
+        {
+            if (world->phong)
+                color = cadd(color, phong_lighting(current_light, ray));
+            else
+                color = cadd(color, vis * color_component(current_light, ray->record));
+        }
         light = light->next;
     }
     return (color);

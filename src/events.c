@@ -82,6 +82,18 @@ void    update_checkerboard(t_server *server)
         server->world->checkerboard = 0;
 }
 
+void    update_phong(t_server *server)
+{
+    if (!server->world->phong)
+    {
+        server->world->phong = 1;
+        server->world->texture = 0;
+        server->world->checkerboard = 0;
+    }
+    else
+        server->world->phong = 0;
+}
+
 // Función para manejar los eventos en la escena
 // Eventos que tengo que manejar:
 // ESC para cerrar la escena --> exit_hook()
@@ -108,6 +120,8 @@ int key_press_hook(int keycode, t_server *server)
         update_material(server);
     else if (keycode == XK_TEXTURE)
         update_texture(server);
+    else if (keycode == XK_PHONG)
+        update_phong(server);
     else if (keycode == XK_space)
     {
         render(server);

@@ -36,6 +36,7 @@
 # define XK_RIGHT_BUTTON 0x0003
 # define XK_CHECKERBOARD 0X60
 # define XK_TEXTURE 0x0075
+# define XK_PHONG 0x006C
 
 //MATERIALES
 # define ALBEDO 1000
@@ -209,6 +210,7 @@ typedef struct s_world
 	int				material;
 	int				texture;
 	t_texture		*texture_img;
+	int				phong;
 }					t_world;
 
 typedef struct s_image
