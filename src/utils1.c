@@ -65,10 +65,19 @@ t_color	ft_atoc(char *str)
 		while (i < 3)
 		{
 			if (invalid_number(split[i]))
-				msg_exit(ERROR_DIR);
+			{
+				// printf("here!\n");
+				free_double(split);
+				return -1;
+			}
 			prim = ft_atoi(split[i]);
 			if (prim < 0 || prim > 0xFF)
-				msg_exit(ERROR_COL_VAL);
+			{
+				// printf("here!\n");
+				free_double(split);
+				return -1;
+			}
+				// msg_exit(ERROR_COL_VAL);
 			color = (color << 8) | prim;
 			i++;
 		}

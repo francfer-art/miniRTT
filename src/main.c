@@ -60,6 +60,106 @@ void	msg_exit(ErrorType error)
 	}
 }
 
+int get_number_lines(char *file)
+{
+	int fd;
+	char *line;
+	int count_line;
+
+	count_line = 0;
+	fd = open_scene_file(file);
+	if (fd < 0)
+		msg_exit(ERROR_OPEN);
+	while ((line = get_next_line(fd)))
+	{
+		if (*line != '#' && *line != '\n')
+		{
+			count_line++;
+		}
+		free(line);
+	}
+	if (close(fd) < 0)
+		msg_exit(ERROR_OPEN);
+	
+	return (count_line);
+}
+
+int check_R(char **data)
+{
+	if (double_pointer_len(data) != 3)
+		return (ERROR_RES_LEN);
+	else if (ft_atoi(data[1]) <= 0 || ft_atoi(data[2]) <= 0)
+		return (ERROR_RES_VALUE);
+	return (0);
+}
+
+int check_A(char **data)
+{
+	if (double_pointer_len(data) != 3)
+		return (ERROR_RES_LEN);
+	else if (ft_atof(data[1]) > 1 || ft_atoc(data[2]) < 0)
+		return (ERROR_BRIGHTNESS);
+	return (0);
+}
+
+int check_c(char **data)
+{
+	if (double_pointer_len(data) != 4)
+		return (ERROR_CAMERA);
+	else if (ft_atof(data[3]) < 0 || ft_atof(data[3]) > 180)
+		return (ERROR_CAMERA);
+	return (0);
+}
+
+int check_l(char **data)
+{
+	if (double_pointer_len(data) < 4)
+		return (ERROR_PARSE);
+	else if (ft_atoc(data[3]) == -1)
+		return (ERROR_COLOR);
+	return (0);
+}
+
+int check_pl(char **data)
+{
+	if (double_pointer_len(data) != 4)
+		return (ERROR_FORMAT);
+	else if (ft_atoc(data[3]) == -1)
+		return (ERROR_COLOR);
+	return (0);
+}
+
+int check_sp(char **data)
+{
+	if (double_pointer_len(data) < 4)
+		return (ERROR_FORMAT);
+	else if (ft_atoc(data[3]) == -1)
+		return (ERROR_COLOR);
+	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
+		return (ERROR_FORMAT);
+	return (0);
+}
+
+int check_sq(char **data)
+{
+	if (double_pointer_len(data) != 5)
+		return (ERROR_FORMAT);
+	else if (ft_atoc(data[4]) == -1)
+		return (ERROR_COLOR);
+	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
+		return (ERROR_FORMAT);
+	return (0);
+}
+
+int check_cy(char **data)
+{
+	if (double_pointer_len(data) != 6)
+		return (ERROR_FORMAT);
+	else if (ft_atoc(data[4]) == -1 || ft_atoc(data[5]) == -1)
+		return (ERROR_COLOR);
+	return (0);
+}
+
 int	pre_parse(char *file)
 {
 	char	*line;
@@ -75,20 +175,13 @@ int	pre_parse(char *file)
 	count_line = 0;
 	line = NULL;
 	full_map = NULL;
-	fd = open_scene_file(file);
-	if (fd < 0)
-		msg_exit(ERROR_OPEN);
-	while ((line = get_next_line(fd)))
-	{
-		if (*line != '#' && *line != '\n')
-		{
-			count_line++;
-		}
-		free(line);
-	}
-	if (close(fd) < 0)
-		msg_exit(ERROR_OPEN);
+
+	count_line = get_number_lines(file);
+
+	// Allocate memory and read the full map
 	full_map = (char **)malloc(sizeof(char *) * (count_line + 1));
+	if (!full_map)
+		msg_exit(ERROR_MALLOC);
 	fd = open_scene_file(file);
 	i = 0;
 	while ((line = get_next_line(fd)))
@@ -101,117 +194,53 @@ int	pre_parse(char *file)
 		free(line);
 	}
 	full_map[i] = '\0';
+
+	// Pre-parse the full map 
 	i = -1;
 	data = NULL;
 	res = 0;
-	while (full_map[++i])
+	while (full_map[++i] && res == 0)
 	{
 		data = ft_split_space(full_map[i]);
-		if (!ft_strcmp(data[0], "R"))
-		{
-			if (double_pointer_len(data) != 3)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_RES_LEN);
-			}
-			else if (ft_atoi(data[1]) <= 0 || ft_atoi(data[2]) <= 0)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_RES_VALUE);
-			}
-		}
-		else if (!ft_strcmp(data[0], "A"))
-		{
-			if (double_pointer_len(data) != 3)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_RES_LEN);
-			}
-			else if (ft_atof(data[1]) > 1 || ft_atoc(data[2]) < 0)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_BRIGHTNESS);
-			}
-		}
-		else if (!ft_strcmp(data[0], "c"))
-		{
-			if (double_pointer_len(data) != 4)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_CAMERA);
-			}
-			else if (ft_atof(data[3]) < 0 || ft_atof(data[3]) > 180)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_CAMERA);
-			}
-		}
-		else if (!ft_strcmp(data[0], "l"))
-		{
-			if (double_pointer_len(data) != 4)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_FORMAT);
-			}
-			else if (ft_atof(data[2]) < 0 || ft_atof(data[2]) >= 1)
-			{
-				printf("data[2] = %f\n", ft_atof(data[2]));
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_BRIGHTNESS);
-			}
-			else if (ft_atoc(data[3]) == -1)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_COLOR);
-			}
-		}
-		else if (!ft_strcmp(data[0], "pl"))
-		{
-			if (double_pointer_len(data) != 4)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_FORMAT);
-			}
-			else if (ft_atoc(data[3]) == -1)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_COLOR);
-			}
-		}
-		else if (!ft_strcmp(data[0], "sp"))
-		{
-			if (double_pointer_len(data) < 4)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_PARSE);
-			}
-			else if (ft_atoc(data[3]) == -1)
-			{
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_COLOR);
-			}
-			else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
-			{
-				printf("data[4] = %s\n", data[4]);
-				free_double(data);
-				free_double(full_map);
-				msg_exit(ERROR_FORMAT);
-				
-			}
-		}
+		if (!ft_strcmp(data[0], "R") && check_R(data) != 0)
+			res = check_R(data);
+		else if (!ft_strcmp(data[0], "A") && check_A(data) != 0)
+			res = check_A(data);
+		else if (!ft_strcmp(data[0], "c") && check_c(data) != 0)
+			res = check_c(data);
+		else if (!ft_strcmp(data[0], "l") && check_l(data) != 0)
+			res = check_l(data);
+		else if (!ft_strcmp(data[0], "pl") && check_pl(data) != 0)
+			res = check_pl(data);
+		else if (!ft_strcmp(data[0], "sp") && check_sp(data) != 0)
+			res = check_pl(data);		
+		else if (!ft_strcmp(data[0], "sq") && check_sq(data) != 0)
+			res = check_sq(data);
+		// else if (!ft_strcmp(data[0], "cy") && check_cy(data) != 0)
+		// 	res = check_cy(data);
+
+		// else if (!ft_strcmp(data[0], "sp"))
+		// {
+		// 	if (double_pointer_len(data) < 4)
+		// 	{
+		// 		free_double(data);
+		// 		free_double(full_map);
+		// 		msg_exit(ERROR_PARSE);
+		// 	}
+		// 	else if (ft_atoc(data[3]) == -1)
+		// 	{
+		// 		free_double(data);
+		// 		free_double(full_map);
+		// 		msg_exit(ERROR_COLOR);
+		// 	}
+		// 	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
+		// 	{
+		// 		printf("data[4] = %s\n", data[4]);
+		// 		free_double(data);
+		// 		free_double(full_map);
+		// 		msg_exit(ERROR_FORMAT);
+		// 	}
+		// }
 		free_double(data);
 	}
 	// free_double(data);
@@ -228,7 +257,7 @@ int	main(int args, char **argv)
 	if (args < 2 || args > 3)
 		msg_exit(ERROR_ARG);
 	if (pre_parse(argv[1]) != 0)
-		msg_exit(ERROR_FORMAT);
+		msg_exit(pre_parse(argv[1]));
 	// world = scene_init(argv[1]);
 	// server = new_server(world);
 	// if (!server)
