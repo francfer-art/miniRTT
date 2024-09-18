@@ -90,6 +90,7 @@ typedef enum {
     ERROR_FORMAT,
     ERROR_OPEN,
     ERROR_CLOSE,
+	ERROR_CAMERA,
     ERROR_COUNT // To keep track of the number of errors
 } ErrorType;
 
@@ -102,9 +103,21 @@ typedef enum s_type
 	SQUARE,
 	TRIANGLE,
 	CYLINDER,
-	CONE,
-	TORUS
+	// TORUS
+	CONE
 }					t_type;
+
+// typedef enum s_material_type
+// {
+// 	MATE,
+// 	GLASS,
+// 	PLASTIC,
+// 	METAL,
+// 	MATTE,
+// 	NONE
+// }					t_material_type;
+
+
 
 typedef	struct s_material
 {
@@ -179,14 +192,14 @@ typedef struct s_triangle
 	t_color			color;
 }					t_triangle;
 
-typedef struct s_torus {
-	t_type type;               // Tipo de objeto, en este caso, TORUS
-    t_vector center;        // Centro del toroide
-    t_vector axis;          // Eje del toroide (puede ser útil si se quiere orientar)
-    float major_radius;     // Radio mayor (desde el centro del toroide al centro del tubo)
-    float minor_radius;     // Radio menor (radio del tubo del toroide)
-    t_color color;          // Color del toroide
-} t_torus;
+// typedef struct s_torus {
+// 	t_type type;               // Tipo de objeto, en este caso, TORUS
+//     t_vector center;        // Centro del toroide
+//     t_vector axis;          // Eje del toroide (puede ser útil si se quiere orientar)
+//     float major_radius;     // Radio mayor (desde el centro del toroide al centro del tubo)
+//     float minor_radius;     // Radio menor (radio del tubo del toroide)
+//     t_color color;          // Color del toroide
+// } t_torus;
 
 typedef struct s_cone {
     t_type type;              // Tipo de objeto, en este caso, CONE
@@ -371,8 +384,8 @@ t_triangle			*new_triangle(char **data);
 int					hit_triangle(t_ray *ray, t_triangle *triangle);
 
 //torus.c
-t_torus *new_torus(char **data);
-int hit_torus(t_ray *ray, t_torus *torus);
+// t_torus *new_torus(char **data);
+// int hit_torus(t_ray *ray, t_torus *torus);
 
 //cone.c
 t_cone *new_cone(char **data);
