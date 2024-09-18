@@ -94,6 +94,19 @@ void    update_phong(t_server *server)
         server->world->phong = 0;
 }
 
+void    update_bump(t_server *server)
+{
+    if (!server->world->bump)
+    {
+        server->world->bump = 1;
+        /* server->world->material = 0;
+        server->world->texture = 0;
+        server->world->checkerboard = 0; */
+    }
+    else
+        server->world->bump = 0;
+}
+
 // Función para manejar los eventos en la escena
 // Eventos que tengo que manejar:
 // ESC para cerrar la escena --> exit_hook()
@@ -122,6 +135,8 @@ int key_press_hook(int keycode, t_server *server)
         update_texture(server);
     else if (keycode == XK_PHONG)
         update_phong(server);
+    else if (keycode == XK_BUMP)
+        update_bump(server);
     else if (keycode == XK_space)
     {
         render(server);

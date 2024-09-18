@@ -43,6 +43,7 @@ t_world	*new_world(void)
 	world->material = 0;
 	world->texture = 0;
 	world->phong = 0;
+	world->bump = 0;
 	world->texture_img = malloc(sizeof(t_texture));
     if (!world->texture_img)
     {

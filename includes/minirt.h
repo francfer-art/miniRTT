@@ -37,6 +37,7 @@
 # define XK_CHECKERBOARD 0X60
 # define XK_TEXTURE 0x0075
 # define XK_PHONG 0x006C
+# define XK_BUMP 0x0070
 
 //MATERIALES
 # define ALBEDO 1000
@@ -211,6 +212,7 @@ typedef struct s_world
 	int				texture;
 	t_texture		*texture_img;
 	int				phong;
+	int				bump;
 }					t_world;
 
 typedef struct s_image

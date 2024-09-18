@@ -145,23 +145,68 @@ t_color phong_lighting(t_light light, t_ray *ray)
 
     float spec;
     float diffuse_factor;
-    float specular_factor = 3; // Factor de especularidad, puedes ajustarlo
-    int shininess = 3; // Brillo, puedes ajustarlo
+    float specular_factor = 3;
+    int shininess = 3;
     color = 0x0;
-    // Dirección de la luz
     light_dir = norm(sub(light.position, ray->record.p));
-    // Componente difusa (Lambertian)
     diffuse_factor = fmax(dot(ray->record.normal, light_dir), 0.0);
     color = cadd(color, cscale(ray->record.material.diffuse, diffuse_factor));
-    // Componente especular (Phong)
     view_dir = norm(sub(ray->origin, ray->record.p));
     reflect_dir = reflect_vector(negate(light_dir), ray->record.normal);
     spec = pow(fmax(dot(view_dir, reflect_dir), 0.0), shininess);
     color = cadd(color, cscale(ray->record.material.specular, spec * specular_factor));
-    // Escala el color por la intensidad de la luz y su color
     color = cscale(color, light_intensity(light, ray->record));
     color = cproduct(color, light.color);
     return color;
+}
+float get_height_from_texture(t_texture *texture, float u, float v)
+{
+    int tex_color = get_texture_color(texture, u, v);
+    int red_channel   = (tex_color >> 16) & 0xFF;
+    int green_channel = (tex_color >> 8) & 0xFF;
+    int blue_channel  = tex_color & 0xFF;
+
+    float average_intensity = (red_channel + green_channel + blue_channel) / 3.0;
+    return (average_intensity / 255.0);
+}
+
+t_vector calculate_tangent(t_vector normal)
+{
+    t_vector tangent;
+
+    if (fabs(normal.y) > 0.9)
+        tangent = vector(1, 0, 0);
+    else
+        tangent = vector(0, 1, 0);
+    tangent = cross(tangent, normal);
+    return norm(tangent);
+}
+
+t_vector bump_function(t_hit record, t_texture *texture, float u, float v)
+{
+    float scale1 = 6.9;
+    float du = 100.0 / texture->width;
+    float dv = 100.0 / texture->height;
+    float height_center = get_height_from_texture(texture, u, v);
+    float height_u = get_height_from_texture(texture, u + du, v);
+    float height_v = get_height_from_texture(texture, u, v + dv);
+    float d_height_u = (height_u - height_center) * scale1;
+    float d_height_v = (height_v - height_center) * scale1;
+    t_vector tangent = calculate_tangent(record.normal);
+    t_vector bitangent = cross(record.normal, tangent);
+    t_vector bump = record.normal;
+    bump = add(bump, scale(tangent, d_height_u));
+    bump = add(bump, scale(bitangent, d_height_v));
+    return norm(bump);
+}
+
+
+t_vector apply_bump(t_hit record, t_world *world, float u, float v)
+{
+    t_vector perturbed_normal = record.normal;
+    t_vector bump = bump_function(record, world->texture_img, u, v);
+    perturbed_normal = add(perturbed_normal, bump);
+    return norm(perturbed_normal);
 }
 
 // El raytracing se encarga de determinar la intersección del rayo
@@ -210,6 +255,8 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
             v = dot(relative_p, v_axis) / square->side + 0.5;
             ray->record.color = get_texture_color(world->texture_img, u, v);
         }
+        if (world->bump)
+            ray->record.normal = apply_bump(ray->record, world, u, v);
     }
     if (world->material)
         treat_material(ray, world, depth);
@@ -290,7 +337,7 @@ void *render_section(void *threadarg)
             my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
             i++;
         }
-    j++;
+        j++;
     }
     pthread_exit(NULL);
 }
@@ -384,6 +431,7 @@ void render(t_server *server)
     if (!server->world->cameras)
         return;
     t = -1;
+    ft_printf("🔴 Renderizando la escena 🔴\n");
     while (++t < NUM_THREADS)
     {
         thread_data[t].server = server;
@@ -404,6 +452,7 @@ void render(t_server *server)
         if (pthread_join(threads[t], NULL))
             full_message_exit(ERROR_JOIN, NULL, server);
     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
+    ft_printf("🔵​​ Renderizado listo 🔵​​\n");
 }
 
 // Función que rellanará un cuadrado de pixeles en lugar de 1 solo. EStá función es la 
