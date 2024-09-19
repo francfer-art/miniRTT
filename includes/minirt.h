@@ -14,20 +14,25 @@
 # include <X11/keysym.h>
 # include <pthread.h>
 
-// Número de threads
+// Threads
 #define NUM_THREADS 12
 
-// Extension archivo
+// File extension
 # define EXTENSION ".rt"
 
-// Nombre ventana
+// Window name
 # define WINDOW_TITLE "miniRT"
 
-// Variable para evitar errores
+// Variable for errors
 # define EPSILON 0.001
 
 // Factor de low render
 # define BASE_FACTOR 50000
+
+// Show menu colors
+# define GREEN "\033[1;32m"
+# define RED "\033[1;31m"
+# define RESET "\033[0m"
 
 // Some defines that are not in X11 library
 # define XK_ZOOM_IN 0x0004
@@ -39,7 +44,7 @@
 # define XK_PHONG 0x006C
 # define XK_BUMP 0x0070
 
-//MATERIALES
+//MATERIALS
 # define ALBEDO 1000
 # define ALBEDO_POLISHED_METAL 900
 # define ALBEDO_GLASS 700
@@ -47,7 +52,7 @@
 # define ALBEDO_MATTE 300
 # define ALBEDO_NONE 0
 
-// Definición de errores 
+// Errors definition 
 # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
 # define ERROR_PARSE "ERROR : While parsing 🔴"
 # define ERROR_JEFE "🐷 Nos vemos jefe 🐷"

@@ -76,7 +76,7 @@ void    update_checkerboard(t_server *server)
     if (!server->world->checkerboard)
     {
         server->world->checkerboard = 1;
-        server->world->texture = 0;
+        /* server->world->texture = 0; */
     }
     else
         server->world->checkerboard = 0;
@@ -85,24 +85,15 @@ void    update_checkerboard(t_server *server)
 void    update_phong(t_server *server)
 {
     if (!server->world->phong)
-    {
         server->world->phong = 1;
-        server->world->texture = 0;
-        server->world->checkerboard = 0;
-    }
     else
         server->world->phong = 0;
 }
 
 void    update_bump(t_server *server)
 {
-    if (!server->world->bump)
-    {
+    if (!server->world->bump && server->world->texture)
         server->world->bump = 1;
-        /* server->world->material = 0;
-        server->world->texture = 0;
-        server->world->checkerboard = 0; */
-    }
     else
         server->world->bump = 0;
 }
@@ -182,6 +173,8 @@ int mouse_handler(int button, int x, int y, t_server *server)
     return (0);
 }
 
+
+
 // Función que maneja los eventos de la minilibX
 // Almacenamos la ventana
 // Registro el manejador para eventos de presión de teclas
@@ -195,7 +188,6 @@ int mlx_events(t_server *server)
     void    *window;
 
     window = server->window;
-  
     mlx_hook(window, KeyPress, KeyPressMask, key_press_hook, server);
     mlx_hook(window, DestroyNotify, StructureNotifyMask, exit_hook, server);
     mlx_hook(window, ButtonPress, ButtonPressMask, mouse_handler, server);

@@ -150,33 +150,30 @@ t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
 
 t_color reflect(t_ray *ray, t_world *world, int depth)
 {
-    if (depth <= 0)
+    t_vector reflected_v;
+    t_ray reflected_ray;
+    
+	if (depth <= 0)
         return (0x0);
-
-    t_vector reflected_v = reflect_vector(ray->direction, ray->record.normal);
-    t_ray reflected_ray = {
-        .origin = ray->record.p,
-        .direction = norm(reflected_v),
-        .record = (t_hit){0}  // Inicializar el record para evitar problemas
-    };
-    return raytracer(&reflected_ray, world, depth - 1);
+	reflected_v = reflect_vector(ray->direction, ray->record.normal);
+    reflected_ray.origin = ray->record.p,
+    reflected_ray.direction = norm(reflected_v);
+    return (raytracer(&reflected_ray, world, depth - 1));
 }
 
 t_color refract(t_ray *ray, t_world *world, int depth)
 {
-    if (depth <= 0)
+    t_ray		refracted_ray;
+    t_vector	refracted_vector;
+    float		env_ior;
+    
+	if (depth <= 0)
         return (0x0);
-
-    float env_ior = 4.0 * ALBEDO;
-    t_vector refracted_vector = refract_vector(ray->direction, ray->record.normal, ray->record.material.ior, env_ior);
-
+	env_ior = 4.0 * ALBEDO;
+	refracted_vector = refract_vector(ray->direction, ray->record.normal, ray->record.material.ior, env_ior);
     if (length(refracted_vector) == 0)
         return (0x0);
-
-    t_ray refracted_ray = {
-        .origin = ray->record.p,
-        .direction = norm(refracted_vector),
-        .record = (t_hit){0}  // Inicializar el record para evitar problemas
-    };
-    return raytracer(&refracted_ray, world, depth - 1);
+    refracted_ray.origin = ray->record.p,
+    refracted_ray.direction = norm(refracted_vector);
+    return (raytracer(&refracted_ray, world, depth - 1));
 }
