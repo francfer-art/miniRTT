@@ -98,6 +98,195 @@ void    update_bump(t_server *server)
         server->world->bump = 0;
 }
 
+void    create_filename(char **number, int *screenshot_counter, char **filename)
+{
+    *filename = malloc(sizeof(char *));
+    if (!*filename)
+        return ;
+    *number = ft_itoa(*screenshot_counter);
+    ft_strcpy(*filename, "save/screenshot_");
+    ft_strcat(*filename, *number);
+    ft_strcat(*filename, ".bmp");
+    free(*number);
+    (*screenshot_counter)++;
+}
+
+
+void    set_info(t_server *server, unsigned char bmp_info_header[40])
+{
+    bmp_info_header[0] = 40;
+    bmp_info_header[1] = 0;
+    bmp_info_header[2] = 0;
+    bmp_info_header[3] = 0;
+    bmp_info_header[4] = (unsigned char)(server->width);
+    bmp_info_header[5] = (unsigned char)(server->width >> 8);
+    bmp_info_header[6] = (unsigned char)(server->width >> 16);
+    bmp_info_header[7] = (unsigned char)(server->width >> 24);
+    bmp_info_header[8] = (unsigned char)(server->height);
+    bmp_info_header[9] = (unsigned char)(server->height >> 8);
+    bmp_info_header[10] = (unsigned char)(server->height >> 16);
+    bmp_info_header[11] = (unsigned char)(server->height >> 24);
+    bmp_info_header[12] = 1;
+    bmp_info_header[13] = 0;
+    bmp_info_header[14] = 24;
+    bmp_info_header[15] = 0;
+}
+
+void    set_file(int file_size, unsigned char bmp_file_header[14])
+{
+    bmp_file_header[0] = 'B';
+    bmp_file_header[1] = 'M';
+    bmp_file_header[2] = (unsigned char)(file_size);
+    bmp_file_header[3] = (unsigned char)(file_size >> 8);
+    bmp_file_header[4] = (unsigned char)(file_size >> 16);
+    bmp_file_header[5] = (unsigned char)(file_size >> 24);
+    bmp_file_header[6] = 0;
+    bmp_file_header[7] = 0;
+    bmp_file_header[8] = 0;
+    bmp_file_header[9] = 0;
+    bmp_file_header[10] = 54;
+    bmp_file_header[11] = 0;
+    bmp_file_header[12] = 0;
+    bmp_file_header[13] = 0;
+}
+void    set_header_info(t_server *server, int fd)
+{     
+    int file_size;
+    unsigned char *bmp_file_header;
+    unsigned char *bmp_info_header;
+
+    bmp_file_header = malloc(14);
+    if (!bmp_file_header)
+        return;
+    bmp_info_header = malloc(40);
+    if (!bmp_info_header)
+        return;
+    file_size = 454 + (3 * server->width * server->height);
+    set_file(file_size, bmp_file_header);
+    set_info(server, bmp_info_header);
+    write(fd, bmp_file_header, 14);
+    write(fd, bmp_info_header, 40);
+    free(bmp_file_header);
+    free(bmp_info_header);
+}
+
+void    color_selec(t_server *server, char *pixels, int y, int x, int fd)
+{
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char color[3];
+
+    r = pixels[y * server->image->size_line + x * 4 + 2];
+    g = pixels[y * server->image->size_line + x * 4 + 1];
+    b = pixels[y * server->image->size_line + x * 4 + 0];
+    color[0] = b;
+    color[1] = g;
+    color[2] = r;
+    write(fd, color, 3);
+}
+
+void    put_pixels(t_server *server, char *pixels, int fd)
+{
+    int             padding;
+    unsigned char   pad[3];
+    int             y;
+    int             x;
+
+    padding = (4 - (server->width * 3) % 4) % 4;
+    y = server->height - 1;
+    while (y >= 0)
+    {
+        x = -1;
+        while (++x < server->width)
+            color_selec(server, pixels, y, x, fd);
+        if (padding > 0)
+        {
+            pad[0] = 0;
+            pad[1] = 0;     
+            pad[2] = 0;
+            write(fd, pad, padding);
+        }
+        y--;
+    }
+}
+/* void take_screenshot(t_server *server)
+{
+    static int  screenshot_counter = 0;
+    char        *filename;
+    char        *number;
+    char        *pixels;
+
+    create_filename(&number, &screenshot_counter, &filename);
+    pixels = mlx_get_data_addr(server->image->image, &server->image->bpp, &server->image->size_line, &server->image->endian);
+    int fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    if (fd < 0)
+        return ;
+    free(filename);
+    int file_size = 54 + (3 * server->width * server->height);
+    unsigned char bmp_file_header[14] = {
+        'B', 'M',
+        (unsigned char)(file_size), (unsigned char)(file_size >> 8), (unsigned char)(file_size >> 16), (unsigned char)(file_size >> 24),
+        0, 0, 0, 0,
+        54, 0, 0, 0
+    };
+
+    unsigned char bmp_info_header[40] = {
+        40, 0, 0, 0,
+        (unsigned char)(server->width), (unsigned char)(server->width >> 8), (unsigned char)(server->width >> 16), (unsigned char)(server->width >> 24),
+        (unsigned char)(server->height), (unsigned char)(server->height >> 8), (unsigned char)(server->height >> 16), (unsigned char)(server->height >> 24),
+        1, 0, 24, 0
+    };
+
+    write(fd, bmp_file_header, 14);
+    write(fd, bmp_info_header, 40);
+
+    int padding = (4 - (server->width * 3) % 4) % 4;
+
+    for (int y = server->height - 1; y >= 0; y--)
+    {
+        for (int x = 0; x < server->width; x++)
+        {
+            unsigned char r = pixels[y * server->image->size_line + x * 4 + 2];
+            unsigned char g = pixels[y * server->image->size_line + x * 4 + 1];
+            unsigned char b = pixels[y * server->image->size_line + x * 4 + 0];
+
+            unsigned char color[3] = {b, g, r};
+            write(fd, color, 3);
+        }
+
+        if (padding > 0)
+        {
+            unsigned char pad[3] = {0, 0, 0};
+            write(fd, pad, padding);
+        }
+    }
+
+    printf("%s Screenshot taken 📸%s\n", PURPLE, RESET);
+    close(fd);
+} */
+
+void take_screenshot(t_server *server)
+{
+    static int  screenshot_counter = 0;
+    char        *filename;
+    char        *number;
+    char        *pixels;
+    int         fd;
+
+    create_filename(&number, &screenshot_counter, &filename);
+    pixels = mlx_get_data_addr(server->image->image, &server->image->bpp, &server->image->size_line, &server->image->endian);
+    fd  = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    if (fd < 0)
+        return;
+    free(filename);
+    set_header_info(server, fd);
+    put_pixels(server, pixels, fd);
+    printf("%s Screenshot taken 📸%s\n", PURPLE, RESET);
+    close(fd);
+}
+
+
 // Función para manejar los eventos en la escena
 // Eventos que tengo que manejar:
 // ESC para cerrar la escena --> exit_hook()
@@ -128,6 +317,8 @@ int key_press_hook(int keycode, t_server *server)
         update_phong(server);
     else if (keycode == XK_BUMP)
         update_bump(server);
+    else if (keycode == XK_SCREENSHOT)
+        return (take_screenshot(server), 1);
     else if (keycode == XK_space)
     {
         render(server);

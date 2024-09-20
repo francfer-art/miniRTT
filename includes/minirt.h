@@ -32,6 +32,7 @@
 // Show menu colors
 # define GREEN "\033[1;32m"
 # define RED "\033[1;31m"
+# define PURPLE "\033[1;35m"
 # define RESET "\033[0m"
 
 // Some defines that are not in X11 library
@@ -43,6 +44,7 @@
 # define XK_TEXTURE 0x0075
 # define XK_PHONG 0x006C
 # define XK_BUMP 0x0070
+# define XK_SCREENSHOT 0xFF0D
 
 //MATERIALS
 # define ALBEDO 1000
