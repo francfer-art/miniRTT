@@ -139,21 +139,17 @@ t_color get_texture_color(t_texture *texture, float u, float v)
 t_color phong_lighting(t_light light, t_ray *ray)
 {
     t_color     color;
-    t_vector    light_dir;
-    t_vector    view_dir;
-    t_vector    reflect_dir;
+    t_vector    vector[3];
+    float       spec;
+    float       diffuse_factor;
 
-    float spec;
-    float diffuse_factor;
-    float specular_factor = 3;
-    int shininess = 3;
     color = 0x0;
-    light_dir = norm(sub(light.position, ray->record.p));
-    diffuse_factor = fmax(dot(ray->record.normal, light_dir), 0.0);
+    vector[0] = norm(sub(light.position, ray->record.p));
+    diffuse_factor = fmax(dot(ray->record.normal, vector[0]), 0.0);
     color = cadd(color, cscale(ray->record.material.diffuse, diffuse_factor));
-    view_dir = norm(sub(ray->origin, ray->record.p));
-    reflect_dir = reflect_vector(negate(light_dir), ray->record.normal);
-    spec = pow(fmax(dot(view_dir, reflect_dir), 0.0), 3);
+    vector[1] = norm(sub(ray->origin, ray->record.p));
+    vector[2] = reflect_vector(negate(vector[0]), ray->record.normal);
+    spec = pow(fmax(dot(vector[1], vector[2]), 0.0), 3);
     color = cadd(color, cscale(ray->record.material.specular, spec * 3));
     color = cscale(color, light_intensity(light, ray->record));
     color = cproduct(color, light.color);
@@ -163,16 +159,16 @@ t_color phong_lighting(t_light light, t_ray *ray)
 float get_height_from_texture(t_texture *texture, float u, float v)
 {
     int     tex_color;
-    int     RED_channel;
-    int     GREEN_channel;
+    int     red_channel;
+    int     green_channel;
     int     blue_channel;
     float   average_intensity;
 
     tex_color = get_texture_color(texture, u, v);
-    RED_channel = (tex_color >> 16) & 0xFF;
-    GREEN_channel = (tex_color >> 8) & 0xFF;
+    red_channel = (tex_color >> 16) & 0xFF;
+    green_channel = (tex_color >> 8) & 0xFF;
     blue_channel = tex_color & 0xFF;
-    average_intensity = (RED_channel + GREEN_channel + blue_channel) / 3.0;
+    average_intensity = (red_channel + green_channel + blue_channel) / 3.0;
     return (average_intensity / 255.0);
 }
 
@@ -364,37 +360,6 @@ t_color raytracer(t_ray *ray, t_world *world, int depth)
     return (color);
 }
 
-// La función render se encargará de renderizar la escena y mostrarla en una 
-// ventana gráfica
-// Si no hay cámaras, salimos del renderizado
-// Hacemos un bucle anidado, idéntico al de fractol. Recorrerá todos los pixeles 
-// de pantalla e irá :
-//      Generando el rayo, calculando el color con la función raytracer() y poniendo en 
-//      la imagen el pixel con el nuevo color
-// Tras salir del bucle pondremos la imagen por pantalla mlx_put_image_to_window
-// void    render(t_server *server)
-// {
-//     int     i;
-//     int     j;
-//     t_ray   ray;
-//     t_color pixel_color;
-
-//     if (!server->world->cameras)
-//         return ;
-//     j = server->height;
-//     while (j-- > 0)
-//     {
-//         i = server->width;
-//         while (i-- > 0)
-//         {
-//             ray = generate_ray(server->world->cameras->content, (float)i / server->width, (float)j / server->height);
-//             pixel_color = raytracer(&ray, server->world);
-//             my_put_pixel(server, i, server->height - 1 - j, pixel_color);
-//         }
-//     }
-//     mlx_put_image_to_window(server->mlx, server->window, server->image->image, 0, 0);
-// }
-
 // Función que realiza el render en una sección delimitada. Dicha sección la realiza
 // un hilo diferente. La idea es dividir la ventana en tantos cuadrados como hilos
 // tengae el procesador
@@ -405,10 +370,8 @@ void *render_section(void *threadarg)
     int             j;
     t_color         pixel_color;
     t_ray           ray;
-    int             max_depth;
     
     data = (t_thread_data *)threadarg;
-    max_depth = 5;
     j = data->start_row;
     while (j < data->end_row)
     {
@@ -416,7 +379,7 @@ void *render_section(void *threadarg)
         while (i < data->server->width)
         {
             ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
-            pixel_color = raytracer(&ray, data->server->world, max_depth);
+            pixel_color = raytracer(&ray, data->server->world, 5);
             my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
             i++;
         }
@@ -454,6 +417,7 @@ void *render_section_super(void *threadarg)
     int             max_depth;
     int             samples_per_pixel = 4;
     int             sqrt_samples = 2;
+    t_color averaged_color;
 
     data = (t_thread_data *)threadarg;
     max_depth = 2;
@@ -463,7 +427,8 @@ void *render_section_super(void *threadarg)
         i = 0;
         while (i < data->server->width)
         {
-            for (int k = 0; k < samples_per_pixel; k++) {
+            for (int k = 0; k < samples_per_pixel; k++)
+            {
                 pixel_colors[k] = 0;
             }
 
@@ -473,21 +438,17 @@ void *render_section_super(void *threadarg)
                 for (n = 0; n < sqrt_samples; n++)
                 {
                     
-                    float u = ((float)i + (m + 0.5) / sqrt_samples) / data->server->width;
-                    float v = ((float)j + (n + 0.5) / sqrt_samples) / data->server->height;
-                    
+                    float u;
+                    float v;
+                    u = ((float)i + (m + 0.5) / sqrt_samples) / data->server->width;
+                    v = ((float)j + (n + 0.5) / sqrt_samples) / data->server->height;
                     ray = generate_ray(data->server->world->cameras->content, u, v);
                     sample_color = raytracer(&ray, data->server->world, max_depth);
-                    
-                    
                     pixel_colors[k] = sample_color;
                     k++;
                 }
             }
-            
-            
-            t_color averaged_color = average_color(pixel_colors, samples_per_pixel);
-
+            averaged_color = average_color(pixel_colors, samples_per_pixel);
             my_put_pixel(data->server, i, data->server->height - 1 - j, averaged_color);
             i++;
         }
@@ -522,6 +483,22 @@ void    show_menu(t_server *server)
     printf("-----------------------\n");
 }
 
+void    render_selector(int t, t_thread_data *thread_data, t_server *server)
+{
+    int         rc;
+    pthread_t   threads[NUM_THREADS];
+    int         rows_per_thread;
+
+    rows_per_thread = server->height / NUM_THREADS;
+    if (t == NUM_THREADS - 1)
+        thread_data[t].end_row = server->height;
+    else
+        thread_data[t].end_row = thread_data[t].start_row + rows_per_thread;
+    if (server->world->material)
+        rc = pthread_create(&threads[t], NULL, render_section_super, (void *)&thread_data[t]);
+    else
+        rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
+}
 // Función para renderizar la escena, es similar a la función render de arriba, pero
 // el único cambio es que dividimos la escena por secciones. Cada seccion será
 // renderizada por un hilo, consiguiendo agilizar la computación, lo que proporciona
@@ -552,6 +529,7 @@ void render(t_server *server)
             rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
         if (rc)
             full_message_exit(ERROR_CREATE, NULL, server);
+        //render_selector(t, thread_data, server);
     }
     t = -1;
     while (++t < NUM_THREADS)

@@ -9,7 +9,7 @@ void	message_exit(char *msg)
 {
 	if (msg)
 	{
-		ft_printf("%s\n", msg);
+		printf("%s%s%s\n", YELLOW, msg, RESET);
 	}
 	exit(EXIT_FAILURE);
 }

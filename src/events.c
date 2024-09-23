@@ -229,18 +229,7 @@ void    put_pixels(t_server *server, char *pixels, int fd)
         (unsigned char)(file_size), (unsigned char)(file_size >> 8), (unsigned char)(file_size >> 16), (unsigned char)(file_size >> 24),
         0, 0, 0, 0,
         54, 0, 0, 0
-    };
-
-    unsigned char bmp_info_header[40] = {
-        40, 0, 0, 0,
-        (unsigned char)(server->width), (unsigned char)(server->width >> 8), (unsigned char)(server->width >> 16), (unsigned char)(server->width >> 24),
-        (unsigned char)(server->height), (unsigned char)(server->height >> 8), (unsigned char)(server->height >> 16), (unsigned char)(server->height >> 24),
-        1, 0, 24, 0
-    };
-
-    write(fd, bmp_file_header, 14);
-    write(fd, bmp_info_header, 40);
-
+    };     write(fd, pad, padding);
     int padding = (4 - (server->width * 3) % 4) % 4;
 
     for (int y = server->height - 1; y >= 0; y--)
