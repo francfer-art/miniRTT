@@ -87,11 +87,21 @@ t_vector	reflect_vector(t_vector v, t_vector normal)
 	return (sub(v, scale(normal, 2.0 * dot(v, normal))));
 }
 
+void	ft_swap(int *a, int *b)
+{
+	int	c;
+
+	c = a;
+	*a = *b;
+	b = c;
+}
+
 t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
 {
 	float		cosi;
 	float		etai;
 	float		etat;
+	float		k;
 	t_vector	n;
 
 	cosi = clamp(dot(v, normal), -1.0, 1.0);
@@ -102,16 +112,13 @@ t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
 		cosi = -cosi;
 	else
 	{
-		float temp = etai;
-		etai = etat;
-		etat = temp;
+		ft_swap(etai, etat);
 		n = negate(normal);
 	}
-	float eta = etai / etat;
-	float k = 1.0 - eta * eta * (1.0 - cosi * cosi);
+	k = 1.0 - (etai / etat) * (etai / etat) * (1.0 - cosi * cosi);
 	if (k < 0)
 		return (vector(0, 0, 0));
-	return (add(scale(v, eta), scale(n, (eta * cosi -sqrt(k)))));
+	return (add(scale(v, eta), scale(n, (eta * cosi - sqrt(k)))));
 }
 // Función que calcula la reflexión de un rayo basado en la dirección del rayo y de la normal
 // del objeto con el que intersecciona. Este rayo incluye la información del material del 

@@ -25,6 +25,13 @@ t_image	*new_image(t_server *server)
 	return (img);
 }
 
+void	resolution_selector(t_world *world, int width, int height)
+{
+	if (world->resolution[0] > width)
+		world->resolution[0] = width;
+	if (world->resolution[1] > height)
+		world->resolution[1] = height;
+}
 // Función que crea e inicializa un puntero a una estructura t_server
 // Lo primero que hacemos es alojar dinámicamente el puntero a la estructura
 // Inicializamos la conexión a la mlx con mlx_init()
@@ -48,10 +55,7 @@ t_server	*new_server(t_world *world)
 	if (!(server->mlx))
 		return (NULL);
 	mlx_get_screen_size(server->mlx, &width, &height);
-	if (world->resolution[0] > width)
-		world->resolution[0] = width;
-	if (world->resolution[1] > height)
-		world->resolution[1] = height;
+	resolution_selector(world, width, height);
 	server->world = world;
 	server->width = world->resolution[0];
 	server->height = world->resolution[1];
