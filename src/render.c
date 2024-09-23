@@ -289,6 +289,7 @@ void    apply_texture(t_ray *ray, t_world *world)
 {
     float   u;
     float   v;
+    
     if (world->texture)
     {
         u = 0;
@@ -497,7 +498,7 @@ void    render_selector(int t, t_thread_data *thread_data, t_server *server)
     if (server->world->material)
         rc = pthread_create(&threads[t], NULL, render_section_super, (void *)&thread_data[t]);
     else
-        rc = pthread_create(&threads[t], NULL, render_section, (void *)&thread_data[t]);
+        rc = pthread_create(&threads[t], NULL, render_section_super, (void *)&thread_data[t]);
 }
 // Función para renderizar la escena, es similar a la función render de arriba, pero
 // el único cambio es que dividimos la escena por secciones. Cada seccion será
