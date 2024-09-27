@@ -15,7 +15,9 @@
 # include <pthread.h>
 
 // Threads
-#define NUM_THREADS 12
+# define NUM_THREADS 12
+# define SAMPLES_PER_PIXEL 4
+# define SQRT_SAMPLES 2
 
 // File extension
 # define EXTENSION ".rt"

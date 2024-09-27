@@ -416,8 +416,6 @@ void *render_section_super(void *threadarg)
     t_color         sample_color;
     t_ray           ray;
     int             max_depth;
-    int             samples_per_pixel = 4;
-    int             sqrt_samples = 2;
     t_color averaged_color;
 
     data = (t_thread_data *)threadarg;
@@ -428,28 +426,28 @@ void *render_section_super(void *threadarg)
         i = 0;
         while (i < data->server->width)
         {
-            for (int k = 0; k < samples_per_pixel; k++)
+            for (int k = 0; k < SAMPLES_PER_PIXEL; k++)
             {
                 pixel_colors[k] = 0;
             }
 
             int k = 0;
-            for (m = 0; m < sqrt_samples; m++)
+            for (m = 0; m < SQRT_SAMPLES; m++)
             {
-                for (n = 0; n < sqrt_samples; n++)
+                for (n = 0; n < SQRT_SAMPLES; n++)
                 {
                     
                     float u;
                     float v;
-                    u = ((float)i + (m + 0.5) / sqrt_samples) / data->server->width;
-                    v = ((float)j + (n + 0.5) / sqrt_samples) / data->server->height;
+                    u = ((float)i + (m + 0.5) / SQRT_SAMPLES) / data->server->width;
+                    v = ((float)j + (n + 0.5) / SQRT_SAMPLES) / data->server->height;
                     ray = generate_ray(data->server->world->cameras->content, u, v);
                     sample_color = raytracer(&ray, data->server->world, max_depth);
                     pixel_colors[k] = sample_color;
                     k++;
                 }
             }
-            averaged_color = average_color(pixel_colors, samples_per_pixel);
+            averaged_color = average_color(pixel_colors, SAMPLES_PER_PIXEL);
             my_put_pixel(data->server, i, data->server->height - 1 - j, averaged_color);
             i++;
         }
