@@ -20,7 +20,6 @@ t_sphere	*new_sphere(char **data)
 	sphere->radius = ft_atof(data[2]);
 	sphere->center = ft_atov(data[1]);
 	sphere->material.type = 1;
-	/* sphere->texture = 1; */
 	return (sphere);
 }
 

@@ -18,6 +18,7 @@
 # define NUM_THREADS 12
 # define SAMPLES_PER_PIXEL 4
 # define SQRT_SAMPLES 2
+# define MAX_DEPTH 5
 
 // File extension
 # define EXTENSION ".rt"
@@ -201,13 +202,13 @@ typedef struct s_ray
 
 typedef struct		s_texture
 {
-    void    *img_ptr;      // Puntero a la imagen de la textura
-    char    *img_data;     // Dirección de los datos de la imagen
-    int     width;         // Ancho de la imagen
-    int     height;        // Alto de la imagen
-    int     bpp;           // Bits por píxel
-    int     size_line;     // Longitud de una línea de la imagen en bytes
-    int     endian;        // Endianess
+    void    *img_ptr;
+    char    *img_data;
+    int     width;
+    int     height;
+    int     bpp;
+    int     size_line;
+    int     endian;
 }					t_texture;
 
 typedef struct s_world
@@ -268,6 +269,7 @@ float				degree_2_rad(float degree);
 float				ft_atof(char *str);
 t_vector			ft_atov(char *str);
 
+
 //utils1.c
 void				free_double(char **s);
 int					invalid_number(char *str);
@@ -285,11 +287,12 @@ t_vector			sub(t_vector v, t_vector w);
 t_vector			at(t_ray ray);
 t_vector			cross(t_vector v, t_vector w);
 t_vector			negate(t_vector v);
-float				clamp(float value, float min, float max);
+float					clamp(float value, float min, float max);
 t_vector			reflect_vector(t_vector v, t_vector normal);
 t_vector			refract_vector(t_vector v, t_vector normal, float ior, float env_ior);
 t_color				reflect(t_ray *ray, t_world *world, int depth);
 t_color				refract(t_ray *ray, t_world *world, int depth);
+void	ft_swap(float *a, float *b);
 
 //parser.c
 int					*resolution(char **data, t_world *world);
@@ -301,6 +304,7 @@ int					parser_file(int fd, t_world *world);
 t_camera			*new_camera(char **data);
 t_light				*new_light(char **data, t_world *world);
 t_light				*new_ambient_light(char **data, t_world *world);
+void compute_sample_colors(t_thread_data *data, int i, int j, t_color pixel_colors[SAMPLES_PER_PIXEL]);
 
 //vector.c
 t_vector			vector(double x, double y, double z);
@@ -350,14 +354,31 @@ t_ray   			generate_ray(t_camera *camera, float u, float v);
 void				move_camera(t_server *server, int code);
 void				move_camera_rotate(t_server *server, int code);
 void				move_camera_position(t_server *server, int code);
+void				recalculate_camera(t_camera *camera, int width, int height);
+void    		rotate_camera_horizontal(t_server *server, float angle);
+void    		rotate_camera_vertical(t_server *server, float angle);
 
 //events.c
 int 				exit_hook(t_server *server);
 int					expose_hook(t_server *server);
+void    		update_hook(int keycode, t_server *server);
 int 				key_press_hook(int keycode, t_server *server);
 int    				mlx_events(t_server *server);
 int					mouse_handler(int button, int x, int y, t_server *server);
-
+void update_ambient_color(t_server *server, int code);
+void    update_texture(t_server *server);
+void    update_material(t_server *server);
+void    update_checkerboard(t_server *server);
+void    update_phong(t_server *server);
+void    update_bump(t_server *server);
+void    create_filename(char **number, int *screenshot_counter, char **filename);
+void    set_info(t_server *server, unsigned char bmp_info_header[40]);
+void    set_file(int file_size, unsigned char bmp_file_header[14]);
+void    set_header_info(t_server *server, int fd);
+void    update_ambient_brightness(t_server *server, float num);
+void    color_selec(t_server *server, char *pixels, int y, int x, int fd);
+void    put_pixels(t_server *server, char *pixels, int fd);
+void take_screenshot(t_server *server);
 //color.c
 t_color				ccheck(int color);
 t_color 			cproduct(int color_a, int color_b);
@@ -369,9 +390,58 @@ float				light_intensity(t_light light, t_hit record);
 
 //render.c
 int 				intersec(t_ray *ray, t_list *figures);
-t_color 			raytracer(t_ray *ray, t_world *world, int depth);
+t_color average_color(t_color *colors, int num_colors);
+void *render_section(void *threadarg);
 void				render(t_server *server);
 void 				render_low(t_server *server);
-int					adjust_scale_factor(t_server *server);
+
+//render1.c
+t_color checkerboard_square(t_ray *ray);
+t_color	checkerboard_sphere(t_ray *ray, float size);
+t_color checkerboard_cylinder(t_ray *ray);
+t_color checkerboard_pattern_selector(t_ray *ray);
+void    treat_material(t_ray *ray, t_world *world, int depth);
+
+//render2.c
+t_color get_texture_color(t_texture *texture, float u, float v);
+t_color phong_lighting(t_light light, t_ray *ray);
+float get_height_from_texture(t_texture *texture, float u, float v);
+t_vector calculate_tangent(t_vector normal);
+t_vector bump_function(t_hit record, t_texture *texture, float u, float v);
+
+//render3.c
+t_vector apply_bump(t_hit record, t_world *world, float u, float v);
+void    apply_texture_sphere(t_ray *ray, t_world *world, float *u, float *v);
+void    apply_texture_square(t_ray *ray, t_world *world, float *u, float *v);
+void    apply_texture_plane(t_ray *ray, t_world *world, float *u, float *v);
+void    apply_texture_cylinder(t_ray *ray, t_world *world, float *u, float *v);
+
+//render4.c
+void    apply_texture(t_ray *ray, t_world *world);
+void    apply_material(t_ray *ray, t_world *world, int depth);
+void    apply_checkerboard(t_ray *ray, t_world *world);
+int check_depth_intersec(t_ray *ray, t_world *world, int depth);
+t_color raytracer(t_ray *ray, t_world *world, int depth);
+
+//render5.c
+void render_pixel(t_thread_data *data, int i, int j);
+void sample_pixel_colors(t_thread_data *data, t_color *pixel_colors, int i, int j);
+int sample_pixel_row(t_thread_data *data, t_color *pixel_colors, int i, int j, int m, int k);
+int sample_pixel(t_thread_data *data, t_color *pixel_colors, int i, int j, int m, int n, int k);
+float calculate_u(int width, int i, int m);
+
+//render6.c
+float calculate_v(int height, int j, int n);
+t_color initialize_color(void);
+void    show_menu(t_server *server);
+void    render_selector(int t, t_thread_data *thread_data, t_server *server);
+void    check_pthread_create(int rc, t_server *server);
+
+//render7.c
+void    fill_pixels(t_server *server, int scale_factor, int i, int j, t_color pixel_color);
+int	adjust_scale_factor(t_server *server);
+void *render_section_super(void *threadarg);
+void render_row(t_thread_data *data, int j);
+void    join_menu_image(pthread_t *threads, t_server *server);
 
 #endif

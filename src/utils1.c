@@ -77,9 +77,3 @@ t_vector	norm(t_vector v)
 {
 	return (scale(v, 1 / length(v)));
 }
-
-//Función que "escala" un vector, multiplica todas sus componentes por un escalar
-t_vector	scale(t_vector v, double c)
-{
-	return (vector(v.x * c, v.y * c, v.z * c));
-}

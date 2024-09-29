@@ -71,3 +71,30 @@ t_light	*new_ambient_light(char **data, t_world *world)
 		full_message_exit(ERROR_BRIGHTNESS, world, NULL);
 	return (light);
 }
+
+void compute_sample_colors(t_thread_data *data, int i, int j, t_color pixel_colors[SAMPLES_PER_PIXEL])
+{
+    t_ray ray;
+    t_color sample_color;
+    int vars[3]; // vars[0] = m, vars[1] = n, vars[2] = k
+    float u;
+		float	v;
+
+    vars[0] = 0; // m
+    vars[2] = 0; // k
+    while (vars[0] < SQRT_SAMPLES)
+		{
+        vars[1] = 0; // n
+        while (vars[1] < SQRT_SAMPLES)
+				{
+            u = ((float)i + (vars[0] + 0.5) / SQRT_SAMPLES) / data->server->width;
+            v = ((float)j + (vars[1] + 0.5) / SQRT_SAMPLES) / data->server->height;
+            ray = generate_ray(data->server->world->cameras->content, u, v);
+            sample_color = raytracer(&ray, data->server->world, MAX_DEPTH);
+            pixel_colors[vars[2]] = sample_color;
+            vars[2]++;
+            vars[1]++;
+        }
+        vars[0]++;
+    }
+}
