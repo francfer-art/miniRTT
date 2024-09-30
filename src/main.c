@@ -1,17 +1,27 @@
 #include <minirt.h>
 
-// Función principal del proyecto
-// Lo primero que hacemos es verificar que el número de argumentos es válido,
-// es decir, si el número de argumentos es menor que 2 o mayor que 3 paramos la 
-// ejecucuión aquí.
-// Inicializamos el mundo --> Esta función leerá el mapa y parseará toda la
-// información e irá creando las figuras y guardandolas en la estructura world
-// Creamos el server --> Esta función creará los punteros necesarios para
-// que la comunicación con la minilibX sea correcta
-// Si falla la creación del server --> Mensaje de error
-// Renderizamos la escena con toda la información
-// Llamamos la función que manejará los eventos --> El programa acabará de forma
-// limpia cuando se pulse la tecla ESC o cuando cerremos la ventana
+void	apply_stuff(t_ray *ray, t_world *world, int depth)
+{
+	apply_texture(ray, world);
+	apply_material(ray, world, depth);
+	apply_checkerboard(ray, world);
+}
+
+void	check_server(t_server *server, int *t, int *rows_per_thread)
+{
+	*rows_per_thread = server->height / NUM_THREADS;
+	if (!server->world->cameras)
+		return ;
+	*t = -1;
+}
+
+int	exit_hook(t_server *server)
+{
+	free_server(server);
+	message_exit(ERROR_JEFE);
+	return (0);
+}
+
 int	main(int args, char **argv)
 {
 	t_world		*world;
@@ -24,7 +34,8 @@ int	main(int args, char **argv)
 	if (!server)
 		full_message_exit(ERROR_SERVER, world, server);
 	render(server);
-	init_texture(server->mlx, server->world->texture_img, "/home/francfer/Desktop/TEST/textures/brick.xpm");
+	init_texture(server->mlx, server->world->texture_img,
+		"/home/francfer/Desktop/TEST/textures/wood.xpm");
 	mlx_events(server);
 	return (EXIT_SUCCESS);
 }

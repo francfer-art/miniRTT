@@ -83,7 +83,6 @@ clean:
 	rm -rf ./$(OBJ_DIR)
 	make -C $(LIBFT_SRC) clean
 	make -C ./lib/minilibx-linux clean
-	cd save && rm -rf *.bmp
 	@printf "$(BLUE)==> $(RED)Removed\n$(RESET)"
 
 fclean: clean

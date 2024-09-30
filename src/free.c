@@ -1,8 +1,5 @@
 #include <minirt.h>
 
-// Función para liberar la memoria dinámica de la estructura world
-// Limpiamos la lista de figuras, la lista de luces y la lista de cámaras
-// Liberamos la luz ambiente, la resolucion y la estructura de world
 void	free_world(t_world *world)
 {
 	if (world)
@@ -17,11 +14,6 @@ void	free_world(t_world *world)
 	}
 }
 
-// función para liberar la memoria dinámica de la estructura server
-// Primero chequeamos que exista la ventana, en caso afirmativo, limpiamos
-// la ventana y la destruimos
-// Ahora destruimos la imagen, liberamos el world, la image, el puntero 
-// a la mlx y la estructura server
 void	free_server(t_server *server)
 {
 	if (server)

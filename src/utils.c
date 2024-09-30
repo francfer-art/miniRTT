@@ -1,6 +1,5 @@
 #include <minirt.h>
 
-// Función para calcular la longitud de un char **
 int	double_pointer_len(char **data)
 {
 	int	i;
@@ -11,10 +10,6 @@ int	double_pointer_len(char **data)
 	return (i);
 }
 
-// Función para saber si un vector está fuera de rango
-// Devuelve 1 si el vector está fuera de rango y 0 si está dentro de rango
-// Considerando vector fuera de rango si alguna de sus componentes es menor que -1 
-// y mayor que 1
 int	out_range_vector(t_vector v)
 {
 	int	out;
@@ -29,14 +24,11 @@ int	out_range_vector(t_vector v)
 	return (out);
 }
 
-// Función para transformar los grados en radianes
 float	degree_2_rad(float degree)
 {
 	return ((M_PI / 180) * degree);
 }
 
-// Función para transformar un string en un float
-// "23.4" --> 23.4
 float	ft_atof(char *str)
 {
 	float	num;
@@ -63,8 +55,6 @@ float	ft_atof(char *str)
 	return ((num + d) * sign);
 }
 
-// Función para transoformar un string en un t_vector
-// "0, 1, 1" --> [0, 1, 1]
 t_vector	ft_atov(char *str)
 {
 	t_vector	v;

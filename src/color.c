@@ -1,8 +1,5 @@
 #include <minirt.h>
 
-// Función que suman dos colores y devuelve la suma
-// Básicamente aplicamos la operación suma y chequeamos que el valor sea correcto
-// Dicha función fuerza a que el valor sea correcto y esté dentro de los límites
 t_color	cadd(int color_a, int color_b)
 {
 	int	r;
@@ -15,14 +12,11 @@ t_color	cadd(int color_a, int color_b)
 	return ((r << 0x10) | (g << 0x08) | b);
 }
 
-// Función que multiplica un color por un valor con decimales
-// Como es posible que la multiplicación por un escalar provoque que el nunero
-// resultante sea > 255 o < 0, hay que pasarle la función ccheck()
 t_color	cscale(int color, float a)
 {
-	int r;
-	int g;
-	int b;
+	int	r;
+	int	g;
+	int	b;
 
 	r = ccheck(a * (color >> 0x10));
 	g = ccheck(a * ((color >> 0x08) & 0xFF));
@@ -30,14 +24,6 @@ t_color	cscale(int color, float a)
 	return ((r << 0x10) | (g << 0x08) | b);
 }
 
-// Función para calcular el color resultante de la intersección de la luz
-// con el objetoen de la escena
-// Esta función tendrá en cuenta el color del objeto y la intensidad y color
-// de la luz
-// Inicializamos el color en negro, obtenemos el color del objeto desde la
-// estructura record. Escalamos el color del objeto con la intensidad de la
-// luz y lo sumamos con el color que teníamos.
-// Finalmente multiplicamos ambos colores, el color del objeto y el color de la luz
 t_color	color_component(t_light light, t_hit record)
 {
 	t_color	obj_color;
@@ -50,17 +36,6 @@ t_color	color_component(t_light light, t_hit record)
 	return (color);
 }
 
-// Función que determina si un punto de una superficia está en sombra o no con respecto a una
-// luz situada en unas coordenadas.
-// Inicializamos el rayo de sombra --> Colocamos dicho rayo ligeramente desplazado del punto de
-// intersección para evitar errores de autointersección, con la dirección normal.
-// Dirección del rayo de sombra --> Esta dirección se calcula como el vector normalizado de la 
-// resta del origen de la luz y el origen del rayo de sombra
-// Verificación de las intersecciones --> Llamamos a la función intersec, que calculará si hay
-// objetos que produzcan intersecciones con el rayo sombra.
-// Devolvemos 1 si el rayo en su camino hacia la luz choca con un objeto, lo que implica que 
-// ese punto estará en sombra. Devolveremos 0 si el rayo no intersecciona con nada antes de llegar
-// a la luz.
 int	in_shadow(t_light light, t_list *figures, t_hit record)
 {
 	t_ray	shadow;
@@ -71,35 +46,6 @@ int	in_shadow(t_light light, t_list *figures, t_hit record)
 	return (intersec(&shadow, figures));
 }
 
-// int	in_shadow(t_light light, t_list	*figures, t_hit record)
-// {
-// 	t_ray	shadow;
-// 	double	light_distance;
-
-// 	shadow.origin = add(record.p, scale(record.normal, EPSILON));
-// 	shadow.direction = norm(sub(light.position, shadow.origin));
-// 	light_distance = length(sub(light.position, shadow.origin));
-// 	if (intersec(&shadow, figures))
-// 	{
-// 		if (shadow.record.t < light_distance)
-// 			return (1);
-// 	}
-// 	return (0);
-// }
-
-// Función que calcula la intensidad de la luz que incide sobre un punto específico
-// de una superficie.
-// Lo primero que hacemos es calcular la dirección de la luz desde el punto de la 
-// superficie p hacia la posición de la luz.
-// Se calcula la distancia al cuadrado entre el origen de la luz y la superficie,
-// esto reprensenta como varía la intensidad conforme la distancia.
-// Calculamos gain, definido como la cantidad de luz que incide sobre la el punto
-// de la superficie. Si el valor es positivo la ganancia será positiva, si es
-// negativa o cero la ganancia será nula --> Devolvemos 0 en este caso
-// Calculamos la intensidad de la luz, que depende del brillo de la propia luz,
-// la ganancia que indica cuanto está la luz alineada con la normal, ALBEDO (coeficiente
-// que representa la reflectividad de la superficie) y (4.0 * M_PI * r2), que 
-// representa la atenuación de la luz
 float	light_intensity(t_light light, t_hit record)
 {
 	t_vector	light_dir;
@@ -113,4 +59,3 @@ float	light_intensity(t_light light, t_hit record)
 		return (0);
 	return ((light.brightness * gain * ALBEDO) / (4.0 * M_PI * r2));
 }
-

@@ -28,13 +28,14 @@ void	ft_swap(float *a, float *b)
 	*b = c;
 }
 
-t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
+t_vector	refract_vector(t_vector v, t_vector normal, float ior,
+		float env_ior)
 {
-	float     cosi;
-	float     etai;
-	float     etat;
-	float     k;
-	t_vector  n;
+	float		cosi;
+	float		etai;
+	float		etat;
+	float		k;
+	t_vector	n;
 
 	cosi = clamp(dot(v, normal), -1.0, 1.0);
 	etai = env_ior;
@@ -50,5 +51,6 @@ t_vector	refract_vector(t_vector v, t_vector normal, float ior, float env_ior)
 	k = 1.0 - (etai / etat) * (etai / etat) * (1.0 - cosi * cosi);
 	if (k < 0)
 		return (vector(0, 0, 0));
-	return (add(scale(v, (etai / etat)), scale(n, ((etai / etat) * cosi - sqrt(k)))));
+	return (add(scale(v, (etai / etat)), scale(n, ((etai / etat) * cosi
+					- sqrt(k)))));
 }
