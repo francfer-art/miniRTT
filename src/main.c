@@ -13,78 +13,114 @@
 // Renderizamos la escena con toda la información
 // Llamamos la función que manejará los eventos --> El programa acabará de forma
 // limpia cuando se pulse la tecla ESC o cuando cerremos la ventana
+// char	**create_error(void)
+// {
+// 	char	*error_messages[ERROR_COUNT];
+
+// 	error_messages[ERROR_JEFE] = strdup("🐷 Nos vemos jefe 🐷");
+// 	error_messages[ERROR_MALLOC] = strdup("ERROR: Malloc problem 🔴");
+// 	error_messages[ERROR_PARSE] = strdup("ERROR: While parsing 🔴");
+// 	error_messages[ERROR_CREATE] = strdup("ERROR: return (pthread_create() 🔴");
+// 	error_messages[ERROR_JOIN] = strdup("ERROR: return (pthread_join() 🔴");
+// 	error_messages[ERROR_COLOR] = strdup("ERROR: Invalid color definition 🔴");
+// 	error_messages[ERROR_SERVER] = strdup("ERROR: Can't create server 🔴");
+// 	error_messages[ERROR_COL_VAL] = strdup("ERROR: Color value out range 🔴");
+// 	error_messages[ERROR_VECTOR] = strdup("ERROR: Vector out range 🔴");
+// 	error_messages[ERROR_BRIGHTNESS] = strdup("ERROR: Bright out of range 🔴");
+// 	error_messages[ERROR_RATIO] = strdup("ERROR: Light ratio out of range 🔴");
+// 	error_messages[ERROR_DIR] = strdup("ERROR: Invalid number detected 🔴");
+// 	error_messages[ERROR_ARG] = strdup("ERROR: Bad number of arguments 🔴");
+// 	error_messages[ERROR_ID] = strdup("ERROR: Invalid object's identifier 🔴");
+// 	error_messages[ERROR_RES] = strdup("ERROR: Resolution not found 🔴");
+// 	error_messages[ERROR_RES_LEN] = strdup("ERROR: Resolution 🔴");
+// 	error_messages[ERROR_RES_VALUE] = strdup("ERROR: Resolution below 0 🔴");
+// 	error_messages[ERROR_AMB] = strdup("ERROR: Not ambient light found 🔴");
+// 	error_messages[ERROR_FORMAT] = strdup("ERROR: File format not supported 🔴");
+// 	error_messages[ERROR_OPEN] = strdup("ERROR: Error opening the file 🔴");
+// 	error_messages[ERROR_CLOSE] = strdup("ERROR: Error closing the file 🔴");
+// 	error_messages[ERROR_CAMERA] = strdup("ERROR: Invalid camera definition 🔴");
+// 	return (error_messages);
+// }
+
+char	**create_error(void)
+{
+	char	**error_messages;
+
+	error_messages = malloc(ERROR_COUNT * sizeof(char *));
+	if (error_messages == NULL)
+		return (NULL);
+	error_messages[ERROR_JEFE] = strdup("🐷 Nos vemos jefe 🐷");
+	error_messages[ERROR_PARSE] = strdup("ERROR: While parsing 🔴");
+	error_messages[ERROR_CREATE] = strdup("ERROR: return (pthread_create() 🔴");
+	error_messages[ERROR_JOIN] = strdup("ERROR: return (pthread_join() 🔴");
+	error_messages[ERROR_COLOR] = strdup("ERROR: Invalid color definition 🔴");
+	error_messages[ERROR_BRIGHTNESS] = strdup("ERROR: Bright out of range 🔴");
+	error_messages[ERROR_DIR] = strdup("ERROR: Invalid number detected 🔴");
+	error_messages[ERROR_ARG] = strdup("ERROR: Bad number of arguments 🔴");
+	error_messages[ERROR_ID] = strdup("ERROR: Invalid object's identifier 🔴");
+	error_messages[ERROR_RES] = strdup("ERROR: Resolution not found 🔴");
+	error_messages[ERROR_RES_LEN] = strdup("ERROR: Resolution 🔴");
+	error_messages[ERROR_RES_VALUE] = strdup("ERROR: Resolution below 0 🔴");
+	error_messages[ERROR_AMB] = strdup("ERROR: Not ambient light found 🔴");
+	error_messages[ERROR_FORMAT] = strdup("ERROR: File format not supported 🔴");
+	error_messages[ERROR_OPEN] = strdup("ERROR: Error opening the file 🔴");
+	error_messages[ERROR_CLOSE] = strdup("ERROR: Error closing the file 🔴");
+	error_messages[ERROR_CAMERA] = strdup("ERROR: Invalid camera definition 🔴");
+	return (error_messages);
+}
 
 void	msg_exit(ErrorType error)
 {
-	char	*error_messages[ERROR_COUNT];
+	char	**error_messages;
+	int		i;
 
-	error_messages[ERROR_JEFE] = strdup("🐷 Nos vemos jefe 🐷");
-	error_messages[ERROR_MALLOC] = strdup("ERROR : Malloc problem 🔴");
-	error_messages[ERROR_PARSE] = strdup("ERROR : While parsing 🔴");
-	error_messages[ERROR_CREATE] = strdup("ERROR; return (code from pthread_create() 🔴");
-	error_messages[ERROR_JOIN] = strdup("ERROR : return (code from pthread_join() 🔴");
-	error_messages[ERROR_COLOR] = strdup("ERROR : Invalid color definition 🔴");
-	error_messages[ERROR_SERVER] = strdup("ERROR : Can't create server 🔴");
-	error_messages[ERROR_COL_VAL] = strdup("ERROR : Color value out range 🔴");
-	error_messages[ERROR_VECTOR] = strdup("ERROR : Vector out range 🔴");
-	error_messages[ERROR_BRIGHTNESS] = strdup("ERROR : Brightness out of range 🔴");
-	error_messages[ERROR_RATIO] = strdup("ERROR : Ambient light ratio out of range 🔴");
-	error_messages[ERROR_DIR] = strdup("ERROR : Invalid number detected 🔴");
-	error_messages[ERROR_ARG] = strdup("ERROR : Incorrect number of arguments 🔴");
-	error_messages[ERROR_ID] = strdup("ERROR : Invalid object's identifier 🔴");
-	error_messages[ERROR_RES] = strdup("ERROR : Resolution not found 🔴");
-	error_messages[ERROR_RES_LEN] = strdup("ERROR : Poor resolution definition 🔴");
-	error_messages[ERROR_RES_VALUE] = strdup("ERROR : Resolution value below 0 🔴");
-	error_messages[ERROR_AMB] = strdup("ERROR : Not ambient light found 🔴");
-	error_messages[ERROR_FORMAT] = strdup("ERROR : File format not supported 🔴");
-	error_messages[ERROR_OPEN] = strdup("ERROR : Error opening the file 🔴");
-	error_messages[ERROR_CLOSE] = strdup("ERROR : Error closing the file 🔴");
-	error_messages[ERROR_CAMERA] = strdup("ERROR : Invalid camera definition 🔴");
+	i = 0;
+	error_messages = create_error();
 	if (error != 0 && error < ERROR_COUNT)
 	{
 		ft_putendl_fd(error_messages[error], STDERR_FILENO);
-		for (int i = 0; i < ERROR_COUNT; i++)
-		{
-			free(error_messages[i]);
-		}
+		while (i < ERROR_COUNT)
+			free(error_messages[i++]);
+		free(error_messages);
 		exit(EXIT_FAILURE);
 	}
 	else if (error == 0)
 	{
 		ft_printf(error_messages[error]);
-		for (int i = 0; i < ERROR_COUNT; i++)
-		{
-			free(error_messages[i]);
-		}
+		while (i < ERROR_COUNT)
+			free(error_messages[i++]);
+		free(error_messages);
 		exit(EXIT_SUCCESS);
 	}
 }
 
-int get_number_lines(char *file)
+int	get_number_lines(char *file)
 {
-	int fd;
-	char *line;
-	int count_line;
+	int		fd;
+	char	*line;
+	int		count_line;
 
 	count_line = 0;
 	fd = open_scene_file(file);
 	if (fd < 0)
 		msg_exit(ERROR_OPEN);
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
 		if (*line != '#' && *line != '\n')
 		{
 			count_line++;
 		}
 		free(line);
+		line = get_next_line(fd);
 	}
+	free(line);
 	if (close(fd) < 0)
 		msg_exit(ERROR_OPEN);
-	
 	return (count_line);
 }
 
-int check_R(char **data)
+int	check_r(char **data)
 {
 	if (double_pointer_len(data) != 3)
 		return (ERROR_RES_LEN);
@@ -93,7 +129,7 @@ int check_R(char **data)
 	return (0);
 }
 
-int check_A(char **data)
+int	check_a(char **data)
 {
 	if (double_pointer_len(data) != 3)
 		return (ERROR_RES_LEN);
@@ -102,7 +138,7 @@ int check_A(char **data)
 	return (0);
 }
 
-int check_c(char **data)
+int	check_c(char **data)
 {
 	if (double_pointer_len(data) != 4)
 		return (ERROR_CAMERA);
@@ -111,7 +147,7 @@ int check_c(char **data)
 	return (0);
 }
 
-int check_l(char **data)
+int	check_l(char **data)
 {
 	if (double_pointer_len(data) < 4)
 		return (ERROR_PARSE);
@@ -120,7 +156,7 @@ int check_l(char **data)
 	return (0);
 }
 
-int check_pl(char **data)
+int	check_pl(char **data)
 {
 	if (double_pointer_len(data) != 4)
 		return (ERROR_FORMAT);
@@ -129,62 +165,51 @@ int check_pl(char **data)
 	return (0);
 }
 
-int check_sp(char **data)
+int	check_sp(char **data)
 {
 	if (double_pointer_len(data) < 4)
 		return (ERROR_FORMAT);
 	else if (ft_atoc(data[3]) == -1)
 		return (ERROR_COLOR);
-	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
+	else if (double_pointer_len(data) == 5 && ft_strcmp(data[4], "GLASS"))
 		return (ERROR_FORMAT);
 	return (0);
 }
 
-int check_sq(char **data)
+int	check_sq(char **data)
 {
-	if (double_pointer_len(data) != 5)
+	if (double_pointer_len(data) < 5)
 		return (ERROR_FORMAT);
 	else if (ft_atoc(data[4]) == -1)
 		return (ERROR_COLOR);
-	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
+	else if (double_pointer_len(data) == 6 && ft_strcmp(data[5], "GLASS"))
 		return (ERROR_FORMAT);
 	return (0);
 }
 
-int check_cy(char **data)
+int	check_cy(char **data)
 {
-	if (double_pointer_len(data) != 6)
+	if (double_pointer_len(data) < 6)
 		return (ERROR_FORMAT);
-	else if (ft_atoc(data[4]) == -1 || ft_atoc(data[5]) == -1)
+	else if (ft_atoc(data[6]) == -1 || ft_atoc(data[6]) == -1)
 		return (ERROR_COLOR);
 	return (0);
 }
 
-int	pre_parse(char *file)
+char	**load_map(int n_lines, char *file)
 {
-	char	*line;
 	char	**full_map;
-	t_world	*world;
-	int		count_line;
 	int		fd;
-	int		err;
+	char	*line;
 	int		i;
-	char	**data;
-	int		res;
 
-	count_line = 0;
-	line = NULL;
-	full_map = NULL;
-
-	count_line = get_number_lines(file);
-
-	// Allocate memory and read the full map
-	full_map = (char **)malloc(sizeof(char *) * (count_line + 1));
-	if (!full_map)
-		msg_exit(ERROR_MALLOC);
-	fd = open_scene_file(file);
 	i = 0;
-	while ((line = get_next_line(fd)))
+	full_map = (char **)malloc(sizeof(char *) * (n_lines + 1));
+	if (!full_map)
+		return (NULL);
+	fd = open_scene_file(file);
+	line = get_next_line(fd);
+	while (line)
 	{
 		if (*line != '#' && *line != '\n')
 		{
@@ -192,20 +217,29 @@ int	pre_parse(char *file)
 			i++;
 		}
 		free(line);
+		line = get_next_line(fd);
 	}
-	full_map[i] = '\0';
+	free(line);
+	full_map[i] = NULL;
+	return (full_map);
+}
 
-	// Pre-parse the full map 
+int	check_errors(char **full_map)
+{
+	int		i;
+	char	**data;
+	int		res;
+
 	i = -1;
 	data = NULL;
 	res = 0;
 	while (full_map[++i] && res == 0)
 	{
 		data = ft_split_space(full_map[i]);
-		if (!ft_strcmp(data[0], "R") && check_R(data) != 0)
-			res = check_R(data);
-		else if (!ft_strcmp(data[0], "A") && check_A(data) != 0)
-			res = check_A(data);
+		if (!ft_strcmp(data[0], "R") && check_r(data) != 0)
+			res = check_r(data);
+		else if (!ft_strcmp(data[0], "A") && check_a(data) != 0)
+			res = check_a(data);
 		else if (!ft_strcmp(data[0], "c") && check_c(data) != 0)
 			res = check_c(data);
 		else if (!ft_strcmp(data[0], "l") && check_l(data) != 0)
@@ -213,39 +247,33 @@ int	pre_parse(char *file)
 		else if (!ft_strcmp(data[0], "pl") && check_pl(data) != 0)
 			res = check_pl(data);
 		else if (!ft_strcmp(data[0], "sp") && check_sp(data) != 0)
-			res = check_pl(data);		
+			res = check_pl(data);
 		else if (!ft_strcmp(data[0], "sq") && check_sq(data) != 0)
 			res = check_sq(data);
-		// else if (!ft_strcmp(data[0], "cy") && check_cy(data) != 0)
-		// 	res = check_cy(data);
-
-		// else if (!ft_strcmp(data[0], "sp"))
-		// {
-		// 	if (double_pointer_len(data) < 4)
-		// 	{
-		// 		free_double(data);
-		// 		free_double(full_map);
-		// 		msg_exit(ERROR_PARSE);
-		// 	}
-		// 	else if (ft_atoc(data[3]) == -1)
-		// 	{
-		// 		free_double(data);
-		// 		free_double(full_map);
-		// 		msg_exit(ERROR_COLOR);
-		// 	}
-		// 	else if (double_pointer_len(data) > 4 && ft_strcmp(data[4], "GLASS"))
-		// 	{
-		// 		printf("data[4] = %s\n", data[4]);
-		// 		free_double(data);
-		// 		free_double(full_map);
-		// 		msg_exit(ERROR_FORMAT);
-		// 	}
-		// }
+		else if (!ft_strcmp(data[0], "cy") && check_cy(data) != 0)
+			res = check_cy(data);
 		free_double(data);
 	}
-	// free_double(data);
+	// free_double(full_map);
+	return (res);
+}
+
+int	pre_parse(char *file)
+{
+	int		count_line;
+	char	**full_map;
+	int		res;
+
+	// char	*line;
+	// int		i;
+	// char	**data;
+	count_line = 0;
+	// line = NULL;
+	// full_map = NULL;
+	count_line = get_number_lines(file);
+	full_map = load_map(count_line, file);
+	res = check_errors(full_map);
 	free_double(full_map);
-	// msg_exit(ERROR_AMB);
 	return (res);
 }
 
@@ -264,7 +292,7 @@ int	main(int args, char **argv)
 	// 	full_message_exit(ERROR_SERVER, world, server);
 	// render(server);
 	// init_texture(server->mlx, server->world->texture_img,
-		// "/home/francfer/Desktop/TEST/textures/brick.xpm");
+	// 	"./textures/brick.xpm");
 	// mlx_events(server);
 	return (EXIT_SUCCESS);
 }
