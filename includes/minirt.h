@@ -428,4 +428,21 @@ void				render(t_server *server);
 void 				render_low(t_server *server);
 int					adjust_scale_factor(t_server *server);
 
+//utils_parse.c
+int 				check_r(char **data);
+int 				check_a(char **data);
+int					check_c(char **data);
+int					check_l(char **data);
+int					check_pl(char **data);
+int					check_sp(char **data);
+int					check_sq(char **data);
+int					check_cy(char **data);
+
+//pre_parse.c
+int pre_parse(char *file);
+
+//utils_error.c
+char **create_error(void);
+void msg_exit(ErrorType error);
+
 #endif

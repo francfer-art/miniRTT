@@ -43,8 +43,10 @@ SRC_FILES = $(SRC_DIR)/camera.c\
 			$(SRC_DIR)/utils1.c\
 			$(SRC_DIR)/utils2.c\
 			$(SRC_DIR)/vector.c\
-			$(SRC_DIR)/cone.c
-# $(SRC_DIR)/toro.c
+			$(SRC_DIR)/cone.c\
+			$(SRC_DIR)/utils_parse.c\
+			$(SRC_DIR)/utils_error.c\
+			$(SRC_DIR)/pre_parse.c\
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 DEP = $(addsuffix .d, $(basename $(SRC_FILES)))

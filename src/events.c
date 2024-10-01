@@ -6,7 +6,7 @@
 int exit_hook(t_server *server)
 {
     free_server(server);
-    message_exit(ERROR_JEFE);
+    msg_exit(ERROR_JEFE);
     return (0);
 }
 
