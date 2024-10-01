@@ -90,6 +90,12 @@ t_ray   generate_ray(t_camera *camera, float u, float v)
     ray.direction = norm(sub(ray.direction, ray.origin));
     ray.record.object = NULL;
     ray.record.color = 0x0;
+    ray.record.material.diffuse = 0;
+    ray.record.material.specular = 0xFFFFFF;
+    ray.record.material.shininess = 128;
+    ray.record.material.reflectivity = 0.1;
+    ray.record.material.refractivity = 0.9;
+    ray.record.material.ior = 1.52;
     return (ray);
 }
 
@@ -126,7 +132,7 @@ void    rotate_camera_horizontal(t_server *server, float angle)
     new_direction.z = camera->direction.x * sin_angle + camera->direction.z * cos_angle;
     new_direction.y = camera->direction.y;
     camera->direction = norm(new_direction);
-    recalculate_camera(server->world->cameras->content, server->width, server->height);
+    //recalculate_camera(server->world->cameras->content, server->width, server->height);
 }
 
 void    rotate_camera_vertical(t_server *server, float angle)
@@ -145,9 +151,42 @@ void    rotate_camera_vertical(t_server *server, float angle)
     new_direction.y = camera->direction.y * cos_angle - camera->direction.z * sin_angle;
     new_direction.z = camera->direction.y * sin_angle + camera->direction.z * cos_angle;
     camera->direction = norm(new_direction);
-    recalculate_camera(server->world->cameras->content, server->width, server->height);
+    //recalculate_camera(server->world->cameras->content, server->width, server->height);
 }
 
+void    move_camera_position(t_server *server, int code)
+{
+    t_camera    *camera;
+    t_vector    right;
+    t_vector    up;
+    float       move_speed;
+
+    up = vector(0, 1, 0);
+    move_speed = 0.1;
+    camera = server->world->cameras->content;
+    right = cross(camera->direction, up);
+    if (code == XK_a)
+    {
+        ft_printf("Me muevo a la izquierda!\n");
+        camera->origin = sub(camera->origin, scale(right, move_speed));
+    }
+    else if (code == XK_d)
+    {
+        ft_printf("Me muevo a la derecha!\n");
+        camera->origin = add(camera->origin, scale(right, move_speed));
+    }
+    else if (code == XK_w)
+    {
+        ft_printf("Me muevo arriba!\n");
+        camera->origin = add(camera->origin, scale(up, move_speed));
+    }
+    else if (code == XK_s)
+    {
+        ft_printf("Me muevo abajo!\n");
+        camera->origin = sub(camera->origin, scale(up, move_speed));
+    }
+    recalculate_camera(camera, server->width, server->height);
+}
 
 void    move_camera_rotate(t_server *server, int code)
 {
@@ -185,23 +224,16 @@ void    move_camera_rotate(t_server *server, int code)
 void    move_camera(t_server *server, int code)
 {
     t_camera    *camera;
-    t_vector    right;
-    t_vector    up;
-    float       move_speed;
     float       zoom_speed;
 
     camera = server->world->cameras->content;
-    right = cross(camera->direction, vector(0, 1, 0));
-    up = vector(0, 1 ,0);
-    move_speed = 0.1;
     zoom_speed = 0.15;
-
-    if (code == XK_KP_Add)
+    if (code == XK_ZOOM_IN)
     {
         ft_printf("Me acerco al centro de la imagen!\n");
         camera->origin = sub(camera->origin, scale(camera->direction, zoom_speed));
     }
-    else if (code == XK_KP_Subtract)
+    else if (code == XK_ZOOM_OUT)
     {
         ft_printf("Me alejo del centro de la imagen!\n");
         camera->origin = add(camera->origin, scale(camera->direction, zoom_speed));

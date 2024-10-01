@@ -26,21 +26,109 @@ int intersec(t_ray *ray, t_list *figures)
         else if (type == PLANE)
             hit |= hit_plane(ray, (t_plane *)figures->content);
         else if (type == SPHERE)
+        {
+            // printf("PRE hit sphere!\n");
             hit |= hit_sphere(ray, (t_sphere *)figures->content);
+        }
         else if (type == SQUARE)
             hit |= hit_square(ray, (t_square *)figures->content);
         else if (type == TRIANGLE)
             hit |= hit_triangle(ray, (t_triangle *)figures->content);
+        // else if (type == TORUS)
+        //     hit |= hit_torus(ray, (t_torus *)figures->content);
+        else if (type == CONE)
+        {
+            // printf("PRE hit cone!\n");
+            hit |= hit_cone(ray, (t_cone *)figures->content);
+        }
         figures = figures->next;
     }
     return (hit);
+}
+
+t_color checkerboard_square(t_ray *ray)
+{
+	int		check_x;
+	int		check_y;
+	int		checker;
+	float	size;
+
+	size = 4.0;
+	check_x = (int)floor(ray->record.p.z / size);
+	check_y = (int)floor(ray->record.p.x / size);
+	checker = (check_x + check_y) % 2;
+	if (checker == 0)
+		return ray->record.color;
+	else
+		return (0xFFFFFF - ray->record.color);
+}
+
+
+t_color	checkerboard_sphere(t_ray *ray, float size)
+{
+    int		check_x;
+    int		check_y;
+    int		check_z;
+    int		checker;
+
+	check_x = (int)floor(ray->record.p.x / size);
+	check_y = (int)floor(ray->record.p.y / size);
+	check_z = (int)floor(ray->record.p.z / size);
+	checker = (check_x + check_y + check_z) % 2;
+	if (checker == 0)
+		return ray->record.color;
+	else
+		return (0xFFFFFF - ray->record.color);
+}
+
+/* t_color	checkerboard_cylinder(t_ray *ray)
+{
+
+} */
+
+t_color checkerboard_pattern_selector(t_ray *ray)
+{
+	if (ray->record.type == SPHERE)
+		return (checkerboard_sphere(ray, 1.0));
+	else if (ray->record.type == PLANE)
+		return (checkerboard_sphere(ray, 3.0));
+	else if (ray->record.type == SQUARE)
+		return (checkerboard_square(ray));
+	/* else if (ray->record.type == CYLINDER)
+		return (checkerboard_cylinder(ray)); */
+	else
+		return (checkerboard_sphere(ray, 1.0));
+	return (ray->record.color);
+}
+
+void    treat_material(t_ray *ray, t_world *world, int depth)
+{
+    if (ray->record.type == SPHERE || ray->record.type == PLANE)
+    {
+        t_color reflected_color = reflect(ray, world, depth);
+        ray->record.color = cadd(ray->record.color, cscale(reflected_color, ray->record.material.reflectivity));
+    }
+    if (ray->record.type == SPHERE || ray->record.type == PLANE)
+    {
+        t_color refracted_color = refract(ray, world, depth);
+        ray->record.color = cadd(ray->record.color, cscale(refracted_color, ray->record.material.refractivity));
+    }
+}
+
+t_color get_texture_color(t_texture *texture, float u, float v)
+{
+    int tex_x = (int)(u * texture->width) % texture->width;
+    int tex_y = (int)(v * texture->height) % texture->height;
+    
+    int pixel_index = (tex_y * texture->size_line) + (tex_x * (texture->bpp / 8));
+    return *(int*)(texture->img_data + pixel_index);
 }
 
 // El raytracing se encarga de determinar la intersección del rayo
 // con los objetos en la escena y calcular el color resultante basado
 // en las propiedades del material, las luces, y otras consideraciones.
 // Si no hay intersección con ningun objeto devuelvo color negro
-t_color raytracer(t_ray *ray, t_world *world)
+t_color raytracer(t_ray *ray, t_world *world, int depth)
 {
     int     vis;
     t_color color;
@@ -48,8 +136,27 @@ t_color raytracer(t_ray *ray, t_world *world)
     t_list  *light;
     t_light current_light;
 
+    if (depth <= 0)
+        return 0x0;
     if (!intersec(ray, world->figures))
         return (0x0);
+    if (world->texture)
+    {
+        float u = 0,v = 0;
+        if (ray->record.type == SPHERE)
+        {
+            u = 1 - (0.5 + (atan2(ray->record.normal.z, ray->record.normal.x) / (2 * M_PI)));
+            v = 0.5 - (asin(ray->record.normal.y) / M_PI);
+            ray->record.color = get_texture_color(world->texture_img, u, v);
+        }/* else if (ray->record.type == SQUARE)
+        {
+           t_square *square = ray->record.object;
+        } */
+    }
+    if (world->material)
+        treat_material(ray, world, depth);
+    if (world->checkerboard)
+        ray->record.color = checkerboard_pattern_selector(ray);
     light = world->lights;
     ambient = cscale((*world->ambient).color, (*world->ambient).brightness);
     color = cproduct(ray->record.color, ambient);
@@ -97,27 +204,101 @@ t_color raytracer(t_ray *ray, t_world *world)
 // Función que realiza el render en una sección delimitada. Dicha sección la realiza
 // un hilo diferente. La idea es dividir la ventana en tantos cuadrados como hilos
 // tengae el procesador
+// void *render_section(void *threadarg)
+// {
+//     t_thread_data   *data;
+//     int             i;
+//     int             j;
+//     t_color         pixel_color;
+//     t_ray           ray;
+//     int             max_depth;
+    
+//     data = (t_thread_data *)threadarg;
+//     max_depth = 5;
+//     j = data->start_row;
+//     while (j < data->end_row)
+//     {
+//         i = 0;
+//         while (i < data->server->width)
+//         {
+//             ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
+//             pixel_color = raytracer(&ray, data->server->world, max_depth);
+//             my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
+//             i++;
+//         }
+//     j++;
+//     }
+//     pthread_exit(NULL);
+// }
+
+t_color average_color(t_color *colors, int num_colors) {
+    int r_sum = 0, g_sum = 0, b_sum = 0;
+
+    for (int i = 0; i < num_colors; i++) {
+        r_sum += (colors[i] >> 16) & 0xFF; // Extrae el componente rojo
+        g_sum += (colors[i] >> 8) & 0xFF;  // Extrae el componente verde
+        b_sum += colors[i] & 0xFF;          // Extrae el componente azul
+    }
+
+    // Calcula el promedio
+    int r_avg = r_sum / num_colors;
+    int g_avg = g_sum / num_colors;
+    int b_avg = b_sum / num_colors;
+
+    // Empaqueta el promedio en un solo valor entero
+    return (r_avg << 16) | (g_avg << 8) | b_avg;
+}
+
 void *render_section(void *threadarg)
 {
     t_thread_data   *data;
-    int             i;
-    int             j;
-    t_color         pixel_color;
+    int             i, j, m, n;
+    t_color         pixel_colors[4]; // Array para almacenar los colores de las muestras
+    t_color         sample_color;
     t_ray           ray;
-    
+    int             max_depth;
+    int             samples_per_pixel = 4; // Cuadrado de la cantidad de muestras por eje (2x2 en este caso)
+    int             sqrt_samples = 2; // Raíz cuadrada de las muestras por pixel
+
     data = (t_thread_data *)threadarg;
+    max_depth = 2;
     j = data->start_row;
     while (j < data->end_row)
     {
         i = 0;
         while (i < data->server->width)
         {
-            ray = generate_ray(data->server->world->cameras->content, (float)i / data->server->width, (float)j / data->server->height);
-            pixel_color = raytracer(&ray, data->server->world);
-            my_put_pixel(data->server, i, data->server->height - 1 - j, pixel_color);
+            // Inicializa el array de colores para las muestras
+            for (int k = 0; k < samples_per_pixel; k++) {
+                pixel_colors[k] = 0;
+            }
+
+            // Genera muestras para cada píxel
+            int k = 0;
+            for (m = 0; m < sqrt_samples; m++)
+            {
+                for (n = 0; n < sqrt_samples; n++)
+                {
+                    // Calcula el offset de la muestra en el píxel
+                    float u = ((float)i + (m + 0.5) / sqrt_samples) / data->server->width;
+                    float v = ((float)j + (n + 0.5) / sqrt_samples) / data->server->height;
+                    
+                    ray = generate_ray(data->server->world->cameras->content, u, v);
+                    sample_color = raytracer(&ray, data->server->world, max_depth);
+                    
+                    // Almacena el color de la muestra
+                    pixel_colors[k] = sample_color;
+                    k++;
+                }
+            }
+            
+            // Promedia el color de todas las muestras
+            t_color averaged_color = average_color(pixel_colors, samples_per_pixel);
+
+            my_put_pixel(data->server, i, data->server->height - 1 - j, averaged_color);
             i++;
         }
-    j++;
+        j++;
     }
     pthread_exit(NULL);
 }
@@ -205,8 +386,10 @@ void render_low(t_server *server)
 	int		scale_factor;
     t_ray   ray;
     t_color pixel_color;
+    int     max_depth;
 
     scale_factor = adjust_scale_factor(server);
+    max_depth = 5;
     if (!server->world->cameras || scale_factor <= 0)
         return;
     j = -1;
@@ -216,7 +399,7 @@ void render_low(t_server *server)
         while (++i < server->width / scale_factor)
         {
             ray = generate_ray(server->world->cameras->content, (float)i / (server->width / scale_factor), (float)j / (server->height / scale_factor));
-            pixel_color = raytracer(&ray, server->world);
+            pixel_color = raytracer(&ray, server->world, max_depth);
             fill_pixels(server, scale_factor, i, j, pixel_color);
         }
     }

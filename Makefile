@@ -9,7 +9,7 @@ LIBFT_SRC = ./lib/libft/
 # Compiler
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC) -I ./lib/minilibx-linux
-CFLAGS				=	-Wall -Werror -Wextra 
+# CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc -g $(CFLAGS) $(INCLUDE)
 CC					=	clang -O0 -g -MMD $(CFLAGS) $(INCLUDE)
 # Colours
@@ -43,6 +43,10 @@ SRC_FILES = $(SRC_DIR)/camera.c\
 			$(SRC_DIR)/utils1.c\
 			$(SRC_DIR)/utils2.c\
 			$(SRC_DIR)/vector.c\
+			$(SRC_DIR)/cone.c\
+			$(SRC_DIR)/utils_parse.c\
+			$(SRC_DIR)/utils_error.c\
+			$(SRC_DIR)/pre_parse.c\
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 DEP = $(addsuffix .d, $(basename $(SRC_FILES)))

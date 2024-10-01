@@ -20,6 +20,7 @@ t_plane	*new_plane(char **data)
 	plane->point = ft_atov(data[1]);
 	plane->normal = norm(ft_atov(data[2]));
 	plane->color = ft_atoc(data[3]);
+	plane->material.type = 1;
 	return (plane);
 }
 
@@ -55,6 +56,10 @@ int	hit_plane(t_ray *ray, t_plane *plane)
 		ray->record.color = plane->color;
 		ray->record.type = plane->type;
 		ray->record.object = plane;
+		if (plane->material.type)
+			fill_glass_material(ray);
+		else
+			fill_mate_material(ray);
 		return (1);
 	}
 	return (0);

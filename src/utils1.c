@@ -30,6 +30,7 @@ int	invalid_number(char *str)
 		else
 			inv |= (!ft_isdigit(str[i]) & (str[i] != '.'));
 	}
+	free(str);
 	return (inv);
 }
 
@@ -53,16 +54,30 @@ t_color	ft_atoc(char *str)
 	color = 0x0;
 	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
-		message_exit(ERROR_COLOR);
+	{	
+		// printf("here!\n");
+		free_double(split);
+		// msg_exit(ERROR_COLOR);
+		return -1;
+	}
 	else
 	{
 		while (i < 3)
 		{
 			if (invalid_number(split[i]))
-				message_exit(ERROR_DIR);
+			{
+				// printf("here!\n");
+				free_double(split);
+				return -1;
+			}
 			prim = ft_atoi(split[i]);
 			if (prim < 0 || prim > 0xFF)
-				message_exit(ERROR_COL_VAL);
+			{
+				// printf("here!\n");
+				free_double(split);
+				return -1;
+			}
+				// msg_exit(ERROR_COL_VAL);
 			color = (color << 8) | prim;
 			i++;
 		}
