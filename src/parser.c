@@ -34,8 +34,6 @@ void	figures_parser(char **line, t_world *world)
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_cylinder(line)));
 	else if (!ft_strcmp(line[0], "tr"))
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_triangle(line)));
-	// else if (!ft_strcmp(line[0], "to"))
-	// 	ft_lstadd_back(&(world->figures), ft_lstnew(new_torus(line)));
 	else if (!ft_strcmp(line[0], "co"))
 		ft_lstadd_back(&(world->figures), ft_lstnew(new_cone(line)));
 	else

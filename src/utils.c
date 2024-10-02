@@ -42,7 +42,6 @@ float	ft_atof(char *str)
 	sign = 1;
 	if (invalid_number(str))
 		return 1;
-		// msg_exit(ERROR_DIR);
 	if (*str == '+' || *str == '-')
 		if (*str++ == '-')
 			sign = -1;

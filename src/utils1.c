@@ -52,9 +52,7 @@ t_color	ft_atoc(char *str)
 	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
 	{	
-		// printf("here!\n");
 		free_double(split);
-		// msg_exit(ERROR_COLOR);
 		return -1;
 	}
 	else
@@ -63,18 +61,15 @@ t_color	ft_atoc(char *str)
 		{
 			if (invalid_number(split[i]))
 			{
-				// printf("here!\n");
 				free_double(split);
 				return -1;
 			}
 			prim = ft_atoi(split[i]);
 			if (prim < 0 || prim > 0xFF)
 			{
-				// printf("here!\n");
 				free_double(split);
 				return -1;
 			}
-				// msg_exit(ERROR_COL_VAL);
 			color = (color << 8) | prim;
 			i++;
 		}

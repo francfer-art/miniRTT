@@ -12,9 +12,9 @@ int	main(int args, char **argv)
 	world = scene_init(argv[1]);
 	server = new_server(world);
 	if (!server)
-		full_message_exit(ERROR_SERVER, world, server);
+		full_message_exit(ERROR_ARG, world, server);
 	render(server);
-	init_texture(server->mlx, server->world->texture_img, "/home/francfer/Desktop/TEST/textures/brick.xpm");
+	init_texture(server->mlx, server->world->texture_img, "./textures/brick.xpm");
 	mlx_events(server);
 	return (EXIT_SUCCESS);
 }

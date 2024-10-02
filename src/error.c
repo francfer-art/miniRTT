@@ -1,6 +1,6 @@
 #include <minirt.h>
 
-void	message_exit(char *msg)
+void	message_exit(ErrorType msg)
 {
 	if (msg)
 	{
@@ -22,7 +22,7 @@ void	set_texture(t_world *world)
 	world->texture_img = malloc(sizeof(t_texture));
 	if (!world->texture_img)
 	{
-		full_message_exit(ERROR_MALLOC, world, NULL);
+		full_message_exit(ERROR_ARG, world, NULL);
 	}
 	world->texture_img->img_ptr = NULL;
 	world->texture_img->img_data = NULL;

@@ -58,29 +58,6 @@
 # define ALBEDO_MATTE 300
 # define ALBEDO_NONE 0
 
-// // Definición de errores 
-// # define ERROR_MALLOC "ERROR : Malloc problem 🔴"
-// # define ERROR_PARSE "ERROR : While parsing 🔴"
-// # define ERROR_JEFE "🐷 Nos vemos jefe 🐷"
-// # define ERROR_CREATE "ERROR; return code from pthread_create() 🔴"
-// # define ERROR_JOIN "ERROR : return code from pthread_join() 🔴"
-// # define ERROR_COLOR "ERROR : Invalid color definition 🔴"
-// # define ERROR_SERVER "ERROR : Can't create server 🔴"
-// # define ERROR_COL_VAL "ERROR : Color value out range 🔴"
-// # define ERROR_VECTOR "ERROR : Vector out range 🔴"
-// # define ERROR_BRIGHTNESS "ERROR : Brightness out of range 🔴"
-// # define ERROR_RATIO "ERROR : Ambient light ratio out of range 🔴"
-// # define ERROR_DIR "ERROR : Invalid number detected 🔴"
-// # define ERROR_ARG "ERROR : Incorrect number of arguments 🔴"
-// # define ERROR_ID "ERROR : Invalid object's identifier 🔴"
-// # define ERROR_RES "ERROR : Resolution not found 🔴"
-// # define ERROR_RES_LEN "ERROR : Poor resolution definition 🔴"
-// # define ERROR_RES_VALUE "ERROR : Resolution value below 0 🔴"
-// # define ERROR_AMB "ERROR : Not ambient light found 🔴"
-// # define ERROR_FORMAT "ERROR : File format not supported"
-// # define ERROR_OPEN "ERROR : Error opening the file 🔴"
-// # define ERROR_CLOSE "ERROR : Error closing the file 🔴"
-
 typedef enum {
     ERROR_JEFE,
     // ERROR_MALLOC,
@@ -104,7 +81,7 @@ typedef enum {
     ERROR_OPEN,
     ERROR_CLOSE,
 	ERROR_CAMERA,
-    ERROR_COUNT // To keep track of the number of errors
+    ERROR_COUNT
 } ErrorType;
 
 typedef int		t_color;
@@ -289,8 +266,8 @@ typedef struct s_thread_data
 }				t_thread_data;
 
 // error.c
-void			message_exit(char *msg);
-void				msg_exit(ErrorType error);
+void			message_exit(ErrorType msg);
+void			msg_exit(ErrorType error);
 void			full_message_exit(ErrorType msg, t_world *world, t_server *server);
 void			check_server(t_server *server, int *t, int *rows_per_thread);
 void			set_texture(t_world *world);
@@ -502,5 +479,22 @@ int				adjust_scale_factor(t_server *server);
 void			*render_section_super(void *threadarg);
 void			render_row(t_thread_data *data, int j);
 void			join_menu_image(pthread_t *threads, t_server *server);
+
+//utils_parse.c
+int 				check_r(char **data);
+int 				check_a(char **data);
+int					check_c(char **data);
+int					check_l(char **data);
+int					check_pl(char **data);
+int					check_sp(char **data);
+int					check_sq(char **data);
+int					check_cy(char **data);
+
+//pre_parse.c
+int pre_parse(char *file);
+
+//utils_error.c
+char **create_error(void);
+void msg_exit(ErrorType error);
 
 #endif

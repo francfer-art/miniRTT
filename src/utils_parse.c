@@ -71,7 +71,7 @@ int	check_cy(char **data)
 {
 	if (double_pointer_len(data) < 6)
 		return (ERROR_FORMAT);
-	else if (ft_atoc(data[6]) == -1 || ft_atoc(data[6]) == -1)
+	else if (ft_atoc(data[5]) == -1 || ft_atoc(data[5]) == -1)
 		return (ERROR_COLOR);
 	return (0);
 }

@@ -9,6 +9,7 @@ void	free_world(t_world *world)
 		ft_lstclear(&world->cameras, free);
 		free(world->ambient);
 		free(world->resolution);
+		free(world->texture_img);
 		free(world);
 		world = NULL;
 	}
