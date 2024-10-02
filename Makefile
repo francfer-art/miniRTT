@@ -24,16 +24,28 @@ RESET				=	\033[0m
 
 
 SRC_FILES = $(SRC_DIR)/camera.c\
+			$(SRC_DIR)/camera1.c\
 			$(SRC_DIR)/color.c\
+			$(SRC_DIR)/color1.c\
 			$(SRC_DIR)/cylinder.c\
 			$(SRC_DIR)/elements.c\
 			$(SRC_DIR)/error.c\
 			$(SRC_DIR)/events.c\
+			$(SRC_DIR)/events1.c\
+			$(SRC_DIR)/events2.c\
+			$(SRC_DIR)/events3.c\
 			$(SRC_DIR)/free.c\
 			$(SRC_DIR)/main.c\
 			$(SRC_DIR)/parser.c\
 			$(SRC_DIR)/plane.c\
 			$(SRC_DIR)/render.c\
+			$(SRC_DIR)/render1.c\
+			$(SRC_DIR)/render2.c\
+			$(SRC_DIR)/render3.c\
+			$(SRC_DIR)/render4.c\
+			$(SRC_DIR)/render5.c\
+			$(SRC_DIR)/render6.c\
+			$(SRC_DIR)/render7.c\
 			$(SRC_DIR)/scene.c\
 			$(SRC_DIR)/server.c\
 			$(SRC_DIR)/sphere.c\
@@ -42,7 +54,10 @@ SRC_FILES = $(SRC_DIR)/camera.c\
 			$(SRC_DIR)/utils.c\
 			$(SRC_DIR)/utils1.c\
 			$(SRC_DIR)/utils2.c\
+			$(SRC_DIR)/utils3.c\
+			$(SRC_DIR)/utils4.c\
 			$(SRC_DIR)/vector.c\
+			$(SRC_DIR)/utils_main.c\
 			$(SRC_DIR)/cone.c\
 			$(SRC_DIR)/utils_parse.c\
 			$(SRC_DIR)/utils_error.c\

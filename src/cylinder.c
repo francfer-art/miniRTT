@@ -1,14 +1,5 @@
 #include <minirt.h>
 
-// Función que parsea y crea un cilindro desde un char **data
-// Este doble puntero viene de hacer un split de cada string del archivo.rt 
-// que nos pasan por argumento
-// Lo primero es verificar la cantidad de elementos del dataset, si no son 6 error
-// Reservo la cantidad de memoria necesaria para el objeto
-// Empiezo a rellenar la estructura
-// Cuando relleno el axis del cilindro, llamo a la función norm despues de llamar a 
-// ft_atov. De este modo consigo que el vector esté normalizado, independientemente
-// del vector que introduzcan en el archivo.rt
 t_cylinder	*new_cylinder(char **data)
 {
 	t_cylinder	*cylinder;
@@ -104,7 +95,8 @@ void	valid_hit(int *hit, float *dist, float *root, float *d, float *t)
 		{
 			*d = dist[0];
 			*t = root[0];
-		}else
+		}
+		else
 		{
 			*d = dist[1];
 			*t = root[1];
@@ -113,7 +105,7 @@ void	valid_hit(int *hit, float *dist, float *root, float *d, float *t)
 	else if (hit[0])
 	{
 		*d = dist[0];
-		*t = root[0];		
+		*t = root[0];
 	}
 	else if (hit[1])
 	{
