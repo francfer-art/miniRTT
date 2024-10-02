@@ -60,6 +60,7 @@ SRC_FILES = $(SRC_DIR)/camera.c\
 			$(SRC_DIR)/utils_main.c\
 			$(SRC_DIR)/cone.c\
 			$(SRC_DIR)/utils_parse.c\
+			$(SRC_DIR)/utils_parse2.c\
 			$(SRC_DIR)/utils_error.c\
 			$(SRC_DIR)/pre_parse.c\
 

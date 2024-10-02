@@ -16,7 +16,6 @@ void	full_message_exit(ErrorType msg, t_world *world, t_server *server)
 	msg_exit(msg);
 }
 
-
 void	set_texture(t_world *world)
 {
 	world->texture_img = malloc(sizeof(t_texture));

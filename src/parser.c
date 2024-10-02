@@ -95,9 +95,8 @@ int	parser_file(int fd, t_world *world)
 // 		free(line);
 // 	}
 
-// 	return 0;
+// 	return (0);
 // }
-
 
 // int	parser_file(int fd, t_world *world)
 // {

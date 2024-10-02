@@ -41,7 +41,7 @@ float	ft_atof(char *str)
 	i = -1;
 	sign = 1;
 	if (invalid_number(str))
-		return 1;
+		return (1);
 	if (*str == '+' || *str == '-')
 		if (*str++ == '-')
 			sign = -1;

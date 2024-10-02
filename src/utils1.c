@@ -47,35 +47,24 @@ t_color	ft_atoc(char *str)
 	int		i;
 	int		prim;
 
-	i = 0;
+	i = -1;
 	color = 0x0;
 	split = ft_split(str, ',');
 	if (double_pointer_len(split) != 3)
-	{	
-		free_double(split);
-		return -1;
-	}
+		return (free_double(split), -1);
 	else
 	{
-		while (i < 3)
+		while (++i < 3)
 		{
 			if (invalid_number(split[i]))
-			{
-				free_double(split);
-				return -1;
-			}
+				return (free_double(split), -1);
 			prim = ft_atoi(split[i]);
 			if (prim < 0 || prim > 0xFF)
-			{
-				free_double(split);
-				return -1;
-			}
+				return (free_double(split), -1);
 			color = (color << 8) | prim;
-			i++;
 		}
 	}
-	free_double(split);
-	return (color);
+	return (free_double(split), color);
 }
 
 t_vector	norm(t_vector v)

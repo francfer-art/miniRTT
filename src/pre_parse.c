@@ -26,8 +26,6 @@ int	get_number_lines(char *file)
 	return (count_line);
 }
 
-
-
 char	**load_map(int n_lines, char *file)
 {
 	char	**full_map;
@@ -105,12 +103,7 @@ int	pre_parse(char *file)
 	char	**full_map;
 	int		res;
 
-	// char	*line;
-	// int		i;
-	// char	**data;
 	count_line = 0;
-	// line = NULL;
-	// full_map = NULL;
 	count_line = get_number_lines(file);
 	full_map = load_map(count_line, file);
 	res = check_errors(full_map);

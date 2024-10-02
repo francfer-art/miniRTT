@@ -69,9 +69,8 @@ int	hit_square(t_ray *ray, t_square *square)
 	t_plane	plane;
 
 	hit = 0;
-
-    memset(&r, 0, sizeof(t_ray));
-    memset(&plane, 0, sizeof(t_plane));
+	memset(&r, 0, sizeof(t_ray));
+	memset(&plane, 0, sizeof(t_plane));
 	plane.point = square->center;
 	plane.normal = square->normal;
 	plane.color = square->color;

@@ -20,10 +20,10 @@ int	intersec(t_ray *ray, t_list *figures)
 			hit |= hit_square(ray, (t_square *)figures->content);
 		else if (type == TRIANGLE)
 			hit |= hit_triangle(ray, (t_triangle *)figures->content);
-        else if (type == CONE)
-        {
-            hit |= hit_cone(ray, (t_cone *)figures->content);
-        }
+		else if (type == CONE)
+		{
+			hit |= hit_cone(ray, (t_cone *)figures->content);
+		}
 		figures = figures->next;
 	}
 	return (hit);
