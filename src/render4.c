@@ -1,5 +1,28 @@
 #include <minirt.h>
 
+void	apply_texture_cone(t_ray *ray, t_world *world, float *u, float *v)
+{
+	t_cone		*cone;
+	t_vector	p_minus_vertex;
+	t_vector	around_axis;
+	float		height_along_axis;
+	float		theta;
+
+	cone = ray->record.object;
+	p_minus_vertex = sub(ray->record.p, cone->vertex);
+	height_along_axis = dot(p_minus_vertex, norm(cone->direction));
+	if (height_along_axis < 0)
+		height_along_axis = 0;
+	if (height_along_axis > cone->height)
+		height_along_axis = cone->height;
+	*v = height_along_axis / cone->height;
+	around_axis = sub(p_minus_vertex, scale(norm(cone->direction), height_along_axis));
+	theta = atan2(around_axis.z, around_axis.x);
+	*u = 1 - (theta / (2 * M_PI));
+	ray->record.color = get_texture_color(world->texture_img, *u, *v);
+}
+
+
 void	apply_texture(t_ray *ray, t_world *world)
 {
 	float	u;
@@ -15,6 +38,8 @@ void	apply_texture(t_ray *ray, t_world *world)
 			apply_texture_square(ray, world, &u, &v);
 		else if (ray->record.type == PLANE)
 			apply_texture_plane(ray, world, &u, &v);
+		else if (ray->record.type == CONE)
+			apply_texture_cone(ray, world, &u, &v);
 		if (world->bump)
 			ray->record.normal = apply_bump(ray->record, world, u, v);
 	}
