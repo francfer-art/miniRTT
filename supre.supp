@@ -1,0 +1,30 @@
+{
+    leak add_history
+    Memcheck:Leak
+    ...
+    fun:add_history
+}
+{
+    leak mlx_init
+    Memcheck:Leak
+    ...
+    fun:mlx_init
+}
+{
+    leak mlx_xpm_file_to_image
+    Memcheck:Leak
+    ...
+    fun:mlx_xpm_file_to_image
+}
+{
+    leak mlx_get_data_addr
+    Memcheck:Leak
+    ...
+    fun:mlx_get_data_addr
+}
+{
+    leak mlx_loop
+    Memcheck:Leak
+    ...
+    fun:mlx_loop
+}

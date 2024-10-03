@@ -44,7 +44,7 @@
 # define XK_ZOOM_OUT 0x0005
 # define XK_LEFT_BUTTON 0x0001
 # define XK_RIGHT_BUTTON 0x0003
-# define XK_CHECKERBOARD 0X60
+# define XK_CHECKERBOARD 0XBA
 # define XK_TEXTURE 0x0075
 # define XK_PHONG 0x006C
 # define XK_BUMP 0x0070
@@ -280,7 +280,7 @@ void			set_texture(t_world *world);
 t_world			*scene_init(char *file);
 int				open_scene_file(char *file);
 t_world			*new_world(void);
-void			init_texture(void *mlx_ptr, t_texture *texture,
+void			init_texture(t_server *server, t_texture *texture,
 					char *file_path);
 
 // utils.c

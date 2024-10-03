@@ -54,14 +54,14 @@ t_world	*scene_init(char *file)
 	return (world);
 }
 
-void	init_texture(void *mlx_ptr, t_texture *texture, char *file_path)
+void	init_texture(t_server *server, t_texture *texture, char *file_path)
 {
-	texture->img_ptr = mlx_xpm_file_to_image(mlx_ptr, file_path,
+	texture->img_ptr = mlx_xpm_file_to_image(server->mlx, file_path,
 			&texture->width, &texture->height);
 	if (!texture->img_ptr)
 	{
 		printf("Error: No se pudo cargar la textura desde %s\n", file_path);
-		return ;
+		full_message_exit(ERROR_OPEN, NULL, server);
 	}
 	texture->img_data = mlx_get_data_addr(texture->img_ptr, &texture->bpp,
 			&texture->size_line, &texture->endian);
