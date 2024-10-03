@@ -276,7 +276,7 @@ void			set_texture(t_world *world);
 t_world			*scene_init(char *file);
 int				open_scene_file(char *file);
 t_world			*new_world(void);
-void			init_texture(void *mlx_ptr, t_texture *texture,
+void			init_texture(t_server *server, t_texture *texture,
 					char *file_path);
 
 // utils.c

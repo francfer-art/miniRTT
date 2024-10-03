@@ -13,9 +13,9 @@ int	main(int args, char **argv)
 	server = new_server(world);
 	if (!server)
 		full_message_exit(ERROR_ARG, world, server);
+	init_texture(server, server->world->texture_img,
+		"./textures/wood.xpm");
 	render(server);
-	init_texture(server->mlx, server->world->texture_img,
-		"./textures/brick.xpm");
 	mlx_events(server);
 	return (EXIT_SUCCESS);
 }
