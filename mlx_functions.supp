@@ -1,0 +1,245 @@
+{
+    leak mlx_clear_window
+    Memcheck:Leak
+    ...
+    fun:mlx_clear_window
+}
+
+{
+    leak mlx_destroy_display
+    Memcheck:Leak
+    ...
+    fun:mlx_destroy_display
+}
+
+{
+    leak mlx_destroy_image
+    Memcheck:Leak
+    ...
+    fun:mlx_destroy_image
+}
+
+{
+    leak mlx_destroy_window
+    Memcheck:Leak
+    ...
+    fun:mlx_destroy_window
+}
+
+{
+    leak mlx_expose_hook
+    Memcheck:Leak
+    ...
+    fun:mlx_expose_hook
+}
+
+{
+    leak mlx_ext_randr
+    Memcheck:Leak
+    ...
+    fun:mlx_ext_randr
+}
+
+{
+    leak mlx_flush_event
+    Memcheck:Leak
+    ...
+    fun:mlx_flush_event
+}
+
+{
+    leak mlx_get_color_value
+    Memcheck:Leak
+    ...
+    fun:mlx_get_color_value
+}
+
+{
+    leak mlx_get_data_addr
+    Memcheck:Leak
+    ...
+    fun:mlx_get_data_addr
+}
+
+{
+    leak mlx_hook
+    Memcheck:Leak
+    ...
+    fun:mlx_hook
+}
+
+{
+    leak mlx_init
+    Memcheck:Leak
+    ...
+    fun:mlx_init
+}
+
+{
+    leak mlx_int_anti_resize_win
+    Memcheck:Leak
+    ...
+    fun:mlx_int_anti_resize_win
+}
+
+{
+    leak mlx_int_do_nothing
+    Memcheck:Leak
+    ...
+    fun:mlx_int_do_nothing
+}
+
+{
+    leak mlx_int_get_visual
+    Memcheck:Leak
+    ...
+    fun:mlx_int_get_visual
+}
+
+{
+    leak mlx_int.h
+    Memcheck:Leak
+    ...
+    fun:mlx_int.h
+}
+
+{
+    leak mlx_int_param_event
+    Memcheck:Leak
+    ...
+    fun:mlx_int_param_event
+}
+
+{
+    leak mlx_int_set_win_event_mask
+    Memcheck:Leak
+    ...
+    fun:mlx_int_set_win_event_mask
+}
+
+{
+    leak mlx_int_str_to_wordtab
+    Memcheck:Leak
+    ...
+    fun:mlx_int_str_to_wordtab
+}
+
+{
+    leak mlx_int_wait_first_expose
+    Memcheck:Leak
+    ...
+    fun:mlx_int_wait_first_expose
+}
+
+{
+    leak mlx_key_hook
+    Memcheck:Leak
+    ...
+    fun:mlx_key_hook
+}
+
+{
+    leak mlx_lib_xpm
+    Memcheck:Leak
+    ...
+    fun:mlx_lib_xpm
+}
+
+{
+    leak mlx_loop
+    Memcheck:Leak
+    ...
+    fun:mlx_loop
+}
+
+{
+    leak mlx_loop_hook
+    Memcheck:Leak
+    ...
+    fun:mlx_loop_hook
+}
+
+{
+    leak mlx_mouse
+    Memcheck:Leak
+    ...
+    fun:mlx_mouse
+}
+
+{
+    leak mlx_mouse_hook
+    Memcheck:Leak
+    ...
+    fun:mlx_mouse_hook
+}
+
+{
+    leak mlx_new_image
+    Memcheck:Leak
+    ...
+    fun:mlx_new_image
+}
+
+{
+    leak mlx_new_window
+    Memcheck:Leak
+    ...
+    fun:mlx_new_window
+}
+
+{
+    leak mlx_pixel_put
+    Memcheck:Leak
+    ...
+    fun:mlx_pixel_put
+}
+
+{
+    leak mlx_put_image_to_window
+    Memcheck:Leak
+    ...
+    fun:mlx_put_image_to_window
+}
+
+{
+    leak mlx_rgb
+    Memcheck:Leak
+    ...
+    fun:mlx_rgb
+}
+
+{
+    leak mlx_screen_size
+    Memcheck:Leak
+    ...
+    fun:mlx_screen_size
+}
+
+{
+    leak mlx_set_font
+    Memcheck:Leak
+    ...
+    fun:mlx_set_font
+}
+
+{
+    leak mlx_string_put
+    Memcheck:Leak
+    ...
+    fun:mlx_string_put
+}
+
+{
+    leak mlx_xpm
+    Memcheck:Leak
+    ...
+    fun:mlx_xpm
+}
+
+{
+    leak mlx_xpm.c.ok
+    Memcheck:Leak
+    ...
+    fun:mlx_xpm.c.ok
+}
+

@@ -4,7 +4,7 @@ void	message_exit(ErrorType msg)
 {
 	if (msg)
 	{
-		printf("%s%s%s\n", YELLOW, msg, RESET);
+		printf("Unexpected error!\n");
 	}
 	exit(EXIT_FAILURE);
 }
