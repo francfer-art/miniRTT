@@ -9,8 +9,8 @@ void	solve_quadratic(float a, float b, float c, float *roots,
 	if (discriminant > 0)
 	{
 		*root_count = 2;
-		roots[0] = (-b + sqrt(discriminant)) / (2 * a);
-		roots[1] = (-b - sqrt(discriminant)) / (2 * a);
+		roots[0] = (-b - sqrt(discriminant)) / (2 * a);
+		roots[1] = (-b + sqrt(discriminant)) / (2 * a);
 	}
 	else if (discriminant == 0)
 	{
