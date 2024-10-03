@@ -176,6 +176,10 @@ typedef struct s_cone {
     float angle;
     t_color color;
 	float height;
+	float a;
+	float b;
+	float c;
+	int root_count;
 } t_cone;
 
 typedef struct s_camera
@@ -364,7 +368,7 @@ int				hit_triangle(t_ray *ray, t_triangle *triangle);
 //cone.c
 t_cone *new_cone(char **data);
 int hit_cone(t_ray *ray, t_cone *cone);
-void solve_quadratic(float a, float b, float c, float *roots, int *root_count);
+void solve_quadratic(t_cone cone, float *roots, int *root_count);
 
 // server.c
 t_image			*new_image(t_server *server);
