@@ -10,7 +10,7 @@ void	update_bump(t_server *server)
 
 void	create_filename(char **number, int *screenshot_counter, char **filename)
 {
-	*filename = malloc(sizeof(char *));
+	*filename = malloc(50 * sizeof(char));
 	if (!*filename)
 		return ;
 	*number = ft_itoa(*screenshot_counter);
@@ -65,10 +65,10 @@ void	set_header_info(t_server *server, int fd)
 	unsigned char	*bmp_file_header;
 	unsigned char	*bmp_info_header;
 
-	bmp_file_header = malloc(14);
+	bmp_file_header = calloc(14, sizeof(unsigned char));
 	if (!bmp_file_header)
 		return ;
-	bmp_info_header = malloc(40);
+	bmp_info_header = calloc(40, sizeof(unsigned char));
 	if (!bmp_info_header)
 		return ;
 	file_size = 454 + (3 * server->width * server->height);

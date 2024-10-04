@@ -37,6 +37,7 @@ void	*render_section(void *threadarg)
 	t_color			pixel_color;
 	t_ray			ray;
 
+	ft_memset(&ray, 0, sizeof(t_ray));
 	data = (t_thread_data *)threadarg;
 	j = data->start_row;
 	while (j < data->end_row)

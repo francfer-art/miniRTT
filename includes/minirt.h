@@ -58,31 +58,27 @@
 # define ALBEDO_MATTE 300
 # define ALBEDO_NONE 0
 
-typedef enum {
-    ERROR_JEFE,
-    // ERROR_MALLOC,
-    ERROR_PARSE,
-    ERROR_CREATE,
-    ERROR_JOIN,
-    ERROR_COLOR,
-    // ERROR_SERVER,
-    // ERROR_COL_VAL,
-    // ERROR_VECTOR,
-    ERROR_BRIGHTNESS,
-    // ERROR_RATIO,
-    ERROR_DIR,
-    ERROR_ARG,
-    ERROR_ID,
-    ERROR_RES,
-    ERROR_RES_LEN,
-    ERROR_RES_VALUE,
-    ERROR_AMB,
-    ERROR_FORMAT,
-    ERROR_OPEN,
-    ERROR_CLOSE,
+typedef enum s_error
+{
+	ERROR_JEFE,
+	ERROR_PARSE,
+	ERROR_CREATE,
+	ERROR_JOIN,
+	ERROR_COLOR,
+	ERROR_BRIGHTNESS,
+	ERROR_DIR,
+	ERROR_ARG,
+	ERROR_ID,
+	ERROR_RES,
+	ERROR_RES_LEN,
+	ERROR_RES_VALUE,
+	ERROR_AMB,
+	ERROR_FORMAT,
+	ERROR_OPEN,
+	ERROR_CLOSE,
 	ERROR_CAMERA,
-    ERROR_COUNT
-} ErrorType;
+	ERROR_COUNT
+}				t_error;
 
 typedef int		t_color;
 
@@ -169,18 +165,19 @@ typedef struct s_triangle
 	t_color		color;
 }				t_triangle;
 
-typedef struct s_cone {
-    t_type type;
-    t_vector vertex;
-    t_vector direction;
-    float angle;
-    t_color color;
-	float height;
-	float a;
-	float b;
-	float c;
-	int root_count;
-} t_cone;
+typedef struct s_cone
+{
+	t_type		type;
+	t_vector	vertex;
+	t_vector	direction;
+	float		angle;
+	t_color		color;
+	float		height;
+	float		a;
+	float		b;
+	float		c;
+	int			root_count;
+}				t_cone;
 
 typedef struct s_camera
 {
@@ -270,9 +267,10 @@ typedef struct s_thread_data
 }				t_thread_data;
 
 // error.c
-void			message_exit(ErrorType msg);
-void			msg_exit(ErrorType error);
-void			full_message_exit(ErrorType msg, t_world *world, t_server *server);
+void			message_exit(t_error msg);
+void			msg_exit(t_error error);
+void			full_message_exit(t_error msg, t_world *world,
+					t_server *server);
 void			check_server(t_server *server, int *t, int *rows_per_thread);
 void			set_texture(t_world *world);
 
@@ -349,8 +347,7 @@ int				is_inside(t_hit r, t_vector *v, int vertex);
 // cylinder.c
 t_cylinder		*new_cylinder(char **data);
 void			cylinder_roots(t_ray r, t_cylinder cylinder, float roots[2]);
-void			valid_hit(int *hit, float *dist, float *root, float *d,
-					float *t);
+void			valid_hit(int *hit, float w[4], float *d, float *t);
 float			solve(t_ray r, t_cylinder cy, float *d, int hit[2]);
 int				hit_cylinder(t_ray *ray, t_cylinder *cylinder);
 
@@ -365,10 +362,10 @@ void			fill_mate_material(t_ray *ray);
 t_triangle		*new_triangle(char **data);
 int				hit_triangle(t_ray *ray, t_triangle *triangle);
 
-//cone.c
-t_cone *new_cone(char **data);
-int hit_cone(t_ray *ray, t_cone *cone);
-void solve_quadratic(t_cone cone, float *roots, int *root_count);
+// cone.c
+t_cone			*new_cone(char **data);
+int				hit_cone(t_ray *ray, t_cone *cone);
+// void solve_quadratic(t_cone cone, float *roots, int *root_count);
 
 // server.c
 t_image			*new_image(t_server *server);
@@ -459,18 +456,12 @@ t_color			raytracer(t_ray *ray, t_world *world, int depth);
 
 // render5.c
 void			render_pixel(t_thread_data *data, int i, int j);
-void			sample_pixel_colors(t_thread_data *data, t_color *pixel_colors,
-					int i, int j);
-int				sample_pixel_row(t_thread_data *data, t_color *pixel_colors,
-					int i, int j, int m, int k);
-int				sample_pixel(t_thread_data *data, t_color *pixel_colors, int i,
-					int j, int m, int n, int k);
 float			calculate_u(int width, int i, int m);
 
 // render6.c
 float			calculate_v(int height, int j, int n);
 void			initialize_colors(t_color pixel_colors[SAMPLES_PER_PIXEL]);
-t_color			initialize_color(void);
+// t_color			initialize_color(void);
 void			show_menu(t_server *server);
 void			render_selector(int t, t_thread_data *thread_data,
 					t_server *server);
@@ -484,21 +475,21 @@ void			*render_section_super(void *threadarg);
 void			render_row(t_thread_data *data, int j);
 void			join_menu_image(pthread_t *threads, t_server *server);
 
-//utils_parse.c
-int 				check_r(char **data);
-int 				check_a(char **data);
-int					check_c(char **data);
-int					check_l(char **data);
-int					check_pl(char **data);
-int					check_sp(char **data);
-int					check_sq(char **data);
-int					check_cy(char **data);
+// utils_parse.c
+int				check_r(char **data);
+int				check_a(char **data);
+int				check_c(char **data);
+int				check_l(char **data);
+int				check_pl(char **data);
+int				check_sp(char **data);
+int				check_sq(char **data);
+int				check_cy(char **data);
 
-//pre_parse.c
-int pre_parse(char *file);
+// pre_parse.c
+int				pre_parse(char *file);
 
-//utils_error.c
-char **create_error(void);
-void msg_exit(ErrorType error);
+// utils_error.c
+char			**create_error(void);
+void			msg_exit(t_error error);
 
 #endif

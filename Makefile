@@ -9,7 +9,7 @@ LIBFT_SRC = ./lib/libft/
 # Compiler
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC) -I ./lib/minilibx-linux
-CFLAGS				=	-Wall -Werror -Wextra 
+# CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc -g $(CFLAGS) $(INCLUDE)
 CC					=	clang -O0 -g -MMD $(CFLAGS) $(INCLUDE)
 # Colours
@@ -94,7 +94,7 @@ clean:
 fclean: clean
 	rm -rf $(NAME) 
 	@make -C $(LIBFT_SRC) fclean
-	make -C ./lib/minilibx-linux clean
+	make -C ./lib/minilibx-linux clean && rm -rf save && mkdir save
 
 re: fclean all
 	@printf "$(BLUE)==> $(CYAN)Recompiled\n$(RESET)"

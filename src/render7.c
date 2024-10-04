@@ -72,7 +72,7 @@ void	join_menu_image(pthread_t *threads, t_server *server)
 		if (pthread_join(threads[t], NULL))
 			full_message_exit(ERROR_JOIN, NULL, server);
 	}
-	show_menu(server);
 	mlx_put_image_to_window(server->mlx, server->window, server->image->image,
 		0, 0);
+	show_menu(server);
 }

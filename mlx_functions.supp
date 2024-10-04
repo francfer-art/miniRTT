@@ -202,6 +202,13 @@
 }
 
 {
+    leak XFlush
+    Memcheck:Leak
+    ...
+    fun:XFlush
+}
+
+{
     leak mlx_rgb
     Memcheck:Leak
     ...

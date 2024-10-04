@@ -1,6 +1,6 @@
 #include <minirt.h>
 
-void	message_exit(ErrorType msg)
+void	message_exit(t_error msg)
 {
 	if (msg)
 	{
@@ -9,7 +9,7 @@ void	message_exit(ErrorType msg)
 	exit(EXIT_FAILURE);
 }
 
-void	full_message_exit(ErrorType msg, t_world *world, t_server *server)
+void	full_message_exit(t_error msg, t_world *world, t_server *server)
 {
 	free_world(world);
 	free_server(server);

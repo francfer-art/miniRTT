@@ -52,23 +52,22 @@ t_vector	cone_normal(t_cone cone, t_vector point)
 
 int	hit_cone(t_ray *ray, t_cone *cone)
 {
-	int			i;
+	int			a[2];
 	float		roots[2];
-	int			root_count;
 	t_vector	point;
 	float		dist_to_vertex;
 
-	i = -1;
-	cone_roots(*ray, *cone, roots, &cone->root_count);
-	while (++i < cone->root_count)
+	a[0] = -1;
+	cone_roots(*ray, *cone, roots, &a[1]);
+	while (++a[0] < a[1])
 	{
-		if (ray->record.t > roots[i] && roots[i] > EPSILON)
+		if (ray->record.t > roots[a[0]] && roots[a[0]] > EPSILON)
 		{
-			point = add(ray->origin, scale(ray->direction, roots[i]));
+			point = add(ray->origin, scale(ray->direction, roots[a[0]]));
 			dist_to_vertex = dot(sub(point, cone->vertex), cone->direction);
 			if (fabs(dist_to_vertex) <= cone->height)
 			{
-				ray->record.t = roots[i];
+				ray->record.t = roots[a[0]];
 				ray->record.p = point;
 				ray->record.normal = cone_normal(*cone, ray->record.p);
 				ray->record.color = cone->color;

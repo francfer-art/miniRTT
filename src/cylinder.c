@@ -18,75 +18,71 @@ t_cylinder	*new_cylinder(char **data)
 	return (cylinder);
 }
 
-void	cylinder_roots(t_ray r, t_cylinder cylinder, float roots[2])
+void	cylinder_roots(t_ray r, t_cylinder cylinder, float roots[4])
 {
 	t_vector	v;
 	t_vector	w;
-	float		a;
-	float		half_b;
-	float		c;
-	float		discriminant;
+	float		f[4];
 
 	v = sub(r.direction, scale(cylinder.axis, dot(r.direction, cylinder.axis)));
 	w = sub(sub(r.origin, cylinder.center), scale(cylinder.axis,
 				dot(sub(r.origin, cylinder.center), cylinder.axis)));
-	a = length_square(v);
-	half_b = dot(v, w);
-	c = length_square(w) - pow(cylinder.radius, 2);
-	discriminant = pow(half_b, 2) - a * c;
-	if (discriminant < 0)
+	f[0] = length_square(v);
+	f[1] = dot(v, w);
+	f[2] = length_square(w) - pow(cylinder.radius, 2);
+	f[3] = pow(f[1], 2) - f[0] * f[2];
+	if (f[3] < 0)
 	{
-		roots[0] = INFINITY;
-		roots[1] = INFINITY;
+		roots[2] = INFINITY;
+		roots[3] = INFINITY;
 		return ;
 	}
-	roots[0] = (-half_b - sqrt(discriminant)) / a;
-	roots[1] = (-half_b + sqrt(discriminant)) / a;
+	roots[2] = (-f[1] - sqrt(f[3])) / f[0];
+	roots[3] = (-f[1] + sqrt(f[3])) / f[0];
 }
 
-void	valid_hit(int *hit, float *dist, float *root, float *d, float *t)
+void	valid_hit(int *hit, float w[4], float *d, float *t)
 {
 	if (hit[0] && hit[1])
 	{
-		if (root[0] < root[1])
+		if (w[2] < w[3])
 		{
-			*d = dist[0];
-			*t = root[0];
+			*d = w[0];
+			*t = w[2];
 		}
 		else
 		{
-			*d = dist[1];
-			*t = root[1];
+			*d = w[1];
+			*t = w[3];
 		}
 	}
 	else if (hit[0])
 	{
-		*d = dist[0];
-		*t = root[0];
+		*d = w[0];
+		*t = w[2];
 	}
 	else if (hit[1])
 	{
-		*d = dist[1];
-		*t = root[1];
+		*d = w[1];
+		*t = w[3];
 	}
 }
 
 float	solve(t_ray r, t_cylinder cy, float *d, int hit[2])
 {
 	float		t;
-	float		dist[2];
-	float		root[2];
 	t_vector	b_ray;
+	float		w[4];
 
-	cylinder_roots(r, cy, root);
+	cylinder_roots(r, cy, w);
 	b_ray = sub(r.origin, cy.center);
-	dist[0] = dot(cy.axis, sub(add(r.origin, scale(r.direction, root[0])),
+	w[0] = dot(cy.axis, sub(add(r.origin, scale(r.direction, w[2])),
 				cy.center));
-	dist[1] = dot(cy.axis, sub(add(r.origin, scale(r.direction, root[1])),
+	w[1] = dot(cy.axis, sub(add(r.origin, scale(r.direction, w[3])),
 				cy.center));
-	hit[0] = (dist[0] >= 0 && dist[0] <= cy.height && root[0] > EPSILON);
-	hit[1] = (dist[1] >= 0 && dist[1] <= cy.height && root[1] > EPSILON);
-	valid_hit(hit, dist, root, d, &t);
+	hit[0] = (w[0] >= 0 && w[0] <= cy.height && w[2] > EPSILON);
+	hit[1] = (w[1] >= 0 && w[1] <= cy.height && w[3] > EPSILON);
+	valid_hit(hit, w, d, &t);
 	return (t);
 }
 

@@ -1,6 +1,6 @@
 ########  RESOLUTION #######
 #### width ## height #######
-#R    80      60
+# R    80      60
 R    1700      720
 #### AMBIENT LIGHTING ####
 #    intensity               color

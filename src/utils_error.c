@@ -27,7 +27,7 @@ char	**create_error(void)
 	return (error_messages);
 }
 
-void	msg_exit(ErrorType error)
+void	msg_exit(t_error error)
 {
 	char	**error_messages;
 	int		i;

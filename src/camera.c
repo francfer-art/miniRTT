@@ -55,6 +55,7 @@ t_ray	generate_ray(t_camera *camera, float u, float v)
 	t_vector	vertical;
 	t_vector	llc;
 
+	ft_memset(&ray, 0, sizeof(t_ray));
 	horizontal = camera->horizontal;
 	vertical = camera->vertical;
 	llc = camera->llc;
