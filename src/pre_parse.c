@@ -63,9 +63,9 @@ int	ambient_checker(char **data)
 		res = check_r(data);
 	else if (!ft_strcmp(data[0], "A") && check_a(data) != 0)
 		res = check_a(data);
-	else if (!ft_strcmp(data[0], "c") && check_c(data) != 0)
+	else if (!ft_strcmp(data[0], "C") && check_c(data) != 0)
 		res = check_c(data);
-	else if (!ft_strcmp(data[0], "l") && check_l(data) != 0)
+	else if (!ft_strcmp(data[0], "L") && check_l(data) != 0)
 		res = check_l(data);
 	return (res);
 }

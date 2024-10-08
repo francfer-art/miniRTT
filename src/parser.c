@@ -49,9 +49,9 @@ void	scene_parser(char **line, t_world *world)
 		world->resolution = resolution(line, world);
 	else if (!ft_strcmp(line[0], "A"))
 		world->ambient = new_ambient_light(line, world);
-	else if (!ft_strcmp(line[0], "c"))
+	else if (!ft_strcmp(line[0], "C"))
 		ft_lstadd_back(&(world->cameras), ft_lstnew(new_camera(line)));
-	else if (!ft_strcmp(line[0], "l"))
+	else if (!ft_strcmp(line[0], "L"))
 		ft_lstadd_back(&(world->lights), ft_lstnew(new_light(line, world)));
 	else
 		figures_parser(line, world);
